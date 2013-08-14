@@ -33,51 +33,44 @@ var app = {
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicity call 'app.receivedEvent(...);'
     onDeviceReady: function () {
+        alert('device ready')
         app.receivedEvent('deviceready');
-
-
-        window.plugins.tts.startup(function (arg) {
-//                        alert('startup successful');
-            window.plugins.tts.speak("Reading your news!", function (arg) {
-//                            alert('speech successful');
-
-                $('#feed').feeds({
-                    feeds: {
-                        feed1: 'http://feeds.feedburner.com/techcrunch/social?format=xml'
-                        // key: 'url', ...
-                    },
-                    preprocess: function (e) {
-                        try {
-                            window.plugins.tts.speak(this.title + "." + this.content,
-                                function (arg) {
-                                }, function (arg) {
-                                    alert(arg);
-                                });
-
-                        } catch (error) {
-                            alert(error);
-                        }
-                    }
-                });
-
-
+        try {
+            window.plugins.tts.startup(function (arg) {
             }, function (arg) {
-                alert('speech FAILED! ' + arg.toString());
+                alert('startup FAILED! ' + arg.toString());
             });
-        }, function (arg) {
-            alert('startup FAILED! ');
-        });
-
+        } catch (e) {
+            alert(e);
+        }
     },
     // Update DOM on a Received Event
     receivedEvent: function (id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
-
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-
-        console.log('Received Event: ' + id);
     }
 };
+
+function speakFeed(rssFeedUrl) {
+    window.plugins.tts.speak("Reading your news!", function (arg) {
+        var feed = rssFeedUrl;//'http://feeds.feedburner.com/techcrunch/social?format=xml';
+        $('#feed').feeds({
+            feeds: {
+                feed1: feed
+                // key: 'url', ...
+            },
+            preprocess: function (e) {
+                try {
+                    window.plugins.tts.speak(this.title + "." + this.content,
+                        function (arg) {
+                        }, function (arg) {
+                            alert(arg);
+                        });
+
+                } catch (error) {
+                    alert(error);
+                }
+            }
+        });
+    }, function (arg) {
+        alert('speech FAILED! ' + arg.toString());
+    });
+}

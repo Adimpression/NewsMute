@@ -66,10 +66,7 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
         try {
             if (action.equals("speak")) {
                 String text = args.getString(0);
-//                if (text.length() > 400) {//Just a guess at size
-                    text = text.replaceAll("  ", "");
-//                    text = text.substring(0, 300);
-//                }
+                text = text.replaceAll("  ", "");
                 Log.d(LOG_TAG, "text being red:" + text);
 
                 if (isReady()) {
@@ -192,15 +189,6 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
     }
 
     /**
-     * Clean up the TTS resources
-     */
-    public void onDestroy() {
-        if (mTts != null) {
-            mTts.shutdown();
-        }
-    }
-
-    /**
      * Is the TTS service ready to play yet?
      *
      * @return
@@ -209,6 +197,15 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
         Log.d(LOG_TAG, "isReady");
 
         return (state == TTS.STARTED) ? true : false;
+    }
+
+    /**
+     * Clean up the TTS resources
+     */
+    public void onDestroy() {
+        if (mTts != null) {
+            mTts.shutdown();
+        }
     }
 
     /**
