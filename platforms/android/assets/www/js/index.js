@@ -33,12 +33,11 @@ var app = {
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicity call 'app.receivedEvent(...);'
     onDeviceReady: function () {
-        alert('device ready')
         app.receivedEvent('deviceready');
         try {
+            $('#userFeed').focus();
             window.plugins.tts.startup(function (arg) {
             }, function (arg) {
-                alert('startup FAILED! ' + arg.toString());
             });
         } catch (e) {
             alert(e);
@@ -49,13 +48,16 @@ var app = {
     }
 };
 
+function unspeakFeed(){
+    window.plugins.tts.stop();
+}
+
 function speakFeed(rssFeedUrl) {
     window.plugins.tts.speak("Reading your news!", function (arg) {
         var feed = rssFeedUrl;//'http://feeds.feedburner.com/techcrunch/social?format=xml';
         $('#feed').feeds({
             feeds: {
                 feed1: feed
-                // key: 'url', ...
             },
             preprocess: function (e) {
                 try {
@@ -71,6 +73,6 @@ function speakFeed(rssFeedUrl) {
             }
         });
     }, function (arg) {
-        alert('speech FAILED! ' + arg.toString());
+        alert('Sorry, we are speechless! ' + arg.toString());
     });
 }
