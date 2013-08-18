@@ -17,12 +17,12 @@
        under the License.
  */
 
-package io.cordova.hellocordova;
+package ai.newsmute;
 
 import android.os.Bundle;
 import org.apache.cordova.*;
 
-public class HelloCordova extends DroidGap
+public class Main extends DroidGap
 {
     @Override
     public void onCreate(Bundle savedInstanceState)

@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.cordova.helloCordova" version="2.0.0" xmlns="http://www.w3.org/ns/widgets">
-    <name>Hello Cordova</name>
+<widget id="com.newsmute" version="2.0.0" xmlns="http://www.w3.org/ns/widgets">
+    <name>News Mute</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        News Mute speaks any website feed for you!
     </description>
-    <author email="dev@cordova.apache.org" href="http://cordova.io">
-        Apache Cordova Team
+    <author email="talktome@adimpression.mobi" href="http://Adimpression.mobi">
+        Adimpression
     </author>
     <content src="index.html" />
     <feature name="App">
@@ -15,8 +15,10 @@
         <param name="android-package" value="com.phonegap.plugins.speech.TTS"/>
     </feature>
     <access origin="*" />
-    <preference name="useBrowserHistory" value="true" />
+    <preference name="useBrowserHistory" value="false" />
     <preference name="exit-on-suspend" value="false" />
     <preference name="fullscreen" value="true" />
-    <preference name="webviewbounce" value="true" />
+    <preference name="webviewbounce" value="false" />
+    <preference name="splashscreen" value="icon" />
+    <preference name="loadingDialog" value="News Mute is starting..., Please give us a moment..." />
 </widget>
