@@ -48,8 +48,6 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
 
     private CallbackContext callbackContext;
 
-    //private String startupCallbackId = "";
-
 
     public TTS() {
         Log.d(LOG_TAG, "init");
@@ -189,14 +187,11 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
     }
 
     /**
-     * Is the TTS service ready to play yet?
-     *
-     * @return
+     * @return If the TTS service ready to play yet or not
      */
     private boolean isReady() {
         Log.d(LOG_TAG, "isReady");
-
-        return (state == TTS.STARTED) ? true : false;
+        return (state == TTS.STARTED);
     }
 
     /**
@@ -225,32 +220,6 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
             //this.success(result, this.startupCallbackId);
             this.startupCallbackContext.sendPluginResult(result);
             mTts.setOnUtteranceCompletedListener(this);
-//            Putting this code in hear as a place holder. When everything moves to API level 15 or greater
-//            we'll switch over to this way of trackign progress.
-//            mTts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-//
-//                @Override
-//                public void onDone(String utteranceId) {
-//                    Log.d(LOG_TAG, "got completed utterance");
-//                    PluginResult result = new PluginResult(PluginResult.Status.OK);
-//                    result.setKeepCallback(false);
-//                    callbackContext.sendPluginResult(result);
-//                }
-//
-//                @Override
-//                public void onError(String utteranceId) {
-//                    Log.d(LOG_TAG, "got utterance error");
-//                    PluginResult result = new PluginResult(PluginResult.Status.ERROR);
-//                    result.setKeepCallback(false);
-//                    callbackContext.sendPluginResult(result);
-//                }
-//
-//                @Override
-//                public void onStart(String utteranceId) {
-//                    Log.d(LOG_TAG, "started talking");
-//                }
-//
-//            });
         } else if (status == TextToSpeech.ERROR) {
             state = TTS.STOPPED;
             PluginResult result = new PluginResult(PluginResult.Status.ERROR, TTS.STOPPED);
