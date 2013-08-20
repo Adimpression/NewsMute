@@ -18,32 +18,82 @@
  */
 var app = {
     // Application Constructor
-    initialize: function() {
+    initialize: function () {
         this.bindEvents();
     },
     // Bind Event Listeners
     //
     // Bind any events that are required on startup. Common events are:
     // 'load', 'deviceready', 'offline', and 'online'.
-    bindEvents: function() {
+    bindEvents: function () {
         document.addEventListener('deviceready', this.onDeviceReady, false);
     },
     // deviceready Event Handler
     //
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicity call 'app.receivedEvent(...);'
-    onDeviceReady: function() {
+    onDeviceReady: function () {
         app.receivedEvent('deviceready');
+        try {
+            $('#userFeed').focus();
+            window.plugins.tts.startup(function (arg) {
+            }, function (arg) {
+            });
+        } catch (e) {
+            alert(e);
+        }
     },
     // Update DOM on a Received Event
-    receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
-
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-
-        console.log('Received Event: ' + id);
+    receivedEvent: function (id) {
     }
+};
+
+function unspeakFeed(){
+    window.plugins.tts.stop();
+}
+
+function speakFeed(rssFeedUrl) {
+
+    window.plugins.tts.speak("Reading your news!", function (arg) {
+        discoverFeedUrlFor(rssFeedUrl)
+            .done(function(data) {
+                var queryResult = data.responseData;
+                if (!!queryResult) {
+                    var feedUrl = queryResult.url;
+                    var feed = feedUrl;//'http://feeds.feedburner.com/techcrunch/social?format=xml';
+
+                    $('#feed').feeds({
+                        feeds: {
+                            feed1: feed
+                        },
+                        preprocess: function (e) {
+                            try {
+                                window.plugins.tts.speak(this.title + "." + this.content,
+                                    function (arg) {
+                                    }, function (arg) {
+                                        alert(arg);
+                                    });
+
+                            } catch (error) {
+                                alert(error);
+                            }
+                        }
+                    });
+
+                }
+            });
+
+
+    }, function (arg) {
+        alert('Sorry, we are speechless! ' + arg.toString());
+    });
+}
+
+
+var discoverFeedUrlFor = function(pageURL) {
+    var baseApiUrl = "http://ajax.googleapis.com/ajax/services/feed/lookup?v=1.0";
+    var jQueryJsonpToken = "&callback=?"; // tells jQuery to treat it as JSONP request
+    var pageUrlParameter = "&q=" + pageURL;
+    var requestUrl = baseApiUrl + jQueryJsonpToken + pageUrlParameter;
+    return $.getJSON(requestUrl);
 };
