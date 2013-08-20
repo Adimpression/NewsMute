@@ -10,7 +10,7 @@
 </head>
 <body style="height: 100%; font-weight: bolder;">
 <div class="container">
-    <h1 class="responsive center important message" data-compression="15" style="color: #000000;">Paste your RSS feed
+    <h1 class="responsive center important message" data-compression="15" style="color: #000000;">Place your RSS feed
         link here</h1>
 
     <div class="one padded">
@@ -18,7 +18,7 @@
         </div>
         <div class="use100" style="height: 10px;">
         </div>
-        <div class="one">
+        <div class="one userFeedSection">
             <label>
                 <input type="text" value="" class="use100" style="height: 70px; font-size: 40px;text-align: center;"
                        placeholder="RSS feed link goes here" id="userFeed"/>
@@ -32,11 +32,11 @@
                 &nbsp;
             </div>
             <div class="fourth center cursor_pointer"
-                 onclick="javascript:speakFeed($('#userFeed').val());">
+                 onclick="javascript:$('.userFeedSection').slideUp();speakFeed($('#userFeed').val());">
                 <h2 class="responsive success" data-compression="6" data-max="60" data-min="40"><i class="icon-play"></i> PLAY</h2>
             </div>
             <div class="fourth center cursor_pointer"
-                 onclick="javascript:unspeakFeed();">
+                 onclick="javascript:$('.userFeedSection').slideDown();unspeakFeed();">
                 <h2 class="responsive error" data-compression="6" data-max="60" data-min="40"><i class="icon-stop"></i> STOP</h2>
             </div>
             <div class="fourth">
@@ -51,7 +51,9 @@
     </div>
     <div class="use100"
          style="height: 100%; border-style:solid;border-width: 5px; border-color: #ffffff;border-top-left-radius: 10px;border-top-right-radius: 10px; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
-        <div class="use100" id="feed" style="background-color: #ffffff; font-size: 30px;line-height: 116%;">
+        <div class="use100" id="feed" style="display:none; background-color: #ffffff; font-size: 30px;line-height: 116%;">
+        </div>
+        <div class="use100" id="feedNowSpeaking" style="background-color: #ffffff; font-size: 30px;line-height: 116%;">
         </div>
 
     </div>
