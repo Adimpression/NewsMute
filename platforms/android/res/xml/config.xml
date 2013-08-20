@@ -12,13 +12,11 @@
         <param name="android-package" value="org.apache.cordova.App" />
     </feature>
     <feature name="TTS">
-        <param name="android-package" value="com.phonegap.plugins.speech.TTS"/>
+        <param name="android-package" value="com.phonegap.plugins.speech.TTS" />
     </feature>
     <access origin="*" />
-    <preference name="useBrowserHistory" value="false" />
+    <preference name="useBrowserHistory" value="true" />
     <preference name="exit-on-suspend" value="false" />
     <preference name="fullscreen" value="true" />
-    <preference name="webviewbounce" value="false" />
-    <preference name="splashscreen" value="icon" />
-    <preference name="loadingDialog" value="News Mute is starting..., Please give us a moment..." />
+    <preference name="webviewbounce" value="true" />
 </widget>
