@@ -92,7 +92,8 @@ function unspeakFeed() {
     window.plugins.tts.stop();
 }
 
-var feedEntries;//Array of feed entries
+var feedEntriesBeingReadIndex;//The index of the the feed item of the feed entries being read
+var feedEntriesNoModifyCurrent;//This should never be modified unless it is a new feed, and always being the currently being read feed
 
 function speakFeed(rssFeedUrl) {
 
@@ -100,7 +101,8 @@ function speakFeed(rssFeedUrl) {
         window.plugins.tts.speak("Reading your news!", function (arg) {
             discoverFeedUrlFor(rssFeedUrl.replace(/\s+/g, ''))//We replace all spaces since a user can type something like Facebook.com which ends up with spaces in the end
                 .done(function (data) {
-                    feedEntries = [];
+                    var feedEntries = [];//Array of feed entries
+
                     var queryResult = data.responseData;
                     if (!!queryResult) {
                         var feedUrl = queryResult.url;
@@ -119,7 +121,9 @@ function speakFeed(rssFeedUrl) {
                             },
                             onComplete: function () {
                                 try {
-                                    speakFeedEntriesRecursively();
+                                    feedEntriesBeingReadIndex = 0;
+                                    feedEntriesNoModifyCurrent = feedEntries;
+                                    speakFeedEntriesRecursively(feedEntries, feedEntriesBeingReadIndex);
                                 } catch (e) {
                                     alert(e);
                                 }
@@ -135,15 +139,38 @@ function speakFeed(rssFeedUrl) {
     }
 }
 
-function speakFeedEntriesRecursively() {
+function speakFeedEntriesPrevious() {
+    //We decrement the feed's feedEntriesBeingReadIndex by one. We avoid doing so if it is 0 being rea
+    if (feedEntriesNoModifyCurrent.length >= 1) {
+        //First we stop everything
+        unspeakFeed();
+        speakFeedEntriesRecursively(feedEntriesNoModifyCurrent, feedEntriesBeingReadIndex--);
+    } else {
+
+    }
+
+}
+
+function speakFeedEntriesNext() {
+    //We increment the feed's feedEntriesBeingReadIndex by one, if it has that length;
+    if (feedEntriesNoModifyCurrent.length <= feedEntriesBeingReadIndex + 1) {
+        //First we stop everything
+        unspeakFeed();
+        speakFeedEntriesRecursively(feedEntriesNoModifyCurrent, feedEntriesBeingReadIndex++);
+    }
+}
+
+
+function speakFeedEntriesRecursively(feedEntries, feedEntriesBeingReadIndex) {
     try {
-        if (feedEntries.length > 0) {
+        if (feedEntries.length == feedEntriesBeingReadIndex) {
             $('#feedNowSpeaking').empty();
-            $('#feedNowSpeaking').html(feedEntries[0]);
-            window.plugins.tts.speak(feedEntries[0],
+            $('#feedNowSpeaking').html(feedEntries[feedEntriesBeingReadIndex]);
+            window.plugins.tts.speak(feedEntries[feedEntriesBeingReadIndex],
                 function (arg) {
                     feedEntries.shift(); //We are done, lets get rid of this entry
-                    speakFeedEntriesRecursively();
+                    speakFeedEntriesRecursively(feedEntries, feedEntriesBeingReadIndex);
+                    feedEntriesBeingReadIndex++;
                 }, function (arg) {
                     alert(arg);
                 });
