@@ -48,7 +48,7 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
 
     private CallbackContext startupCallbackContext;
 
-    private CallbackContext callbackContext;
+    private CallbackContext currentSpeakingCallbackContext;
 
 
     public TTS() {
@@ -59,7 +59,6 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
     public boolean execute(String action, final JSONArray args, final CallbackContext callbackContext) {
         Log.d(LOG_TAG, "execute");
         final PluginResult.Status status = PluginResult.Status.OK;
-        this.callbackContext = callbackContext;
 
             if (action.equals("speak")) {
                 cordova.getThreadPool().execute(new Runnable() {
@@ -78,6 +77,7 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
                                 PluginResult pr = new PluginResult(PluginResult.Status.NO_RESULT);
                                 pr.setKeepCallback(true);
                                 callbackContext.sendPluginResult(pr);
+                                TTS.this.currentSpeakingCallbackContext = callbackContext;
                             } else {
                                 JSONObject error = new JSONObject();
                                 error.put("message", "TTS service is still initialzing.");
@@ -100,7 +100,7 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
                                 final HashMap<String, String> map = new HashMap<String, String>();
                                 //map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, callbackId);
                                 mTts.speak(text, TextToSpeech.QUEUE_FLUSH, map);
-                                state = TTS.STARTED;
+                                //We wont' set state here. It will be set at onUtteranceCompleted
                                 PluginResult pr = new PluginResult(PluginResult.Status.NO_RESULT);
                                 pr.setKeepCallback(true);
                                 callbackContext.sendPluginResult(pr);
@@ -123,7 +123,7 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
                         try {
                             if (isReady()) {
                                 mTts.stop();
-                                state = TTS.STARTED;
+                                //We wont' set state here. It will be set at onUtteranceCompleted
                                 callbackContext.sendPluginResult(new PluginResult(status, ""));
                             } else {
                                 JSONObject error = new JSONObject();
@@ -334,6 +334,6 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
         state = TTS.STARTED;
         PluginResult result = new PluginResult(PluginResult.Status.OK);
         result.setKeepCallback(false);
-        this.callbackContext.sendPluginResult(result);
+        this.currentSpeakingCallbackContext.sendPluginResult(result);
     }
 }

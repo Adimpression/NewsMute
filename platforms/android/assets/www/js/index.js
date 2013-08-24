@@ -89,6 +89,7 @@ var app = {
 };
 
 function unspeakFeed() {
+    speakFeedEntriesRecursivelyCurrentContinue = false;
     window.plugins.tts.stop();
 }
 
@@ -102,7 +103,6 @@ function speakFeed(rssFeedUrl) {
         window.plugins.tts.speak("Reading your news!", function (arg) {
             discoverFeedUrlFor(rssFeedUrl.replace(/\s+/g, ''))//We replace all spaces since a user can type something like Facebook.com which ends up with spaces in the end
                 .done(function (data) {
-                    alert('done');
                     $('#feedNowSpeaking').text('Got data from your website. Preparing them...');
                     var feedEntries = [];//Array of feed entries
                     feedEntriesNoModifyCurrent = [];
@@ -177,17 +177,17 @@ function speakFeedEntriesPrevious() {
         if (feedEntriesNoModifyCurrent.length > 2 && feedEntriesBeingReadIndex != 0) {
             //First we stop everything
             unspeakFeed();
-            alert('Waiting for speech stop');
+//            alert('Waiting forspeech stop');
 
             updatesSpeechEngineStateStart();
-            while (speechEngineState == 3) {
+            while (speechEngineState == 3 && !speakFeedEntriesRecursivelyCurrentCompleted) {
                 //We have to wait for the speech engine to stop. No other way.
             }
             updatesSpeechEngineStateStop();
 
-            alert('Speech stopped');
+//            alert('Speech stopped');
             if (feedEntriesBeingReadIndex > 0) {
-                feedEntriesBeingReadIndex--;
+                --feedEntriesBeingReadIndex;
             }
             speakFeedEntriesRecursively(feedEntriesNoModifyCurrent, feedEntriesBeingReadIndex);
         }
@@ -201,36 +201,42 @@ function speakFeedEntriesNext() {
         if (feedEntriesNoModifyCurrent.length - 1 > feedEntriesBeingReadIndex) {
             //First we stop everything
             unspeakFeed();
-            alert('Waiting for speech stop');
+//            alert('Waiting for speech stop');
 
             updatesSpeechEngineStateStart();
-            while (speechEngineState == 3) {
+            while (speechEngineState == 3 && !speakFeedEntriesRecursivelyCurrentCompleted) {
                 //We have to wait for the speech engine to stop. No other way.
             }
             updatesSpeechEngineStateStop();
 
-            alert('Speech stopped');
+//            alert('Speech stopped');
             //Since the speakFeedEntriesRecursively is a recursive loop hopping onto the next item, we don't need to increment. Or we'll have to change our strategy in the loop
-            speakFeedEntriesRecursively(feedEntriesNoModifyCurrent, feedEntriesBeingReadIndex);
+            speakFeedEntriesRecursively(feedEntriesNoModifyCurrent, ++feedEntriesBeingReadIndex);
         }
     } catch (e) {
         alert(e);
     }
 }
 
+var speakFeedEntriesRecursivelyCurrentCompleted = false;
+var speakFeedEntriesRecursivelyCurrentContinue = true;
 
 function speakFeedEntriesRecursively(feedEntries, feedEntriesBeingReadIndex) {
     try {
         if (feedEntries.length - 1 >= feedEntriesBeingReadIndex) {
             $('#feedNowSpeaking').empty();
             $('#feedNowSpeaking').html(feedEntries[feedEntriesBeingReadIndex]);
+            speakFeedEntriesRecursivelyCurrentCompleted = false;
             window.plugins.tts.speak(feedEntries[feedEntriesBeingReadIndex],
                 function (arg) {
-                    feedEntries.shift(); //We are done, lets get rid of this entry
+//                    alert('Completed reading this entry');
+                    speakFeedEntriesRecursivelyCurrentCompleted = true;
                     if (feedEntries.length - 1 >= feedEntriesBeingReadIndex) {
                         feedEntriesBeingReadIndex++;
                     }
-                    speakFeedEntriesRecursively(feedEntries, feedEntriesBeingReadIndex);
+                    if (speakFeedEntriesRecursivelyCurrentContinue) {
+                        speakFeedEntriesRecursively(feedEntries, feedEntriesBeingReadIndex);
+                    }
                 }, function (arg) {
                     alert(arg);
                 });
