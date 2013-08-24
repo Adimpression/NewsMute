@@ -64,12 +64,11 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
         try {
             if (action.equals("speak")) {
                 String text = args.getString(0);
-                text = text.replaceAll("  ", "");
+                text = text.replaceAll("  ", "");//Added by Ravindranth Akila...
                 Log.d(LOG_TAG, "text being red:" + text);
 
                 if (isReady()) {
-                    HashMap<String, String> map = null;
-                    map = new HashMap<String, String>();
+                    final HashMap<String, String> map = new HashMap<String, String>();
                     map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, callbackContext.getCallbackId());
                     mTts.speak(text, TextToSpeech.QUEUE_ADD, map);
                     PluginResult pr = new PluginResult(PluginResult.Status.NO_RESULT);
@@ -84,8 +83,7 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
             } else if (action.equals("interrupt")) {
                 String text = args.getString(0);
                 if (isReady()) {
-                    HashMap<String, String> map = null;
-                    map = new HashMap<String, String>();
+                    final HashMap<String, String> map = new HashMap<String, String>();
                     //map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, callbackId);
                     mTts.speak(text, TextToSpeech.QUEUE_FLUSH, map);
                     PluginResult pr = new PluginResult(PluginResult.Status.NO_RESULT);
@@ -109,8 +107,7 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
                 }
             } else if (action.equals("silence")) {
                 if (isReady()) {
-                    HashMap<String, String> map = null;
-                    map = new HashMap<String, String>();
+                    final HashMap<String, String> map = new HashMap<String, String>();
                     map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, callbackContext.getCallbackId());
                     mTts.playSilence(args.getLong(0), TextToSpeech.QUEUE_ADD, map);
                     PluginResult pr = new PluginResult(PluginResult.Status.NO_RESULT);
