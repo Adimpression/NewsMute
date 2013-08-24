@@ -143,6 +143,16 @@ cordova.define("cordova/plugin/tts",
     TTS.prototype.setLanguage = function(lang, successCallback, errorCallback) {
          return exec(successCallback, errorCallback, "TTS", "setLanguage", [lang]);
     };
+    /**
+     * Sets the TTS service state
+     *
+     * @param {DOMString} lang
+     * @param {Object} successCallback
+     * @param {Object} errorCallback
+     */
+    TTS.prototype.getState = function(successCallback, errorCallback) {
+         return exec(successCallback, errorCallback, "TTS", "getState", []);
+    };
 
     var tts = new TTS();
     module.exports = tts;

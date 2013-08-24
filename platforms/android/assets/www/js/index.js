@@ -92,7 +92,9 @@ function unspeakFeed() {
     window.plugins.tts.stop();
 }
 
-var feedEntries;//Array of feed entries
+var feedEntriesBeingReadIndex;//The index of the the feed item of the feed entries being read
+var feedEntriesNoModifyCurrent;//This should never be modified unless it is a new feed, and always being the currently being read feed
+var speechEngineState = -1;//-1 reflects the state has never being updated
 
 function speakFeed(rssFeedUrl) {
 
@@ -100,7 +102,11 @@ function speakFeed(rssFeedUrl) {
         window.plugins.tts.speak("Reading your news!", function (arg) {
             discoverFeedUrlFor(rssFeedUrl.replace(/\s+/g, ''))//We replace all spaces since a user can type something like Facebook.com which ends up with spaces in the end
                 .done(function (data) {
-                    feedEntries = [];
+                    alert('done');
+                    $('#feedNowSpeaking').text('Got data from your website. Preparing them...');
+                    var feedEntries = [];//Array of feed entries
+                    feedEntriesNoModifyCurrent = [];
+
                     var queryResult = data.responseData;
                     if (!!queryResult) {
                         var feedUrl = queryResult.url;
@@ -112,6 +118,7 @@ function speakFeed(rssFeedUrl) {
                             },
                             preprocess: function (e) {
                                 try {
+                                    $('#feedNowSpeaking').text('Still preparing your news. About to read them....');
                                     feedEntries.push(this.title + " - " + this.content);
                                 } catch (error) {
                                     alert(error);
@@ -119,12 +126,17 @@ function speakFeed(rssFeedUrl) {
                             },
                             onComplete: function () {
                                 try {
-                                    speakFeedEntriesRecursively();
+                                    $('#feedNowSpeaking').text('Done preparing your news. About to read ' + feedEntries.length + ' items....');
+                                    feedEntriesBeingReadIndex = 0;
+                                    feedEntriesNoModifyCurrent = feedEntries;
+                                    speakFeedEntriesRecursively(feedEntries, feedEntriesBeingReadIndex);
                                 } catch (e) {
                                     alert(e);
                                 }
                             }
                         });
+                    } else {
+                        alert(queryResult);
                     }
                 });
         }, function (arg) {
@@ -135,15 +147,90 @@ function speakFeed(rssFeedUrl) {
     }
 }
 
-function speakFeedEntriesRecursively() {
+function updatesSpeechEngineStateSuccess(result) {
+    speechEngineState = result;
+}
+
+function updatesSpeechEngineStateSuccessError(reason) {
+    alert(reason);
+}
+
+function updatesSpeechEngineState() {
+    window.plugins.tts.getState(updatesSpeechEngineStateSuccess, updatesSpeechEngineStateSuccessError);
+}
+
+var updateSpeechEngineStateIntervalId;
+function updatesSpeechEngineStateStart() {
+    updateSpeechEngineStateIntervalId = setInterval("updatesSpeechEngineState()", 1000);
+}
+
+function updatesSpeechEngineStateStop() {
     try {
-        if (feedEntries.length > 0) {
+        window.clearInterval(updateSpeechEngineStateIntervalId);
+    } catch (e) {
+        alert(e);
+    }
+}
+
+function speakFeedEntriesPrevious() {
+    try { //We decrement the feed's feedEntriesBeingReadIndex by one. We avoid doing so if it is 0 being read
+        if (feedEntriesNoModifyCurrent.length > 2 && feedEntriesBeingReadIndex != 0) {
+            //First we stop everything
+            unspeakFeed();
+            alert('Waiting for speech stop');
+
+            updatesSpeechEngineStateStart();
+            while (speechEngineState == 3) {
+                //We have to wait for the speech engine to stop. No other way.
+            }
+            updatesSpeechEngineStateStop();
+
+            alert('Speech stopped');
+            if (feedEntriesBeingReadIndex > 0) {
+                feedEntriesBeingReadIndex--;
+            }
+            speakFeedEntriesRecursively(feedEntriesNoModifyCurrent, feedEntriesBeingReadIndex);
+        }
+    } catch (e) {
+        alert(e);
+    }
+}
+
+function speakFeedEntriesNext() {
+    try { //We increment the feed's feedEntriesBeingReadIndex by one, if it has that length;
+        if (feedEntriesNoModifyCurrent.length - 1 > feedEntriesBeingReadIndex) {
+            //First we stop everything
+            unspeakFeed();
+            alert('Waiting for speech stop');
+
+            updatesSpeechEngineStateStart();
+            while (speechEngineState == 3) {
+                //We have to wait for the speech engine to stop. No other way.
+            }
+            updatesSpeechEngineStateStop();
+
+            alert('Speech stopped');
+            //Since the speakFeedEntriesRecursively is a recursive loop hopping onto the next item, we don't need to increment. Or we'll have to change our strategy in the loop
+            speakFeedEntriesRecursively(feedEntriesNoModifyCurrent, feedEntriesBeingReadIndex);
+        }
+    } catch (e) {
+        alert(e);
+    }
+}
+
+
+function speakFeedEntriesRecursively(feedEntries, feedEntriesBeingReadIndex) {
+    try {
+        if (feedEntries.length - 1 >= feedEntriesBeingReadIndex) {
             $('#feedNowSpeaking').empty();
-            $('#feedNowSpeaking').html(feedEntries[0]);
-            window.plugins.tts.speak(feedEntries[0],
+            $('#feedNowSpeaking').html(feedEntries[feedEntriesBeingReadIndex]);
+            window.plugins.tts.speak(feedEntries[feedEntriesBeingReadIndex],
                 function (arg) {
                     feedEntries.shift(); //We are done, lets get rid of this entry
-                    speakFeedEntriesRecursively();
+                    if (feedEntries.length - 1 >= feedEntriesBeingReadIndex) {
+                        feedEntriesBeingReadIndex++;
+                    }
+                    speakFeedEntriesRecursively(feedEntries, feedEntriesBeingReadIndex);
                 }, function (arg) {
                     alert(arg);
                 });
@@ -154,9 +241,14 @@ function speakFeedEntriesRecursively() {
 }
 
 var discoverFeedUrlFor = function (pageURL) {
-    var baseApiUrl = "http://ajax.googleapis.com/ajax/services/feed/lookup?v=1.0";
-    var jQueryJsonpToken = "&callback=?"; // tells jQuery to treat it as JSONP request
-    var pageUrlParameter = "&q=" + pageURL;
-    var requestUrl = baseApiUrl + jQueryJsonpToken + pageUrlParameter;
-    return $.getJSON(requestUrl);
+    try {
+        var baseApiUrl = "http://ajax.googleapis.com/ajax/services/feed/lookup?v=1.0";
+        var jQueryJsonpToken = "&callback=?"; // tells jQuery to treat it as JSONP request
+        var pageUrlParameter = "&q=" + pageURL;
+        var requestUrl = baseApiUrl + jQueryJsonpToken + pageUrlParameter;
+        var JSON = $.getJSON(requestUrl);
+        return  JSON;
+    } catch (e) {
+        alert(e);
+    }
 };
