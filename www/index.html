@@ -8,57 +8,201 @@
     <title>News Mute</title>
     <link type="text/css" rel="stylesheet" href="./css/groundwork.css">
 </head>
-<body style="height: 100%; font-weight: bolder;">
+<!-- Let's keep the style of the body simple. Just the laying out. -->
+<body style="width: 100%; height: 100%; overflow:hidden;">
 <div class="container">
-    <h1 class="responsive center important message" data-compression="15" style="color: #000000;">Place your RSS feed
-        link here</h1>
+    <div class="one" style="height: 38%;">
+        <!-- This is the first half of the page, used for controlling items, URL, play/pause, stop, next, previous-->
+        <div class="one padded">
+            <div class="one">
+            </div>
+            <div class="use100" style="height: 10px;">
+            </div>
+            <div class="one userFeedSection">
+                <label>
+                    <input type="text" value="" class="use100" style="height: 70px; font-size: 40px;text-align: center;"
+                           placeholder="Website/Feed link goes here. e.g. fox news . com" id="userFeed"/>
+                </label>
+            </div>
+            <div class="one">
+                &nbsp;
+            </div>
+            <div class="one">
+                <div class="use25 center cursor_pointer">
+                    <h2 class="responsive success" data-compression="6" data-max="60" data-min="40"><i
+                            class="icon-fast-backward"></i></h2>
+                </div>
+                <div class="use50">
+                    <div class="half center cursor_pointer"
+                         onclick="javascript:$('.userFeedSection').slideUp();speakFeed($('#userFeed').val());">
+                        <h2 class="responsive success" data-compression="6" data-max="60" data-min="40"><i
+                                class="icon-play-sign"></i> PLAY</h2>
+                    </div>
+                    <div class="half center cursor_pointer"
+                         onclick="javascript:$('.userFeedSection').slideDown();unspeakFeed();">
+                        <h2 class="responsive error" data-compression="6" data-max="60" data-min="40"><i
+                                class="icon-stop"></i> STOP</h2>
+                    </div>
+                </div>
+                <div class="use25 center cursor_pointer">
+                    <h2 class="responsive success" data-compression="6" data-max="60" data-min="40"><i
+                            class="icon-fast-forward"></i></h2>
+                </div>
+            </div>
+        </div>
 
-    <div class="one padded">
-        <div class="one">
-        </div>
-        <div class="use100" style="height: 10px;">
-        </div>
-        <div class="one userFeedSection">
-            <label>
-                <input type="text" value="" class="use100" style="height: 70px; font-size: 40px;text-align: center;"
-                       placeholder="RSS feed link goes here" id="userFeed"/>
-            </label>
-        </div>
-        <div class="one">
-            &nbsp;
-        </div>
-        <div class="one">
-            <div class="fourth">
-                &nbsp;
-            </div>
-            <div class="fourth center cursor_pointer"
-                 onclick="javascript:$('.userFeedSection').slideUp();speakFeed($('#userFeed').val());">
-                <h2 class="responsive success" data-compression="6" data-max="60" data-min="40"><i class="icon-play"></i> PLAY</h2>
-            </div>
-            <div class="fourth center cursor_pointer"
-                 onclick="javascript:$('.userFeedSection').slideDown();unspeakFeed();">
-                <h2 class="responsive error" data-compression="6" data-max="60" data-min="40"><i class="icon-stop"></i> STOP</h2>
-            </div>
-            <div class="fourth">
-                &nbsp;
-            </div>
-        </div>
+
     </div>
 
 
-    <div class="use100">
-        &nbsp;
-    </div>
-    <div class="use100"
-         style="height: 100%; border-style:solid;border-width: 5px; border-color: #ffffff;border-top-left-radius: 10px;border-top-right-radius: 10px; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
-        <div class="use100" id="feed" style="display:none; background-color: #ffffff; font-size: 30px;line-height: 116%;">
-        </div>
-        <div class="use100" id="feedNowSpeaking" style="background-color: #ffffff; font-size: 30px;line-height: 116%;">
+    <div class="one" style="height: 62%;">
+        <!-- This is the second half of the page, used for viewving items, and showing the playlist-->
+
+        <div class="use100" style="border: 5px solid #ffffff;border-radius: 10px;height: 100%;">
+            <div class="use100" id="feed"
+                 style="display:none; background-color: #ffffff; font-size: 30px;line-height: 116%;">
+            </div>
+            <div class="use100" id="feedNowSpeaking"
+                 style="background-color: #ffffff; font-size: 30px;line-height: 116%;overflow: scroll; height: 100%; ">
+                Sir Richard Charles Nicholas Branson (born 18 July 1950) is an English business magnate and investor. He
+                is best known as the founder of Virgin Group of more than 400 companies.[2]
+                His first business venture was a magazine called Student at the age of 16.[3] In 1970, he set up a
+                mail-order record business. In 1972, he opened a chain of record stores, Virgin Records, later known as
+                Virgin Megastores. Branson's Virgin brand grew rapidly during the 1980s, as he set up Virgin Atlantic
+                and expanded the Virgin Records music label.
+                Branson is the 4th richest citizen of the United Kingdom, according to the Forbes 2012 list of
+                billionaires, with an estimated net worth of US$4.6 billion.[1]
+                Contents [hide]
+                1 Early life
+                2 Career
+                2.1 Record business
+                2.2 Business ventures
+                3 World record attempts
+                4 Television, film, and print
+                5 Activism
+                5.1 Humanitarian initiatives
+                5.2 Politics
+                6 Business practices
+                7 Honours and awards
+                8 Personal life
+                8.1 Influences
+                9 References
+                10 Further Reading
+                11 Bibliography
+                12 External links
+                Early life[edit source | editbeta]
+
+                Branson was born in Blackheath, London, the son and eldest child of barrister Edward James Branson (10
+                March 1918 – 19 March 2011)[4] and Eve Huntley Branson (née Flindt).[4][5] His grandfather, the Right
+                Honourable Sir George Arthur Harwin Branson, was a judge of the High Court of Justice and a Privy
+                Councillor.[6] Branson was educated at Scaitcliffe School (now Bishopsgate School)[7] until the age of
+                thirteen. He then attended Stowe School until the age of sixteen. Branson has dyslexia and had poor
+                academic performance as a student, but later discovered his ability to connect with others.[8]
+                Career[edit source | editbeta]
+
+                Record business[edit source | editbeta]
+
+                This section needs additional citations for verification. Please help improve this article by adding
+                citations to reliable sources. Unsourced material may be challenged and removed. (May 2010)
+                Richard Branson started his record business from the crypt of a church where he ran The Student. Branson
+                advertised popular records in The Student Magazine and it was an overnight success. Trading under the
+                name "Virgin", he sold records for considerably less than the "High Street" outlets, especially the
+                chain W. H. Smith. Branson once said, "There is no point in starting your own business unless you do it
+                out of a sense of frustration." The name "Virgin" was suggested by one of Branson's early employees
+                because they were all new at business.[9] At the time, many products were sold under restrictive
+                marketing agreements that limited discounting, despite efforts in the 1950s and 1960s to limit so-called
+                resale price maintenance.[10] In effect, Branson began the series of changes that led to large-scale
+                discounting of recorded music.
+                Branson eventually started a record shop in Oxford Street in London. In 1971, Branson was questioned in
+                connection with the selling of records in Virgin stores that had been declared export stock. The matter
+                was never brought before a court and Branson agreed to repay any unpaid tax and a fine. Branson's
+                mother, Eve, re-mortgaged the family home to help pay the settlement.[9]
+                Earning enough money from his record store, Branson in 1972 launched the record label Virgin Records
+                with Nik Powell and bought a country estate, in which he installed a recording studio. He leased out
+                studio time to fledgling artists, including multi-instrumentalist Mike Oldfield, whose debut album
+                Tubular Bells (1973) was Virgin Records' first release and a chart-topping best-seller.
+                Virgin signed such controversial bands as the Sex Pistols, which other companies were reluctant to sign.
+                It also won praise for exposing the public to such obscure avant-garde music as Faust and Can. Virgin
+                Records also introduced Culture Club to the music world. In the early 1980s, Virgin purchased the gay
+                nightclub Heaven. In 1991, in a consortium with David Frost, Richard Branson had made the unsuccessful
+                bid for three ITV franchisees under the CPV-TV name. The early 1980s also saw his only attempt as a
+                producer—on the novelty record "Baa, Baa, Black Sheep", by Singing Sheep in association with Doug McLean
+                and Grace McDonald. The recording was a series of sheep baaing along to a drum machine produced track
+                and even made the charts at number 42 in 1982.
+                In 1992, to keep his airline company afloat, Branson sold the Virgin label to EMI for £500 million.[11]
+                Branson says that he wept when the sale was completed since the record business had been the birth of
+                the Virgin Empire. He later created V2 Records to re-enter the music business.[12]
+                Business ventures[edit source | editbeta]
+                Main article: Timeline of Richard Branson's business ventures
+                Branson formed Virgin Atlantic Airways in 1984, launched Virgin Mobile in 1999, Virgin Blue in Australia
+                (now named Virgin Australia) in 2000. He was 9th in the Sunday Times Rich List 2006, worth just over £3
+                billion. Branson wrote in his autobiography of the decision to start an airline:
+                My interest in life comes from setting myself huge, apparently unachievable challenges and trying to
+                rise above them ... from the perspective of wanting to live life to the full, I felt that I had to
+                attempt it.
+                In 1993, Branson took what many saw as being one of his riskier business exploits by entering into the
+                railway business. Virgin Trains won the franchises for the former Intercity West Coast and Cross-Country
+                sectors of British Rail.
+                Virgin acquired European short-haul airline Euro Belgian Airlines in 1996 and renamed it Virgin Express.
+                In 2006, the airline was merged with SN Brussels Airlines forming Brussels Airlines. It also started a
+                national airline based in Nigeria, called Virgin Nigeria. Another airline, Virgin America, began flying
+                out of San Francisco International Airport in August 2007. Branson has also developed a Virgin Cola
+                brand and even a Virgin Vodka brand, which has not been a very successful enterprise. As a consequence
+                of these lacklustre performers, the satirical British fortnightly magazine Private Eye has been critical
+                of Branson and his companies (see Private Eye image caption).[13]
+                A series of disputes in the early 1990s caused tension between Virgin Atlantic and British Airways,
+                which viewed Virgin as an emerging competitor. Virgin subsequently accused British Airways of poaching
+                its passengers, hacking into its computers and leaking stories to the press that portrayed Virgin in a
+                negative light. After the so-called campaign of "dirty tricks", British Airways settled the case, giving
+                £500,000 to Branson and a further £110,000 to his airline and had to pay legal fees of up to £3 million.
+                Branson divided his compensation (the so-called "BA bonus") among his staff.[14]
+                On 25 September 2004, Branson announced the signing of a deal under which a new space tourism company,
+                Virgin Galactic, will license the technology behind Spaceship One—funded by Microsoft co-founder Paul
+                Allen and designed by legendary American aeronautical engineer and visionary Burt Rutan—to take paying
+                passengers into suborbital space. Virgin Galactic (wholly owned by Virgin Group) plans to make flights
+                available to the public with tickets priced at US$200,000 using Scaled Composites White Knight Two.
+                Branson's next venture with the Virgin group is Virgin Fuels, which is set to respond to global warming
+                and exploit the recent spike in fuel costs by offering a revolutionary, cheaper fuel for automobiles
+                and, in the near future, aircraft. Branson has stated that he was formerly a global warming sceptic and
+                was influenced in his decision by a breakfast meeting with Al Gore.[15]
+                Branson has been tagged as a "transformational leader" in the management lexicon, with his maverick
+                strategies and his stress on the Virgin Group as an organisation driven on informality and information,
+                one that is bottom-heavy rather than strangled by top-level management.
+                On 21 September 2006, Branson pledged to invest the profits of Virgin Atlantic and Virgin Trains in
+                research for environmentally friendly fuels. The investment is estimated to be worth $3 billion.[16][17]
+                On 4 July 2006, Branson sold his Virgin Mobile company to UK cable TV, broadband, and telephone company
+                NTL/NTL:Telewest for almost £1 billion. The new company was launched with much fanfare and publicity on
+                8 February 2007, under the name Virgin Media. The decision to merge his Virgin Media Company with NTL
+                was to integrate both of the companies' compatible parts of commerce. Branson used to own three-quarters
+                of Virgin Mobile, whereas now he owns 15 percent of the new Virgin Media company.[18]
+                In 2006, Branson formed Virgin Comics and Virgin Animation, an entertainment company focused on creating
+                new stories and characters for a global audience. The company was founded with author Deepak Chopra,
+                filmmaker Shekhar Kapur, and entrepreneurs Sharad Devarajan and Gotham Chopra.
+                Branson also launched the Virgin Health Bank on 1 February 2007, offering parents-to-be the opportunity
+                to store their baby's umbilical cord blood stem cells in private and public stem cell banks.
+                In June 2006, a tip-off from Virgin Atlantic led US and UK competition authorities to investigate
+                price-fixing attempts between Virgin Atlantic and British Airways. In August 2007, British Airways was
+                fined £271 million over the allegations. Virgin Atlantic was given immunity for tipping off the
+                authorities and received no fine—a controversial decision the Office of Fair Trading defended as being
+                in the public interest.[19]
+                On 9 February 2007, Branson announced the setting up of a new Global science and technology prize—The
+                Virgin Earth Challenge—in the belief that history has shown that prizes of this nature encourage
+                technological advancements for the good of mankind. The Virgin Earth Challenge will award $25 million to
+                the individual or group who are able to demonstrate a commercially viable design which will result in
+                the net removal of anthropogenic, atmospheric greenhouse gases each year for at least ten years without
+                countervailing harmful effects. This removal must have long-term effects and contribute materially to
+                the stability of the Earth's climate.
+                Branson also announced that he would be joined in the adjudication of the Prize by a panel of five
+                judges, all world authorities in their respective fields: Al Gore, Sir Crispin Tickell, Tim Flannery,
+                James E. Hansen, and James Lovelock. The panel of judges will be assisted in their deliberations by The
+                Climate Group and Special Advisor to The Virgin Earth Prize Judges, Steve Howard.
+            </div>
+
         </div>
 
     </div>
 </div>
-<script type="text/javascript" src="cordova.js"></script>
+<!--<script type="text/javascript" src="cordova.js"></script>-->
 <script src="js/jquery-2.0.3.min.js"></script>
 <script src="js/jquery.feeds.min.js"></script>
 <script src="./js/libs/modernizr-2.6.2.min.js"></script>
