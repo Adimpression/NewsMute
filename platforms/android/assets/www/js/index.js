@@ -80,20 +80,7 @@ var app = {
             DB = openDatabase('NewsMute', '1.0', 'News Mute Feed Entries', 2 * 1024 * 1024);
             DB.transaction(function (tx) {
                 tx.executeSql('CREATE TABLE IF NOT EXISTS Feed (url UNIQUE)');
-                tx.executeSql('SELECT * FROM Feed', [], function (tx, results) {
-                    try {
-                        var len = results.rows.length, i;
-                        alert(len);
-                        for (i = 0; i < len; i++) {
-                            alert(results.rows.item(i).url);
-                            $('#feedsList').html("<p><b>" + results.rows.item(i).url + "</b></p><hr/>");
-                        }
-                    } catch (e) {
-                        alert(e);
-                    }
-                }, function (error) {
-                    alert(error)
-                });
+                updateFeedListFromDB();
                 $('#feedsList').slideDown();
                 $('#feedNowSpeaking').slideUp();
             });
@@ -111,74 +98,103 @@ var app = {
 
 var DB;
 
+function updateFeedListFromDB() {
+    try {
+        $('#feedsList').empty();
+        DB.transaction(function (tx) {
+            tx.executeSql('SELECT * FROM Feed', [], function (tx, results) {
+                try {
+                    var len = results.rows.length, i;
+                    var feedList = $('#feedsList');
+                    for (i = 0; i < len; i++) {
+                        feedList.append(feedList.add("<p><b id='" + 'feed' + i + "'>" + results.rows.item(i).url + "</b></p><hr/>"));
+                        $('#feed' + i).click(function (event) {
+                            try {
+                                $('#userFeed').val($('#' + event.target.id).text());
+                                $('#userFeed').text($('#' + event.target.id).text());
+                                //alert($('#' + event.target.id).text());
+                                $('#play').click();
+                            } catch (e) {
+                                alert(e);
+                            }
+                        })
+                    }
+                } catch (e) {
+                    alert(e);
+                }
+            }, function (error) {
+                alert(error)
+            });
+        });
+    } catch (e) {
+        alert(e);
+    }
+}
+
 function unspeakFeed() {
     speakFeedEntriesRecursivelyCurrentContinue = false;
     window.plugins.tts.stop();
+    $('#feedsList').show();
+    $('#feedNowSpeaking').hide();
 }
 
 var feedEntriesBeingReadIndex;//The index of the the feed item of the feed entries being read
 var feedEntriesNoModifyCurrent;//This should never be modified unless it is a new feed, and always being the currently being read feed
 var speechEngineState = -1;//-1 reflects the state has never being updated
 
-function speakFeed(rssFeedUrl) {
+function processFeed(feed) {
+    var feedEntries = [];//Array of feed entries
 
+    $('#feed').feeds({
+        feeds: {
+            feed1: feed
+        },
+        preprocess: function (e) {
+            try {
+                $('#feedNowSpeaking').text('Still preparing your news. About to read them....');
+                feedEntries.push(this.title + " - " + this.content);
+            } catch (error) {
+                alert(error);
+            }
+        },
+        onComplete: function () {
+            try {
+                $('#feedNowSpeaking').text('Done preparing your news. About to read ' + feedEntries.length + ' items....');
+                if (feedEntries.length > 0) {//i.e. feed fetch successful
+                    DB.transaction(function (tx) {
+                        tx.executeSql('INSERT OR IGNORE INTO Feed (url) VALUES (?)', [feed], function (success) {
+                            updateFeedListFromDB();
+                        }, function (error) {
+                            alert(error);
+                        });
+                    });
+                }
+                feedEntriesBeingReadIndex = 0;
+                feedEntriesNoModifyCurrent = feedEntries;
+                speakFeedEntriesRecursively(feedEntries, feedEntriesBeingReadIndex);
+            } catch (e) {
+                alert(e);
+            }
+        }
+    });
+}
+
+function speakFeed(rssFeedUrl) {
     try {
         window.plugins.tts.speak("Reading your news!", function (arg) {
             discoverFeedUrlFor(rssFeedUrl.replace(/\s+/g, ''))//We replace all spaces since a user can type something like Facebook.com which ends up with spaces in the end
                 .done(function (data) {
                     $('#feedNowSpeaking').text('Got data from your website. Preparing them...');
-                    var feedEntries = [];//Array of feed entries
                     feedEntriesNoModifyCurrent = [];
-                    alert(JSON.stringify(data))
-
+                    //alert(JSON.stringify(data));
                     if (!!data.responseData) {
-                        var feedUrl = data.responseData.entries[0].url;
-                        var feed = feedUrl;//'http://feeds.feedburner.com/techcrunch/social?format=xml';
-
-                        $('#feed').feeds({
-                            feeds: {
-                                feed1: feed
-                            },
-                            preprocess: function (e) {
-                                try {
-                                    $('#feedNowSpeaking').text('Still preparing your news. About to read them....');
-                                    feedEntries.push(this.title + " - " + this.content);
-                                } catch (error) {
-                                    alert(error);
-                                }
-                            },
-                            onComplete: function () {
-                                try {
-                                    $('#feedNowSpeaking').text('Done preparing your news. About to read ' + feedEntries.length + ' items....');
-                                    if (feedEntries.length > 0) {//i.e. feed fetch successful
-                                        DB.transaction(function (tx) {
-                                            tx.executeSql('INSERT INTO Feed (url) VALUES (?)', [feedUrl], function (success) {
-                                                alert(success)
-                                                tx.executeSql('SELECT * FROM Feed', [], function (tx, results) {
-                                                    var len = results.rows.length, i;
-                                                    alert('len');
-                                                    for (i = 0; i < len; i++) {
-                                                        $('#feedsList').add("<p><b>" + results.rows.item(i).url + "</b></p><hr/>");
-                                                    }
-                                                }, function (error) {
-                                                    alert(error)
-                                                });
-                                            }, function (error) {
-                                                error
-                                            });
-                                        });
-                                    }
-                                    //$('#feedNowSpeaking').slideDown();
-                                    //$('#feedsList').slideUp();
-
-                                    feedEntriesBeingReadIndex = 0;
-                                    feedEntriesNoModifyCurrent = feedEntries;
-                                    speakFeedEntriesRecursively(feedEntries, feedEntriesBeingReadIndex);
-                                } catch (e) {
-                                    alert(e);
-                                }
-                            }
-                        });
+                        //alert(data.responseData.entries.length);
+                        if (data.responseData.entries.length == 0) {
+                            processFeed(rssFeedUrl);
+                        } else {
+                            var feedUrl = data.responseData.entries[0].url;
+                            processFeed(feedUrl);
+                        }
                     } else {
                         alert(queryResult);
                     }
@@ -270,6 +286,8 @@ function speakFeedEntriesRecursively(feedEntries, feedEntriesBeingReadIndex) {
         if (feedEntries.length - 1 >= feedEntriesBeingReadIndex) {
             $('#feedNowSpeaking').empty();
             $('#feedNowSpeaking').html(feedEntries[feedEntriesBeingReadIndex]);
+            $('#feedNowSpeaking').show();
+            $('#feedsList').hide();
             speakFeedEntriesRecursivelyCurrentCompleted = false;
             window.plugins.tts.speak(feedEntries[feedEntriesBeingReadIndex],
                 function (arg) {
@@ -280,6 +298,8 @@ function speakFeedEntriesRecursively(feedEntries, feedEntriesBeingReadIndex) {
                     }
                     if (speakFeedEntriesRecursivelyCurrentContinue) {
                         speakFeedEntriesRecursively(feedEntries, feedEntriesBeingReadIndex);
+                    } else {
+                        speakFeedEntriesRecursivelyCurrentContinue = true;//We end by resetting this. No better place to do this
                     }
                 }, function (arg) {
                     alert(arg);
@@ -292,9 +312,17 @@ function speakFeedEntriesRecursively(feedEntries, feedEntriesBeingReadIndex) {
 
 var discoverFeedUrlFor = function (pageURL) {
     try {
+//        if (pageURL.indexOf('https') != -1) {
+//            pageURL = pageURL.substring(8, pageURL.length);
+//            alert(pageURL);
+//        }
+//        if (pageURL.indexOf('http') > -1) {
+//            pageURL = pageURL.substring(7, pageURL.length);
+//            alert(pageURL);
+//        }
         var baseApiUrl = "http://ajax.googleapis.com/ajax/services/feed/find?v=1.0";
         var jQueryJsonpToken = "&callback=?"; // tells jQuery to treat it as JSONP request
-        var pageUrlParameter = "&q=site:" + pageURL;
+        var pageUrlParameter = "&q=site:" + pageURL.replace(/^https?:\/\//, '').replace(/^http?:\/\//, '');
         var requestUrl = baseApiUrl + jQueryJsonpToken + pageUrlParameter;
         var JSON = $.getJSON(requestUrl);
         return  JSON;
