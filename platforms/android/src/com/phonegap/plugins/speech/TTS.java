@@ -72,7 +72,14 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
                             if (isReady()) {
                                 final HashMap<String, String> map = new HashMap<String, String>();
                                 map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, callbackContext.getCallbackId());
-                                mTts.speak(text, TextToSpeech.QUEUE_ADD, map);
+                                //@TODO: Loop instead. we could get 14,000 and 4000 is the limit afaik
+                                if(text.length() > 3000){
+                                    mTts.speak(text.substring(0, 3000), TextToSpeech.QUEUE_FLUSH, null);
+                                    //I remember as a child reading out loud "Father" as "Fat her". My mom used to laugh. She still can!
+                                    mTts.speak(text.substring(3001, text.length() - 1), TextToSpeech.QUEUE_ADD, map);
+                                } else {
+                                    mTts.speak(text, TextToSpeech.QUEUE_FLUSH, map);
+                                }
                                 state = TTS.SPEAKING;
                                 PluginResult pr = new PluginResult(PluginResult.Status.NO_RESULT);
                                 pr.setKeepCallback(true);
@@ -285,14 +292,6 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
         }
 
     /**
-     * @return If the TTS service ready to play yet or not
-     */
-    private boolean isReady() {
-        Log.d(LOG_TAG, "isReady");
-        return (state == TTS.STARTED || state == TTS.SPEAKING);
-    }
-
-    /**
      * Clean up the TTS resources
      */
     public void onDestroy() {
@@ -300,6 +299,14 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
             mTts.shutdown();
             state = TTS.STOPPED;
         }
+    }
+
+    /**
+     * @return If the TTS service ready to play yet or not
+     */
+    private boolean isReady() {
+        Log.d(LOG_TAG, "isReady");
+        return (state == TTS.STARTED || state == TTS.SPEAKING);
     }
 
     /**
