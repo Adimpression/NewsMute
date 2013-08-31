@@ -76,24 +76,24 @@ var app = {
     onDeviceReady: function () {
         app.receivedEvent('deviceready');
         try {
-            $('#userFeed').focus();
+            $userFeed.focus();
             DB = openDatabase('NewsMute', '1.0', 'News Mute Feed Entries', 2 * 1024 * 1024);
             DB.transaction(function (tx) {
                 tx.executeSql('CREATE TABLE IF NOT EXISTS Feed (url UNIQUE)');
                 updateFeedListFromDB();
-                $('#feedsList').slideDown();
-                $('#feedNowSpeaking').slideUp();
+                $feedsList.slideDown();
+                $feedNowSpeaking.slideUp();
             });
 
 
             document.addEventListener("touchstart", function () {
-                $(".bar").each(function (i) {
+                $$bar.each(function (i) {
                     unfluctuate($(this));
                 });
             }, false);
             document.addEventListener("touchend", function () {
                 if (speechEngineState == 3) {
-                    $(".bar").each(function (i) {
+                    $$bar.each(function (i) {
                         fluctuate($(this));
                     });
                 }
@@ -115,18 +115,18 @@ var DB;
 
 function updateFeedListFromDB() {
     try {
-        $('#feedsList').empty();
+        $feedsList.empty();
         DB.transaction(function (tx) {
             tx.executeSql('SELECT * FROM Feed', [], function (tx, results) {
                 try {
                     var len = results.rows.length, i;
-                    var feedList = $('#feedsList');
+                    var feedList = $feedsList;
                     for (i = 0; i < len; i++) {
                         feedList.append(feedList.add("<p><b id='" + 'feed' + i + "'>" + results.rows.item(i).url + "</b></p><hr style='color:#00beff; background-color: #00beff; border-color: #00beff;'/>"));
                         $('#feed' + i).click(function (event) {
                             try {
-                                $('#userFeed').val($('#' + event.target.id).text());
-                                $('#userFeed').text($('#' + event.target.id).text());
+                                $userFeed.val($('#' + event.target.id).text());
+                                $userFeed.text($('#' + event.target.id).text());
                                 //alert($('#' + event.target.id).text());
                                 $('#play').click();
                             } catch (e) {
@@ -150,10 +150,10 @@ function unspeakFeed() {
     speakFeedEntriesRecursivelyCurrentContinue = false;
     window.plugins.tts.stop();
     speechEngineState = 2;
-    $('#feedsList').show();
-    $('#feedNowSpeaking').hide();
+    $feedsList.show();
+    $feedNowSpeaking.hide();
 
-    $(".bar").each(function (i) {
+    $$bar.each(function (i) {
         unfluctuate($(this));
     });
 }
@@ -177,7 +177,7 @@ function processFeed(feed) {
         },
         preprocess: function (e) {
             try {
-                $('#feedNowSpeaking').text('Still preparing your news. About to read them....');
+                $feedNowSpeaking.text('Still preparing your news. About to read them....');
                 feedEntries.push(this.title + " - " + this.content);
             } catch (error) {
                 alert(error);
@@ -185,7 +185,7 @@ function processFeed(feed) {
         },
         onComplete: function () {
             try {
-                $('#feedNowSpeaking').text('Done preparing your news. About to read ' + feedEntries.length + ' items....');
+                $feedNowSpeaking.text('Done preparing your news. About to read ' + feedEntries.length + ' items....');
                 if (feedEntries.length > 0) {//i.e. feed fetch successful
                     DB.transaction(function (tx) {
                         tx.executeSql('INSERT OR IGNORE INTO Feed (url) VALUES (?)', [feed], function (success) {
@@ -210,7 +210,7 @@ function speakFeed(rssFeedUrl) {
         window.plugins.tts.speak("Reading your news!", function (arg) {
             discoverFeedUrlFor(rssFeedUrl.replace(/\s+/g, ''))//We replace all spaces since a user can type something like Facebook.com which ends up with spaces in the end
                 .done(function (data) {
-                    $('#feedNowSpeaking').text('Got data from your website. Preparing them...');
+                    $feedNowSpeaking.text('Got data from your website. Preparing them...');
                     feedEntriesNoModifyCurrent = [];
                     //alert(JSON.stringify(data));
                     if (!!data.responseData) {
@@ -328,20 +328,25 @@ function speakFeedEntriesNext() {
 var speakFeedEntriesRecursivelyCurrentCompleted = false;
 var speakFeedEntriesRecursivelyCurrentContinue = true;
 
+var $feedNowSpeaking = $('#feedNowSpeaking');
+var $feedsList = $('#feedsList');
+var $$bar = $('.bar');
+var $userFeed = $('#userFeed');
+
 function speakFeedEntriesRecursively(feedEntries, feedEntriesBeingReadIndex) {
     try {
         if (feedEntries.length - 1 >= feedEntriesBeingReadIndex) {
-            $('#feedNowSpeaking').empty();
-            $('#feedNowSpeaking').html(feedEntries[feedEntriesBeingReadIndex]);
+            $feedNowSpeaking.empty();
+            $feedNowSpeaking.html(feedEntries[feedEntriesBeingReadIndex]);
 
-           // readability.init($('#feedNowSpeaking').get(0));
+            // readability.init($feedNowSpeaking.get(0));
 
-            $('#feedNowSpeaking').show();
-            $('#feedsList').hide();
+            $feedNowSpeaking.show();
+            $feedsList.hide();
 
             speechEngineState = 3;
 
-            $(".bar").each(function (i) {
+            $$bar.each(function (i) {
                 fluctuate($(this));
             });
 
