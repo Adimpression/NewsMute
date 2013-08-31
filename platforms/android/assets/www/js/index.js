@@ -86,17 +86,17 @@ var app = {
             });
 
 
-            document.addEventListener("touchstart", function(){
-                $(".bar").each(function(i) {
+            document.addEventListener("touchstart", function () {
+                $(".bar").each(function (i) {
                     unfluctuate($(this));
                 });
             }, false);
-            document.addEventListener("touchend", function(){
-                updatesSpeechEngineStateStart();
-                while (speechEngineState == 2) {
-                    fluctuate($(this));
+            document.addEventListener("touchend", function () {
+                if (speechEngineState == 3) {
+                    $(".bar").each(function (i) {
+                        fluctuate($(this));
+                    });
                 }
-                updatesSpeechEngineStateStop();
             }, false);
 
             window.plugins.tts.startup(function (arg) {
@@ -149,17 +149,24 @@ function updateFeedListFromDB() {
 function unspeakFeed() {
     speakFeedEntriesRecursivelyCurrentContinue = false;
     window.plugins.tts.stop();
+    speechEngineState = 2;
     $('#feedsList').show();
     $('#feedNowSpeaking').hide();
 
-    $(".bar").each(function(i) {
+    $(".bar").each(function (i) {
         unfluctuate($(this));
     });
 }
 
 var feedEntriesBeingReadIndex;//The index of the the feed item of the feed entries being read
 var feedEntriesNoModifyCurrent;//This should never be modified unless it is a new feed, and always being the currently being read feed
-var speechEngineState = -1;//-1 reflects the state has never being updated
+
+/**
+ * STOPPED = 0 INITIALIZING = 1 STARTED = 2 SPEAKING = 3
+ * -1 reflects the state has never being updated.
+ * @type {number}
+ */
+var speechEngineState = -1;
 
 function processFeed(feed) {
     var feedEntries = [];//Array of feed entries
@@ -251,6 +258,27 @@ function updatesSpeechEngineStateStop() {
     }
 }
 
+function runAfterIfSpeechEngineState(whatToRun, runAfter, speechEngineStateValue) {
+    try {
+        updatesSpeechEngineState();
+        var checkSpeechEngineState = function (successFunction, testValue) {
+            try {
+                if (speechEngineState == testValue) {
+                    alert('realized');
+                    successFunction();
+                } else {
+                    alert(speechEngineState);
+                }
+            } catch (e) {
+                alert(e);
+            }
+        };
+        setTimeout("checkSpeechEngineState(whatToRun, speechEngineStateValue)", runAfter);
+    } catch (e) {
+        alert(e);
+    }
+}
+
 function speakFeedEntriesPrevious() {
     try { //We decrement the feed's feedEntriesBeingReadIndex by one. We avoid doing so if it is 0 being read
         if (feedEntriesNoModifyCurrent.length > 2 && feedEntriesBeingReadIndex != 0) {
@@ -308,8 +336,9 @@ function speakFeedEntriesRecursively(feedEntries, feedEntriesBeingReadIndex) {
             $('#feedNowSpeaking').show();
             $('#feedsList').hide();
 
+            speechEngineState = 3;
 
-            $(".bar").each(function(i) {
+            $(".bar").each(function (i) {
                 fluctuate($(this));
             });
 
@@ -317,6 +346,7 @@ function speakFeedEntriesRecursively(feedEntries, feedEntriesBeingReadIndex) {
             window.plugins.tts.speak(feedEntries[feedEntriesBeingReadIndex],
                 function (arg) {
 //                    alert('Completed reading this entry');
+                    speechEngineState = 2;
                     speakFeedEntriesRecursivelyCurrentCompleted = true;
                     if (feedEntries.length - 1 >= feedEntriesBeingReadIndex) {
                         feedEntriesBeingReadIndex++;
@@ -364,12 +394,12 @@ function fluctuate(bar) {
 
     bar.animate({
         height: hgt
-    }, t, function() {
+    }, t, function () {
         fluctuate($(this));
     });
 }
 
 function unfluctuate(bar) {
     bar.stop();
-    bar.css("height","15px");
+    bar.css("height", "15px");
 }

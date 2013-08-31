@@ -144,10 +144,11 @@ cordova.define("cordova/plugin/tts",
          return exec(successCallback, errorCallback, "TTS", "setLanguage", [lang]);
     };
     /**
-     * Sets the TTS service state
+     * Returns the TTS service state
+     *
      *
      * @param {DOMString} lang
-     * @param {Object} successCallback
+     * @param {Object} successCallback STOPPED = 0 INITIALIZING = 1 STARTED = 2 SPEAKING = 3
      * @param {Object} errorCallback
      */
     TTS.prototype.getState = function(successCallback, errorCallback) {

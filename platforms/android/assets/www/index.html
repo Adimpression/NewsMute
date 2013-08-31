@@ -7,22 +7,36 @@
     <link rel="stylesheet" type="text/css" href="css/layout.css"/>
     <title>News Mute</title>
     <link type="text/css" rel="stylesheet" href="./css/groundwork.css">
+    <style type="text/css">
+        .active {
+            color:deeppink;
+        }
+        .invert_active {
+            background-color:deeppink;
+        }
+        .active_bg{
+            background-color: #4a3440;
+        }
+        .invert_active_bg{
+            color: #00384a;
+        }
+    </style>
 </head>
 <!-- Let's keep the style of the body simple. Just the laying out. -->
-<body style="width: 100%; height: 100%; overflow:hidden; background-color: #000000;">
+<body style="width: 100%; height: 100%; overflow:hidden; background-color: #ffffff;">
 <div class="container bordered"
-     style="background-color: #000000;border: 5px #0096ce;width: 100%; height: 100%;">
+     style="background-color: #ffffff;border: 5px #0096ce;width: 100%; height: 100%;">
     <div class="use100" style="height: 62%;">
         <!-- This is the second half of the page, used for viewing items, and showing the playlist-->
-        <div class="use100" style="border: 5px solid #00beff;border-radius: 10px;height: 100%;padding: 1">
-            <div class="use100" id="feed"
-                 style="display:none; background-color: #00384a;color: #0096ce; font-size: 30px;line-height: 116%;overflow: scroll; height: 100%; padding: 2%;">
+        <div class="use100 active" style="border: 5px solid ;border-radius: 10px;height: 100%;padding: 1">
+            <div class="use100 active" id="feed"
+                 style="display:none;  font-size: 30px;line-height: 116%;overflow: scroll; height: 100%; padding: 2%;">
             </div>
-            <div class="use100" id="feedNowSpeaking"
-                 style="display:none; background-color: #00384a;color: #0096ce; font-size: 30px;line-height: 116%;overflow: scroll; height: 100%; padding: 2%;">
+            <div class="use100 active active_bg" id="feedNowSpeaking"
+                 style="display:none;font-size: 30px;line-height: 116%;overflow: scroll; height: 100%; padding: 2%;">
             </div>
-            <div class="use100" id="feedsList"
-                 style="display:block; background-color: #00384a;color: #0096ce; font-size: 30px;line-height: 116%;overflow: scroll; height: 100%; padding: 2%;">
+            <div class="use100 active active_bg" id="feedsList"
+                 style="display:block; font-size: 30px;line-height: 116%;overflow: scroll; height: 100%; padding: 2%;">
             </div>
         </div>
 
@@ -32,15 +46,15 @@
         <div class="use100 padded" style="height: 100%;overflow: hidden;">
             <div class="use100" style="height: 25%; overflow: hidden;">
                 <div class="eq use100 center" style="vertical-align: bottom;height: 100%;overflow: hidden;">
-                    <span class="bar" style="vertical-align: bottom;"></span>
-                    <span class="bar" style="vertical-align: bottom;"></span>
-                    <span class="bar" style="vertical-align: bottom;"></span>
-                    <span class="bar" style="vertical-align: bottom;"></span>
-                    <span class="bar" style="vertical-align: bottom;"></span>
-                    <span class="bar" style="vertical-align: bottom;"></span>
-                    <span class="bar" style="vertical-align: bottom;"></span>
-                    <span class="bar" style="vertical-align: bottom;"></span>
-                    <span class="bar" style="vertical-align: bottom;"></span>
+                    <span class="bar invert_active" style="vertical-align: bottom;"></span>
+                    <span class="bar invert_active" style="vertical-align: bottom;"></span>
+                    <span class="bar invert_active" style="vertical-align: bottom;"></span>
+                    <span class="bar invert_active" style="vertical-align: bottom;"></span>
+                    <span class="bar invert_active" style="vertical-align: bottom;"></span>
+                    <span class="bar invert_active" style="vertical-align: bottom;"></span>
+                    <span class="bar invert_active" style="vertical-align: bottom;"></span>
+                    <span class="bar invert_active" style="vertical-align: bottom;"></span>
+                    <span class="bar invert_active" style="vertical-align: bottom;"></span>
                 </div>
             </div>
             <div class="use100" style="height: 5%;overflow: hidden;">
@@ -49,37 +63,34 @@
             <div class="use100" style="height: 70%;overflow: hidden;">
                 <div class="one userFeedSection" style="height: 40%;">
                     <label>
-                        <input type="text" value="" class="use100"
-                               style="height: 100%; font-size: 3em; padding: 0; text-align: center; border: 10px #0096ce;background-color: #00384a;color: #0096ce;"
+                        <input type="text" value="" class="use100 active active_bg"
+                               style="height: 100%; font-size: 3em; padding: 0; text-align: center; border: 5px solid;"
                                placeholder="Website/Feed link goes here. e.g. fox news . com" id="userFeed"/>
                     </label>
                 </div>
                 <div class="one" style="height: 60%;">
                     <div class="use25 center cursor_pointer"
                          onclick="javascript:speakFeedEntriesPrevious();">
-                        <h2 class="responsive success" data-compression="6" data-max="60" data-min="40"
-                            style="color: #00beff;"><i
+                        <h2 class="responsive success active" data-compression="6" data-max="60" data-min="40"><i
                                 class="icon-fast-backward"></i></h2>
                     </div>
                     <div class="use50">
                         <div class="half center cursor_pointer"
                              id="play"
                              onclick="javascript:$('.userFeedSection').slideUp();speakFeed($('#userFeed').val());">
-                            <h2 class="responsive success" data-compression="6" data-max="60" data-min="40"
-                                style="color: #00beff;">
+                            <h2 class="responsive success active" data-compression="6" data-max="60" data-min="40" >
                                 <i class="icon-play-sign"></i> PLAY</h2>
                         </div>
                         <div class="half center cursor_pointer"
                              onclick="javascript:$('.userFeedSection').slideDown();unspeakFeed();">
-                            <h2 class="responsive" data-compression="6" data-max="60" data-min="40"
-                                style="color: #00beff;">
+                            <h2 class="responsive active" data-compression="6" data-max="60" data-min="40">
                                 <i class="icon-stop"></i> STOP</h2>
                         </div>
                     </div>
                     <div class="use25 center cursor_pointer"
                          onclick="javascript:speakFeedEntriesNext();">
-                        <h2 class="responsive success" data-compression="6" data-max="60" data-min="40"
-                            style="color: #00beff;"><i class="icon-fast-forward"></i></h2>
+                        <h2 class="responsive success active" data-compression="6" data-max="60" data-min="40">
+                            <i class="icon-fast-forward"></i></h2>
                     </div>
                 </div>
             </div>
