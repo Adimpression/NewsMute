@@ -333,6 +333,9 @@ function speakFeedEntriesRecursively(feedEntries, feedEntriesBeingReadIndex) {
         if (feedEntries.length - 1 >= feedEntriesBeingReadIndex) {
             $('#feedNowSpeaking').empty();
             $('#feedNowSpeaking').html(feedEntries[feedEntriesBeingReadIndex]);
+
+           // readability.init($('#feedNowSpeaking').get(0));
+
             $('#feedNowSpeaking').show();
             $('#feedsList').hide();
 
@@ -343,7 +346,9 @@ function speakFeedEntriesRecursively(feedEntries, feedEntriesBeingReadIndex) {
             });
 
             speakFeedEntriesRecursivelyCurrentCompleted = false;
-            window.plugins.tts.speak(feedEntries[feedEntriesBeingReadIndex],
+            //http://css-tricks.com/snippets/javascript/strip-html-tags-in-javascript/
+            var readableText = feedEntries[feedEntriesBeingReadIndex].replace(/(<([^>]+)>)/ig, "");
+            window.plugins.tts.speak(readableText,
                 function (arg) {
 //                    alert('Completed reading this entry');
                     speechEngineState = 2;
