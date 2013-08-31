@@ -84,6 +84,17 @@ var app = {
                 $('#feedsList').slideDown();
                 $('#feedNowSpeaking').slideUp();
             });
+
+
+            document.addEventListener("touchstart", function(){
+                $(".bar").each(function(i) {
+                    unfluctuate($(this));
+                });
+            }, false);
+            document.addEventListener("touchend", function(){
+
+            }, false);
+
             window.plugins.tts.startup(function (arg) {
             }, function (arg) {
             });
@@ -107,7 +118,7 @@ function updateFeedListFromDB() {
                     var len = results.rows.length, i;
                     var feedList = $('#feedsList');
                     for (i = 0; i < len; i++) {
-                        feedList.append(feedList.add("<p><b id='" + 'feed' + i + "'>" + results.rows.item(i).url + "</b></p><hr/>"));
+                        feedList.append(feedList.add("<p><b id='" + 'feed' + i + "'>" + results.rows.item(i).url + "</b></p><hr style='color:#00beff; background-color: #00beff; border-color: #00beff;'/>"));
                         $('#feed' + i).click(function (event) {
                             try {
                                 $('#userFeed').val($('#' + event.target.id).text());
@@ -136,6 +147,10 @@ function unspeakFeed() {
     window.plugins.tts.stop();
     $('#feedsList').show();
     $('#feedNowSpeaking').hide();
+
+    $(".bar").each(function(i) {
+        unfluctuate($(this));
+    });
 }
 
 var feedEntriesBeingReadIndex;//The index of the the feed item of the feed entries being read
@@ -288,6 +303,12 @@ function speakFeedEntriesRecursively(feedEntries, feedEntriesBeingReadIndex) {
             $('#feedNowSpeaking').html(feedEntries[feedEntriesBeingReadIndex]);
             $('#feedNowSpeaking').show();
             $('#feedsList').hide();
+
+
+            $(".bar").each(function(i) {
+                fluctuate($(this));
+            });
+
             speakFeedEntriesRecursivelyCurrentCompleted = false;
             window.plugins.tts.speak(feedEntries[feedEntriesBeingReadIndex],
                 function (arg) {
@@ -330,3 +351,21 @@ var discoverFeedUrlFor = function (pageURL) {
         alert(e);
     }
 };
+
+
+function fluctuate(bar) {
+    var hgt = Math.random() * 100;
+    hgt += 1;
+    var t = hgt * 5;
+
+    bar.animate({
+        height: hgt
+    }, t, function() {
+        fluctuate($(this));
+    });
+}
+
+function unfluctuate(bar) {
+    bar.stop();
+    bar.css("height","15px");
+}

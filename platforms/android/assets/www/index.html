@@ -9,18 +9,17 @@
     <link type="text/css" rel="stylesheet" href="./css/groundwork.css">
 </head>
 <!-- Let's keep the style of the body simple. Just the laying out. -->
-<body style="width: 100%; height: 100%; overflow:hidden;">
-<div class="container">
+<body style="width: 100%; height: 100%; overflow:hidden; background-color: #000000;">
+<div class="container bordered" style="background-color: #000000;border-color: #0096ce;border-width: 5px;width: 100%; height: 100%;">
     <div class="one" style="height: 38%;">
         <!-- This is the first half of the page, used for controlling items, URL, play/pause, stop, next, previous-->
         <div class="one padded">
-            <div class="one">
-            </div>
             <div class="use100" style="height: 10px;">
             </div>
             <div class="one userFeedSection">
                 <label>
-                    <input type="text" value="" class="use100" style="height: 70px; font-size: 40px;text-align: center;"
+                    <input type="text" value="" class="use100"
+                           style="height: 70px; font-size: 40px;text-align: center;border: 10px #0096ce;background-color: #00384a;color: #0096ce;"
                            placeholder="Website/Feed link goes here. e.g. fox news . com" id="userFeed"/>
                 </label>
             </div>
@@ -29,49 +28,61 @@
             </div>
             <div class="one">
                 <div class="use25 center cursor_pointer"
-                        onclick="javascript:speakFeedEntriesPrevious();">
-                    <h2 class="responsive success" data-compression="6" data-max="60" data-min="40"><i
+                     onclick="javascript:speakFeedEntriesPrevious();">
+                    <h2 class="responsive success" data-compression="6" data-max="60" data-min="40"
+                        style="color: #00beff;"><i
                             class="icon-fast-backward"></i></h2>
                 </div>
                 <div class="use50">
                     <div class="half center cursor_pointer"
                          id="play"
                          onclick="javascript:$('.userFeedSection').slideUp();speakFeed($('#userFeed').val());">
-                        <h2 class="responsive success" data-compression="6" data-max="60" data-min="40"><i
-                                class="icon-play-sign"></i> PLAY</h2>
+                        <h2 class="responsive success" data-compression="6" data-max="60" data-min="40"
+                            style="color: #00beff;">
+                            <i class="icon-play-sign"></i> PLAY</h2>
                     </div>
                     <div class="half center cursor_pointer"
                          onclick="javascript:$('.userFeedSection').slideDown();unspeakFeed();">
-                        <h2 class="responsive error" data-compression="6" data-max="60" data-min="40"><i
-                                class="icon-stop"></i> STOP</h2>
+                        <h2 class="responsive" data-compression="6" data-max="60" data-min="40" style="color: #00beff;">
+                            <i class="icon-stop"></i> STOP</h2>
                     </div>
                 </div>
                 <div class="use25 center cursor_pointer"
-                        onclick="javascript:speakFeedEntriesNext();">
-                    <h2 class="responsive success" data-compression="6" data-max="60" data-min="40"><i
-                            class="icon-fast-forward"></i></h2>
+                     onclick="javascript:speakFeedEntriesNext();">
+                    <h2 class="responsive success" data-compression="6" data-max="60" data-min="40"
+                        style="color: #00beff;"><i class="icon-fast-forward"></i></h2>
+                </div>
+            </div>
+            <div class="use100">
+                <div class="eq use100 center">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
                 </div>
             </div>
         </div>
-
-
-    </div>
+=    </div>
 
 
     <div class="one" style="height: 62%;">
         <!-- This is the second half of the page, used for viewving items, and showing the playlist-->
 
-        <div class="use100" style="border: 5px solid #ffffff;border-radius: 10px;height: 100%;">
+        <div class="use100" style="border: 5px solid #00beff;border-radius: 10px;height: 100%;padding: 1">
             <div class="use100" id="feed"
-                 style="display:none; background-color: #ffffff; font-size: 30px;line-height: 116%;">
+                 style="display:none; background-color: #00384a;color: #0096ce; font-size: 30px;line-height: 116%;overflow: scroll; height: 100%; padding: 2%;">
             </div>
             <div class="use100" id="feedNowSpeaking"
-                 style="display:none; background-color: #ffffff; font-size: 30px;line-height: 116%;overflow: scroll; height: 100%; ">
+                 style="display:none; background-color: #00384a;color: #0096ce; font-size: 30px;line-height: 116%;overflow: scroll; height: 100%; padding: 2%;">
             </div>
             <div class="use100" id="feedsList"
-                 style="display:block; background-color: #ffffff; font-size: 30px;line-height: 116%;overflow: scroll; height: 100%; ">
+                 style="display:block; background-color: #00384a;color: #0096ce; font-size: 30px;line-height: 116%;overflow: scroll; height: 100%; padding: 2%;">
             </div>
-
         </div>
 
     </div>

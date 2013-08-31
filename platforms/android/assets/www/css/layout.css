@@ -1848,5 +1848,13 @@ div.jqi button.jqidefaultbutton{
     cursor:pointer;
 }
 
+.bar {
+    background-color: #00beff;
+    width:10%;
+    height:15px;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
 /* EO COMMON */
 
