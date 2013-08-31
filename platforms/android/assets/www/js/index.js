@@ -92,7 +92,11 @@ var app = {
                 });
             }, false);
             document.addEventListener("touchend", function(){
-
+                updatesSpeechEngineStateStart();
+                while (speechEngineState == 2) {
+                    fluctuate($(this));
+                }
+                updatesSpeechEngineStateStop();
             }, false);
 
             window.plugins.tts.startup(function (arg) {
