@@ -20,6 +20,10 @@
 package ai.newsmute;
 
 import android.os.Bundle;
+import android.widget.LinearLayout;
+import com.google.ads.AdRequest;
+import com.google.ads.AdSize;
+import com.google.ads.AdView;
 import org.apache.cordova.*;
 
 public class Main extends DroidGap
@@ -31,6 +35,19 @@ public class Main extends DroidGap
         // Set by <content src="index.html" /> in config.xml
         super.loadUrl(Config.getStartUrl());
         //super.loadUrl("file:///android_asset/www/index.html")
+
+        renderAdMobAds();
+    }
+
+    /**
+     * http://kineticsproject.com/phonegap-2-8-0-for-android-and-admob/
+     */
+    private void renderAdMobAds() {
+        final AdView adView = new AdView(this, AdSize.SMART_BANNER , "a15222c59b1f090");
+        final LinearLayout layout = super.root;
+        layout.addView(adView);
+        layout.setHorizontalGravity(android.view.Gravity.CENTER_HORIZONTAL); //This centers the ads in landscape mode.
+        adView.loadAd(new AdRequest());
     }
 }
 
