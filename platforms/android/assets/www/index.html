@@ -38,7 +38,7 @@
         <div class="use100">
             <input type="text" value="" class="use100 active"
                    style="height: 95%; font-size: 3em; text-align: center; border-width: 0; background-color: transparent;"
-                   onclick="javascript:$('.feedDataSection').slideUp();"
+                   onclick="javascript:$('.feedDataSection').hide();"
                    placeholder="Website/Feed link goes here. e.g. fox news . com" id="userFeed"/>
         </div>
     </div>
@@ -83,25 +83,25 @@
 
                 <div class="one" style="height: 100%;">
                     <div class="use25 center cursor_pointer"
-                         onclick="javascript:speakFeedEntriesPrevious(); $('.feedDataSection').slideDown();">
+                         onclick="javascript:speakFeedEntriesPrevious(); $('.feedDataSection').hide();">
                         <h2 class="responsive success active" data-compression="1" data-max="120" data-min="40">
                             <i class="icon-fast-backward"></i></h2>
                     </div>
                     <div class="use50">
                         <div class="half center cursor_pointer"
                              id="play"
-                             onclick="javascript:$('.userFeedSection').slideUp();$('.feedDataSection').slideDown();$('.feedDataSection').css('height','62%');speakFeed($('#userFeed').val());">
+                             onclick="javascript:$('.userFeedSection').hide();$('.feedDataSection').show();$('.feedDataSection').css('height','62%');speakFeed($('#userFeed').val());">
                             <h2 class="responsive success active" data-compression="1" data-max="120" data-min="40">
                                 <i class="icon-play-sign"></i></h2>
                         </div>
                         <div class="half center cursor_pointer"
-                             onclick="javascript:$('.userFeedSection').slideDown();$('.feedDataSection').slideDown();$('.feedDataSection').css('height','50%');unspeakFeed();">
+                             onclick="javascript:$('.userFeedSection').show();$('.feedDataSection').show();$('.feedDataSection').css('height','50%');unspeakFeed();">
                             <h2 class="responsive success active" data-compression="1" data-max="120" data-min="40">
                                 <i class="icon-stop"></i></h2>
                         </div>
                     </div>
                     <div class="use25 center cursor_pointer"
-                         onclick="javascript:speakFeedEntriesNext();$('.feedDataSection').slideDown();">
+                         onclick="javascript:speakFeedEntriesNext();$('.feedDataSection').show();">
                         <h2 class="responsive success active" data-compression="1" data-max="120" data-min="40">
                             <i class="icon-fast-forward"></i></h2>
                     </div>
