@@ -281,7 +281,7 @@ function runAfterIfSpeechEngineState(whatToRun, runAfter, speechEngineStateValue
 
 function speakFeedEntriesPrevious() {
     try { //We decrement the feed's feedEntriesBeingReadIndex by one. We avoid doing so if it is 0 being read
-        if (feedEntriesNoModifyCurrent.length > 2 && feedEntriesBeingReadIndex != 0) {
+        if (feedEntriesNoModifyCurrent && feedEntriesNoModifyCurrent.length > 2 && feedEntriesBeingReadIndex != 0) {
             //First we stop everything
             unspeakFeed();
 //            alert('Waiting forspeech stop');
@@ -305,7 +305,7 @@ function speakFeedEntriesPrevious() {
 
 function speakFeedEntriesNext() {
     try { //We increment the feed's feedEntriesBeingReadIndex by one, if it has that length;
-        if (feedEntriesNoModifyCurrent.length - 1 > feedEntriesBeingReadIndex) {
+        if (feedEntriesNoModifyCurrent && feedEntriesNoModifyCurrent.length - 1 > feedEntriesBeingReadIndex) {
             //First we stop everything
             unspeakFeed();
 //            alert('Waiting for speech stop');
