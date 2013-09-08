@@ -122,11 +122,13 @@ function updateFeedListFromDB() {
                     var len = results.rows.length, i;
                     var feedList = $feedsList;
                     for (i = 0; i < len; i++) {
-                        feedList.append(feedList.add("<p><b id='" + 'feed' + i + "'>" + results.rows.item(i).url + "</b></p><hr style='color:#00beff; background-color: #00beff; border-color: #00beff;'/>"));
+                        feedList.append(feedList.add("<div class='use10'>X</div><div class='use90' style='border-width: 2px; border-radius: 2px; border-color: #444444;'><b id='" + 'feed' + i + "'>" + results.rows.item(i).url + "</b></div>"));
                         $('#feed' + i).click(function (event) {
                             try {
-                                $userFeed.val($('#' + event.target.id).text());
-                                $userFeed.text($('#' + event.target.id).text());
+                                var feedItem = '#' + event.target.id;
+
+                                $userFeed.val($(feedItem).text());
+                                $userFeed.text($(feedItem).text());
                                 //alert($('#' + event.target.id).text());
                                 $('#play').click();
                             } catch (e) {
@@ -400,7 +402,7 @@ var discoverFeedUrlFor = function (pageURL) {
 function fluctuate(bar) {
     var hgt = Math.random() * 100;
     hgt += 1;
-    var t = hgt * 5;
+    var t = hgt * 0.5;
 
     bar.animate({
         height: hgt
