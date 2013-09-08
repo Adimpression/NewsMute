@@ -122,7 +122,7 @@ function updateFeedListFromDB() {
                     var len = results.rows.length, i;
                     var feedList = $feedsList;
                     for (i = 0; i < len; i++) {
-                        feedList.append(feedList.add("<div class='use10'>X</div><div class='use90' style='border-width: 2px; border-radius: 2px; border-color: #444444;'><b id='" + 'feed' + i + "'>" + results.rows.item(i).url + "</b></div>"));
+                        feedList.append(feedList.add("<div class='use100'  style='background-color:#444444;color: #ffffff; border-radius: 2px;'><div class='use10 center' id='" + 'Deletefeed' + i + "'>X</div><div class='use90'><b id='" + 'feed' + i + "'>" + results.rows.item(i).url + "</b></div></div>"));
                         $('#feed' + i).click(function (event) {
                             try {
                                 var feedItem = '#' + event.target.id;
@@ -131,6 +131,30 @@ function updateFeedListFromDB() {
                                 $userFeed.text($(feedItem).text());
                                 //alert($('#' + event.target.id).text());
                                 $('#play').click();
+                            } catch (e) {
+                                alert(e);
+                            }
+                        })
+
+                        $('#Deletefeed' + i).click(function (event) {
+                            try {
+                                try {
+                                    var feedItem = '#' + event.target.id;
+                                    feedItem = feedItem.substr(7, feedItem.length - 1);//7 = # and Delete...
+
+                                    var confirmed = confirm('Deleting:' + $('#' + feedItem).text());
+                                    if(confirmed){
+                                        DB.transaction(function (tx) {
+                                            tx.executeSql('DELETE FROM Feed WHERE url=?', [$('#' + feedItem).text()], function (success) {
+                                                updateFeedListFromDB();
+                                            }, function (error) {
+                                                alert(error);
+                                            });
+                                        });
+                                    }
+                                } catch (e) {
+                                    alert(e);
+                                }
                             } catch (e) {
                                 alert(e);
                             }
