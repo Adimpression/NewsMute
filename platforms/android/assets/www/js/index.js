@@ -80,6 +80,7 @@ var app = {
             DB = openDatabase('NewsMute', '1.0', 'News Mute Feed Entries', 2 * 1024 * 1024);
             DB.transaction(function (tx) {
                 tx.executeSql('CREATE TABLE IF NOT EXISTS Feed (url UNIQUE)');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS FeedTitle (url UNIQUE, title)');
                 updateFeedListFromDB();
                 $feedsList.slideDown();
                 $feedNowSpeaking.slideUp();
@@ -121,44 +122,68 @@ function updateFeedListFromDB() {
                 try {
                     var len = results.rows.length, i;
                     var feedList = $feedsList;
+
                     for (i = 0; i < len; i++) {
-                        feedList.append(feedList.add("<div class='use100'  style='background-color:#444444;color: #ffffff; border-radius: 2px;'><div class='use10 center' id='" + 'Deletefeed' + i + "'>X</div><div class='use90'><b id='" + 'feed' + i + "'>" + results.rows.item(i).url + "</b></div></div>"));
-                        $('#feed' + i).click(function (event) {
-                            try {
-                                var feedItem = '#' + event.target.id;
+                        (function(i){
+                            var feedTitle;
 
-                                $userFeed.val($(feedItem).text());
-                                $userFeed.text($(feedItem).text());
-                                //alert($('#' + event.target.id).text());
-                                $('#play').click();
-                            } catch (e) {
-                                alert(e);
-                            }
-                        })
+                            tx.executeSql('SELECT * FROM FeedTitle WHERE url=?', [results.rows.item(i).url], function (tx, titles) {
+                                feedTitle =  titles.rows.item(0).title;
 
-                        $('#Deletefeed' + i).click(function (event) {
-                            try {
-                                try {
-                                    var feedItem = '#' + event.target.id;
-                                    feedItem = feedItem.substr(7, feedItem.length - 1);//7 = # and Delete...
+                                feedList.append(feedList.add("<div class='use100'  style='background-color:#444444;color: #ffffff; border-radius: 2px;'><div class='use10 center' id='" + 'Deletefeed' + i + "'>X</div><div class='use90'><b id='" + 'feed' + i + "'>" + feedTitle + "</b><input id='" + 'URLfeed' + i + "' type='hidden' value='"+results.rows.item(i).url+"'/></div></div>"));
+                                $('#feed' + i).click(function (event) {
+                                    try {
+                                        var feedItem = '#' + event.target.id;
 
-                                    var confirmed = confirm('Deleting:' + $('#' + feedItem).text());
-                                    if(confirmed){
-                                        DB.transaction(function (tx) {
-                                            tx.executeSql('DELETE FROM Feed WHERE url=?', [$('#' + feedItem).text()], function (success) {
-                                                updateFeedListFromDB();
-                                            }, function (error) {
-                                                alert(error);
-                                            });
-                                        });
+                                        var URLfeed = '#URLfeed' + feedItem.substr(5, feedItem.length - 1);//7 = # and Delete...
+
+                                        //alert(URLfeed);
+
+                                        $userFeed.val($(URLfeed).val());
+                                        $userFeed.text($(URLfeed).val());
+
+                                        //alert($(URLfeed).val());
+
+                                        //alert($('#' + event.target.id).text());
+                                        $('#play').click();
+                                    } catch (e) {
+                                        alert(e);
                                     }
-                                } catch (e) {
-                                    alert(e);
-                                }
-                            } catch (e) {
-                                alert(e);
-                            }
-                        })
+                                })
+
+                                $('#Deletefeed' + i).click(function (event) {
+                                    try {
+                                        try {
+                                            var feedItem = '#' + event.target.id;
+                                            feedItem = feedItem.substr(7, feedItem.length - 1);//7 = # and Delete...
+
+                                            var confirmed = confirm('Remove:' + $('#' + feedItem).text());
+                                            if(confirmed){
+                                                DB.transaction(function (tx) {
+                                                    tx.executeSql('DELETE FROM Feed WHERE url=?', [$('#' + feedItem).text()], function (success) {
+                                                        updateFeedListFromDB();
+                                                    }, function (error) {
+                                                        alert(error);
+                                                    });
+                                                });
+                                                DB.transaction(function (tx) {
+                                                    tx.executeSql('DELETE FROM FeedTitle WHERE url=?', [$('#' + feedItem).text()], function (success) {
+                                                        updateFeedListFromDB();
+                                                    }, function (error) {
+                                                        alert(error);
+                                                    });
+                                                });
+                                            }
+                                        } catch (e) {
+                                            alert(e);
+                                        }
+                                    } catch (e) {
+                                        alert(e);
+                                    }
+                                })
+                            });
+                        })(i);
+
                     }
                 } catch (e) {
                     alert(e);
@@ -196,6 +221,7 @@ var speechEngineState = -1;
 
 function processFeed(feed) {
     var feedEntries = [];//Array of feed entries
+    var feedWebsiteTitle = undefined;
 
     $('#feed').feeds({
         feeds: {
@@ -205,6 +231,9 @@ function processFeed(feed) {
             try {
                 $feedNowSpeaking.text('Still preparing your news. About to read them....');
                 feedEntries.push(this.title + " - " + this.content);
+                if(!feedWebsiteTitle){
+                    feedWebsiteTitle = this.feedTitle;
+                }
             } catch (error) {
                 alert(error);
             }
@@ -216,6 +245,13 @@ function processFeed(feed) {
                     DB.transaction(function (tx) {
                         tx.executeSql('INSERT OR IGNORE INTO Feed (url) VALUES (?)', [feed], function (success) {
                             updateFeedListFromDB();
+                        }, function (error) {
+                            alert(error);
+                        });
+                    });
+                    DB.transaction(function (tx) {
+                        tx.executeSql('INSERT OR IGNORE INTO FeedTitle (url, title) VALUES (?,?)', [feed,feedWebsiteTitle], function (success) {
+                            feedWebsiteTitle = undefined;
                         }, function (error) {
                             alert(error);
                         });
@@ -279,27 +315,6 @@ function updatesSpeechEngineStateStart() {
 function updatesSpeechEngineStateStop() {
     try {
         window.clearInterval(updateSpeechEngineStateIntervalId);
-    } catch (e) {
-        alert(e);
-    }
-}
-
-function runAfterIfSpeechEngineState(whatToRun, runAfter, speechEngineStateValue) {
-    try {
-        updatesSpeechEngineState();
-        var checkSpeechEngineState = function (successFunction, testValue) {
-            try {
-                if (speechEngineState == testValue) {
-                    alert('realized');
-                    successFunction();
-                } else {
-                    alert(speechEngineState);
-                }
-            } catch (e) {
-                alert(e);
-            }
-        };
-        setTimeout("checkSpeechEngineState(whatToRun, speechEngineStateValue)", runAfter);
     } catch (e) {
         alert(e);
     }
@@ -403,14 +418,6 @@ function speakFeedEntriesRecursively(feedEntries, feedEntriesBeingReadIndex) {
 
 var discoverFeedUrlFor = function (pageURL) {
     try {
-//        if (pageURL.indexOf('https') != -1) {
-//            pageURL = pageURL.substring(8, pageURL.length);
-//            alert(pageURL);
-//        }
-//        if (pageURL.indexOf('http') > -1) {
-//            pageURL = pageURL.substring(7, pageURL.length);
-//            alert(pageURL);
-//        }
         var baseApiUrl = "http://ajax.googleapis.com/ajax/services/feed/find?v=1.0";
         var jQueryJsonpToken = "&callback=?"; // tells jQuery to treat it as JSONP request
         var pageUrlParameter = "&q=site:" + pageURL.replace(/^https?:\/\//, '').replace(/^http?:\/\//, '');
