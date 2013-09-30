@@ -155,25 +155,27 @@ function updateFeedListFromDB() {
                                     try {
                                         try {
                                             var feedItem = '#' + event.target.id;
-                                            feedItem = feedItem.substr(7, feedItem.length - 1);//7 = # and Delete...
+                                            feedItem = feedItem.substr(11, feedItem.length - 1);//7 = # and Deletefeed...
 
-                                            var confirmed = confirm('Remove:' + $('#' + feedItem).text());
+                                            var confirmed = confirm('Remove:' + $('#feed' + feedItem).text());
+
                                             if(confirmed){
                                                 DB.transaction(function (tx) {
-                                                    tx.executeSql('DELETE FROM Feed WHERE url=?', [$('#' + feedItem).text()], function (success) {
-                                                        updateFeedListFromDB();
-                                                    }, function (error) {
-                                                        alert(error);
-                                                    });
-                                                });
-                                                DB.transaction(function (tx) {
-                                                    tx.executeSql('DELETE FROM FeedTitle WHERE url=?', [$('#' + feedItem).text()], function (success) {
-                                                        updateFeedListFromDB();
+                                                    tx.executeSql('DELETE FROM Feed WHERE url=?', [$('#URLfeed' + feedItem).val()], function (success) {
+                                                        DB.transaction(function (tx) {
+                                                            tx.executeSql('DELETE FROM FeedTitle WHERE url=?', [$('#URLfeed' + feedItem).val()], function (success) {
+                                                                updateFeedListFromDB();
+                                                            }, function (error) {
+                                                                updateFeedListFromDB();//Since we successfully deleted from master table anyway
+                                                                alert(error);
+                                                            });
+                                                        });
                                                     }, function (error) {
                                                         alert(error);
                                                     });
                                                 });
                                             }
+
                                         } catch (e) {
                                             alert(e);
                                         }
