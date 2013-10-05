@@ -25,7 +25,7 @@ import java.util.Map;
  * BTW, did you know how Winstone got it's name? Find out soon, before someone walking with you drops his pants as you enter the alleys :D
  *
  * Created with IntelliJ IDEA Ultimate.
- * User: http://www.ilikeplaces.com
+ * User: http://www.NewsMute.com
  * Date: 15/9/13
  * Time: 2:23 PM
  */
