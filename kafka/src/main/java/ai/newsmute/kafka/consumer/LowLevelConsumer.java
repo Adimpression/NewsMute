@@ -32,7 +32,7 @@ public class LowLevelConsumer {
     }
 
     public static void main(String args[]) {
-        args = new String[]{"10", "wall", "17","localhost","9092" };
+        args = new String[]{"1000", "wall", "17","localhost","9092" };
 
 
         LowLevelConsumer example = new LowLevelConsumer();

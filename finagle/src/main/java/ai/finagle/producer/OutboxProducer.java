@@ -1,52 +1,49 @@
 package ai.finagle.producer;
 
 import com.twitter.finagle.Service;
-import com.twitter.finagle.builder.ClientBuilder;
 import com.twitter.finagle.builder.ServerBuilder;
 import com.twitter.finagle.http.Http;
 import com.twitter.finagle.http.MockResponse;
 import com.twitter.util.Future;
-import com.twitter.util.FutureEventListener;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
-import org.jboss.netty.handler.codec.http.*;
+import org.jboss.netty.handler.codec.http.CookieEncoder;
+import org.jboss.netty.handler.codec.http.HttpRequest;
+import org.jboss.netty.handler.codec.http.HttpResponse;
+import org.jboss.netty.handler.codec.http.QueryStringDecoder;
 
 import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 
 /**
- *
  * Created with IntelliJ IDEA Ultimate.
  * User: http://www.NewsMute.com
  * Date: 15/9/13
  * Time: 2:23 PM
  */
-public class OutboxProducer implements Runnable{
+public class OutboxProducer implements Runnable {
 
-//    private final Producer<String, String> producer;
+    private final Producer<String, String> producer;
 
-    public OutboxProducer(){
-//        final Properties props = new Properties();
-//
-//        props.put("metadata.broker.list", "localhost:9092");
-//        props.put("serializer.class", "kafka.serializer.StringEncoder");
-//        props.put("partitioner.class", "ai.newsmute.kafka.partitioner.SimplePartitioner");
-//        props.put("request.required.acks", "1");
-//
-//        ProducerConfig config = new ProducerConfig(props);
-//        producer = new Producer<String, String>(config);
+    public OutboxProducer() {
+        final Properties props = new Properties();
+
+        props.put("metadata.broker.list", "localhost:9092");
+        props.put("serializer.class", "kafka.serializer.StringEncoder");
+        props.put("partitioner.class", "ai.finagle.producer.SimplePartitioner");
+        props.put("request.required.acks", "1");
+
+        ProducerConfig config = new ProducerConfig(props);
+        producer = new Producer<String, String>(config);
     }
 
     public static void main(final String[] args) {
         new Thread(new OutboxProducer()).run();
     }
-
-
 
     @Override
     public void run() {
@@ -56,27 +53,22 @@ public class OutboxProducer implements Runnable{
 
                 final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
                 final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
-                final Set<String> keys = parameters.keySet();
-                for (String key : keys) {
-                    System.out.println("key:"+key);
-                    System.out.println("values:");
-                    final List<String> values = parameters.get(key);
-                    for (String value : values) {
-                        System.out.println("Key's value:"+value);
+
+                final List<String> url = parameters.get("url");
+                if (url != null) {
+                    final String s = url.get(0);
+                    if (s != null && !s.isEmpty()) {
+                        KeyedMessage<String, String> data = new KeyedMessage<String, String>("wall", "user17", s);
+                        System.out.println("sent:" + data.message());
+                        producer.send(data);
+                    } else {
+                        System.out.println("No url parameter value is empty:" + s);
                     }
+                } else {
+                    System.out.println("No url parameter in request");
                 }
 
-
-                //while (true) {
-                //    KeyedMessage<String, String> data = new KeyedMessage<String, String>("wall", "user17", Long.toString(System.currentTimeMillis()));
-                //    producer.send(data);
-                //    System.out.println("sent:" + data.message());
-                //    Thread.sleep(3000);
-                //}
-
-
                 final HttpResponse httpResponse = new MockResponse();
-                System.out.println("External service");
                 final List<Map.Entry<String, String>> headers = request.getHeaders();
 
                 for (Map.Entry<String, String> header : headers) {
@@ -93,7 +85,6 @@ public class OutboxProducer implements Runnable{
                 .codec(Http.get())
                 .name("HttpServer")
                 .bindTo(new InetSocketAddress("localhost", 10000)));
-
 
 
     }

@@ -22,24 +22,25 @@
              some other sub modules as well (see below) -->
         <dependency>
             <groupId>com.twitter</groupId>
-            <artifactId>finagle-core</artifactId>
-            <version>5.3.1</version>
+            <artifactId>finagle-core_2.9.2</artifactId>
+            <version>6.6.2</version>
         </dependency>
         <dependency>
             <groupId>com.twitter</groupId>
-            <artifactId>finagle-http</artifactId>
-            <version>5.3.1</version>
+            <artifactId>finagle-http_2.9.2</artifactId>
+            <version>6.6.2</version>
         </dependency>
-
-
 
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka_2.9.2</artifactId>
             <version>0.8.0-beta1</version>
-            <scope>system</scope>
-            <systemPath>/Users/ravindranathakila/ilikeplaces/kafka_2.8.0-0.8.0-beta1/kafka_2.8.0-0.8.0-beta1.jar</systemPath>
         </dependency>
+
+
+
+
+
         <dependency>
             <groupId>jopt-simple</groupId>
             <artifactId>jopt-simple</artifactId>
@@ -68,20 +69,9 @@
             <scope>system</scope>
             <systemPath>/Users/ravindranathakila/ilikeplaces/kafka_2.8.0-0.8.0-beta1/libs/metrics-core-2.2.0.jar</systemPath>
         </dependency>
-        <dependency>
-            <groupId>scala-compiler</groupId>
-            <artifactId>scala-compiler</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>/Users/ravindranathakila/ilikeplaces/kafka_2.8.0-0.8.0-beta1/libs/scala-compiler.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>scala-library</groupId>
-            <artifactId>scala-library</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>/Users/ravindranathakila/ilikeplaces/kafka_2.8.0-0.8.0-beta1/libs/scala-library.jar</systemPath>
-        </dependency>
+
+
+
         <dependency>
             <groupId>slf4j-api</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -95,29 +85,8 @@
             <version>1.6.4</version>
             <scope>system</scope>
             <systemPath>/Users/ravindranathakila/ilikeplaces/kafka_2.8.0-0.8.0-beta1/libs/slf4j-simple-1.6.4.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>snappy-java</groupId>
-            <artifactId>snappy-java</artifactId>
-            <version>1.0.4.1</version>
-            <scope>system</scope>
-            <systemPath>/Users/ravindranathakila/ilikeplaces/kafka_2.8.0-0.8.0-beta1/libs/snappy-java-1.0.4.1.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>zkclient</groupId>
-            <artifactId>zkclient</artifactId>
-            <version>0.3</version>
-            <scope>system</scope>
-            <systemPath>/Users/ravindranathakila/ilikeplaces/kafka_2.8.0-0.8.0-beta1/libs/zkclient-0.3.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>zookeeper</groupId>
-            <artifactId>zookeeper</artifactId>
-            <version>3.3.4</version>
-            <scope>system</scope>
-            <systemPath>/Users/ravindranathakila/ilikeplaces/kafka_2.8.0-0.8.0-beta1/libs/zookeeper-3.3.4.jar</systemPath>
-        </dependency>
-
+        </dependency
     </dependencies>
-    
+
+
 </project>
