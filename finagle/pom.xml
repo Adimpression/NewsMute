@@ -9,6 +9,8 @@
     <version>1.0-SNAPSHOT</version>
 
 
+
+
     <!-- Tell maven where to find finagle -->
     <repositories>
         <repository>
@@ -18,6 +20,28 @@
     </repositories>
 
     <dependencies>
+
+
+        <dependency>
+            <groupId>reaver</groupId>
+            <artifactId>reaver</artifactId>
+            <version>1.0.4-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>scribble</groupId>
+            <artifactId>scribble</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+        </dependency>
+
+
         <!-- At the very least you will need finagle-core, and probably
              some other sub modules as well (see below) -->
         <dependency>
@@ -85,7 +109,18 @@
             <version>1.6.4</version>
             <scope>system</scope>
             <systemPath>/Users/ravindranathakila/ilikeplaces/kafka_2.8.0-0.8.0-beta1/libs/slf4j-simple-1.6.4.jar</systemPath>
-        </dependency
+        </dependency>
+
+
+
+        <!--Avro Dependencies-->
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>1.7.3</version>
+        </dependency>
+        <!--End of Avro Dependencies-->
+
     </dependencies>
 
 

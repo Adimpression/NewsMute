@@ -1,22 +1,19 @@
 package ai.finagle.producer;
 
+import ai.finagle.util.HBaseCrudService;
+import ai.finagle.util.RowKey;
+import ai.finagle.util.Subscriber;
 import com.twitter.finagle.Service;
 import com.twitter.finagle.builder.ServerBuilder;
 import com.twitter.finagle.http.Http;
 import com.twitter.finagle.http.MockResponse;
 import com.twitter.util.Future;
-import kafka.javaapi.producer.Producer;
-import kafka.producer.KeyedMessage;
-import kafka.producer.ProducerConfig;
-import org.jboss.netty.handler.codec.http.CookieEncoder;
-import org.jboss.netty.handler.codec.http.HttpRequest;
-import org.jboss.netty.handler.codec.http.HttpResponse;
-import org.jboss.netty.handler.codec.http.QueryStringDecoder;
+import org.jboss.netty.handler.codec.http.*;
 
 import java.net.InetSocketAddress;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 
 /**
@@ -26,20 +23,6 @@ import java.util.Properties;
  * Time: 2:23 PM
  */
 public class OutboxProducer implements Runnable {
-
-    private final Producer<String, String> producer;
-
-    public OutboxProducer() {
-        final Properties props = new Properties();
-
-        props.put("metadata.broker.list", "localhost:9092");
-        props.put("serializer.class", "kafka.serializer.StringEncoder");
-        props.put("partitioner.class", "ai.finagle.producer.SimplePartitioner");
-        props.put("request.required.acks", "1");
-
-        ProducerConfig config = new ProducerConfig(props);
-        producer = new Producer<String, String>(config);
-    }
 
     public static void main(final String[] args) {
         new Thread(new OutboxProducer()).run();
@@ -58,9 +41,47 @@ public class OutboxProducer implements Runnable {
                 if (url != null) {
                     final String s = url.get(0);
                     if (s != null && !s.isEmpty()) {
-                        KeyedMessage<String, String> data = new KeyedMessage<String, String>("wall", "user17", s);
-                        System.out.println("sent:" + data.message());
-                        producer.send(data);
+
+//                        URI uri = URI.create("localhost:9090");
+//
+//                        DefaultHttpRequest hbaseRequest =  new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, uri.toASCIIString());
+//                        hbaseRequest.setHeader(HttpHeaders.Names.HOST, "localhost");
+//                        hbaseRequest.setHeader(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
+//                        hbaseRequest.setHeader(HttpHeaders.Names.ACCEPT_ENCODING, HttpHeaders.Values.GZIP + ',' + HttpHeaders.Values.DEFLATE);
+//                        hbaseRequest.setHeader(HttpHeaders.Names.CONTENT_TYPE, "text/plain");
+//                        hbaseRequest.setHeader(HttpHeaders.Names.REFERER, uri.toString());
+//                        hbaseRequest.setHeader(HttpHeaders.Names.USER_AGENT, "Finagle");
+//                        hbaseRequest.getContent().writeBytes();
+//                        hbaseRequest.setHeader(HttpHeaders.Names.CONTENT_LENGTH, hbaseRequest.getContent().readableBytes());
+//
+//                        hbaseRequest.
+
+
+                        final HBaseCrudService<Subscriber> crudService = new HBaseCrudService<Subscriber>();
+                        final HBaseCrudService<Subscriber>.Scanner _scanner = crudService.scan(new Subscriber(), 1).returnValueBadly();
+
+
+                        final Subscriber subscriber = new Subscriber();
+
+                        subscriber.setMockData(s);
+
+                        crudService.create(new RowKey() {
+                            @Override
+                            public String getRowKey() {
+                                return String.valueOf(System.currentTimeMillis());
+                            }
+                        }, subscriber);
+
+                        while (_scanner.getNewValue() != null) {
+                            final String _newValue = _scanner.getNewValue();
+                            System.out.println("Scanned value:" + _newValue);
+                            crudService.scan(new Subscriber(), _scanner);
+
+                        }
+
+                            //final HBaseCrudService<Subscriber>.Scanner _scanner = crudService.scan(new Subscriber(), 1).returnValueBadly();
+
+
                     } else {
                         System.out.println("No url parameter value is empty:" + s);
                     }
