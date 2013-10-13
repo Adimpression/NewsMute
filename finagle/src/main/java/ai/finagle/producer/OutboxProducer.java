@@ -1,19 +1,24 @@
 package ai.finagle.producer;
 
-import ai.finagle.util.HBaseCrudService;
-import ai.finagle.util.RowKey;
-import ai.finagle.util.Subscriber;
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.Host;
+import com.datastax.driver.core.Metadata;
 import com.twitter.finagle.Service;
 import com.twitter.finagle.builder.ServerBuilder;
 import com.twitter.finagle.http.Http;
 import com.twitter.finagle.http.MockResponse;
+import com.twitter.util.ExecutorServiceFuturePool;
+import com.twitter.util.Function0;
 import com.twitter.util.Future;
-import org.jboss.netty.handler.codec.http.*;
+import org.jboss.netty.handler.codec.http.CookieEncoder;
+import org.jboss.netty.handler.codec.http.HttpRequest;
+import org.jboss.netty.handler.codec.http.HttpResponse;
 
 import java.net.InetSocketAddress;
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 /**
@@ -24,91 +29,107 @@ import java.util.Map;
  */
 public class OutboxProducer implements Runnable {
 
+    ExecutorService pool = Executors.newFixedThreadPool(4);                     // Java thread pool
+
+    ExecutorServiceFuturePool futurePool = new ExecutorServiceFuturePool(pool); // Java Future thread pool
+
+    private Cluster cluster;
+
     public static void main(final String[] args) {
-        new Thread(new OutboxProducer()).run();
+
+        final OutboxProducer outboxProducer = new OutboxProducer();
+        //outboxProducer.connect("127.0.0.1");
+
+        new Thread(outboxProducer).run();
+
+        //final OutboxProducer outboxProducer = new OutboxProducer();
+        //outboxProducer.connect("127.0.0.1");
+        //outboxProducer.close();
     }
 
     @Override
     public void run() {
 
         Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
-            public Future<HttpResponse> apply(HttpRequest request) {
+            ExecutorService es = Executors.newFixedThreadPool(4); // Number of threads to devote to blocking requests
 
-                final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
-                final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
+            ExecutorServiceFuturePool esfp = new ExecutorServiceFuturePool(es); // Pool to process blockng requests so server thread doesn't
 
-                final List<String> url = parameters.get("url");
-                if (url != null) {
-                    final String s = url.get(0);
-                    if (s != null && !s.isEmpty()) {
+            public Future<HttpResponse> apply(final HttpRequest request) {
+                return esfp.apply(new Function0<HttpResponse>() {
+                    @Override
+                    public HttpResponse apply() {
+                        blocking(request);
 
-//                        URI uri = URI.create("localhost:9090");
-//
-//                        DefaultHttpRequest hbaseRequest =  new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, uri.toASCIIString());
-//                        hbaseRequest.setHeader(HttpHeaders.Names.HOST, "localhost");
-//                        hbaseRequest.setHeader(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
-//                        hbaseRequest.setHeader(HttpHeaders.Names.ACCEPT_ENCODING, HttpHeaders.Values.GZIP + ',' + HttpHeaders.Values.DEFLATE);
-//                        hbaseRequest.setHeader(HttpHeaders.Names.CONTENT_TYPE, "text/plain");
-//                        hbaseRequest.setHeader(HttpHeaders.Names.REFERER, uri.toString());
-//                        hbaseRequest.setHeader(HttpHeaders.Names.USER_AGENT, "Finagle");
-//                        hbaseRequest.getContent().writeBytes();
-//                        hbaseRequest.setHeader(HttpHeaders.Names.CONTENT_LENGTH, hbaseRequest.getContent().readableBytes());
-//
-//                        hbaseRequest.
+                        final HttpResponse httpResponse = new MockResponse();
+                        final List<Map.Entry<String, String>> headers = request.getHeaders();
 
-
-                        final HBaseCrudService<Subscriber> crudService = new HBaseCrudService<Subscriber>();
-                        final HBaseCrudService<Subscriber>.Scanner _scanner = crudService.scan(new Subscriber(), 1).returnValueBadly();
-
-
-                        final Subscriber subscriber = new Subscriber();
-
-                        subscriber.setMockData(s);
-
-                        crudService.create(new RowKey() {
-                            @Override
-                            public String getRowKey() {
-                                return String.valueOf(System.currentTimeMillis());
-                            }
-                        }, subscriber);
-
-                        while (_scanner.getNewValue() != null) {
-                            final String _newValue = _scanner.getNewValue();
-                            System.out.println("Scanned value:" + _newValue);
-                            crudService.scan(new Subscriber(), _scanner);
-
+                        for (Map.Entry<String, String> header : headers) {
+                            System.out.println("Header:" + header.getKey() + " value:" + header.getValue());
                         }
-
-                            //final HBaseCrudService<Subscriber>.Scanner _scanner = crudService.scan(new Subscriber(), 1).returnValueBadly();
-
-
-                    } else {
-                        System.out.println("No url parameter value is empty:" + s);
+                        CookieEncoder encoder = new CookieEncoder(true);
+                        encoder.addCookie("JSESSIONID", "1234");
+                        httpResponse.setHeader("Set-Cookie", encoder.encode());
+                        return httpResponse;
                     }
-                } else {
-                    System.out.println("No url parameter in request");
-                }
+                });
 
-                final HttpResponse httpResponse = new MockResponse();
-                final List<Map.Entry<String, String>> headers = request.getHeaders();
 
-                for (Map.Entry<String, String> header : headers) {
-                    System.out.println("Header:" + header.getKey() + " value:" + header.getValue());
-                }
-                CookieEncoder encoder = new CookieEncoder(true);
-                encoder.addCookie("JSESSIONID", "1234");
-                httpResponse.setHeader("Set-Cookie", encoder.encode());
-                return Future.value(httpResponse);
+//                final Session session = cluster.connect();
+//
+//                session.execute("CREATE KEYSPACE Excelsior WITH strategy_class = 'SimpleStrategy'\n" +
+//                        "    AND strategy_options:replication_factor = 1;");
+//
+//                final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
+//                final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
+//
+//                final HttpResponse httpResponse = new MockResponse();
+//                final List<Map.Entry<String, String>> headers = request.getHeaders();
+//
+//                for (Map.Entry<String, String> header : headers) {
+//                    System.out.println("Header:" + header.getKey() + " value:" + header.getValue());
+//                }
+//                CookieEncoder encoder = new CookieEncoder(true);
+//                encoder.addCookie("JSESSIONID", "1234");
+//                httpResponse.setHeader("Set-Cookie", encoder.encode());
+//                return Future.value(httpResponse);
             }
         };
+
 
         ServerBuilder.safeBuild(service, ServerBuilder.get()
                 .codec(Http.get())
                 .name("HttpServer")
                 .bindTo(new InetSocketAddress("localhost", 10000)));
 
+        //OutboxProducer.this.close();
 
     }
+
+    private void blocking(HttpRequest request) {
+        new OutboxProducer().connect("127.0.0.1");
+
+    }
+
+    public String connect(String node) {
+        cluster = Cluster.builder()
+                .addContactPoint(node).build();
+        Metadata metadata = cluster.getMetadata();
+        System.out.printf("Connected to cluster: %s\n",
+                metadata.getClusterName());
+        StringBuilder stringBuilder = new StringBuilder("");
+        for (Host host : metadata.getAllHosts()) {
+            System.out.printf("Datatacenter: %s; Host: %s; Rack: %s\n",
+                    host.getDatacenter(), host.getAddress(), host.getRack());
+            stringBuilder.append("Datatacenter: " + host.getDatacenter() + "; Host: " + host.getAddress() + "; Rack: " + host.getRack());
+        }
+        return stringBuilder.toString();
+    }
+
+    public void close() {
+        cluster.shutdown();
+    }
+
 
 }
 
