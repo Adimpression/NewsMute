@@ -1,8 +1,7 @@
 package ai.finagle.producer;
 
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.Host;
-import com.datastax.driver.core.Metadata;
+import com.datastax.driver.core.*;
+import com.datastax.driver.core.exceptions.AlreadyExistsException;
 import com.twitter.finagle.Service;
 import com.twitter.finagle.builder.ServerBuilder;
 import com.twitter.finagle.http.Http;
@@ -38,12 +37,12 @@ public class OutboxProducer implements Runnable {
     public static void main(final String[] args) {
 
         final OutboxProducer outboxProducer = new OutboxProducer();
-        //outboxProducer.connect("127.0.0.1");
+        //outboxProducer.open("127.0.0.1");
 
         new Thread(outboxProducer).run();
 
         //final OutboxProducer outboxProducer = new OutboxProducer();
-        //outboxProducer.connect("127.0.0.1");
+        //outboxProducer.open("127.0.0.1");
         //outboxProducer.close();
     }
 
@@ -75,7 +74,7 @@ public class OutboxProducer implements Runnable {
                 });
 
 
-//                final Session session = cluster.connect();
+//                final Session session = cluster.open();
 //
 //                session.execute("CREATE KEYSPACE Excelsior WITH strategy_class = 'SimpleStrategy'\n" +
 //                        "    AND strategy_options:replication_factor = 1;");
@@ -107,11 +106,23 @@ public class OutboxProducer implements Runnable {
     }
 
     private void blocking(HttpRequest request) {
-        new OutboxProducer().connect("127.0.0.1");
+        this.open("127.0.0.1");
+        final Session connect = cluster.connect();
+//        final ResultSet execute = connect.execute("CREATE KEYSPACE Test WITH strategy_class = 'SimpleStrategy' AND strategy_options:replication_factor = 1;");
+        try {
+            final ResultSet execute = connect.execute("CREATE KEYSPACE Test1 WITH replication = {'class':'SimpleStrategy', 'replication_factor':1};");
+            for (Row row : execute.all()) {
+                System.out.println("Create Keyspace Result:" + row.toString());
+            }
+        } catch (AlreadyExistsException e) {
+            System.out.println("Keyspace exists. Hence using it.");
+            final Session test = cluster.connect("Test1");
+        }
+        this.close();
 
     }
 
-    public String connect(String node) {
+    public String open(String node) {
         cluster = Cluster.builder()
                 .addContactPoint(node).build();
         Metadata metadata = cluster.getMetadata();
