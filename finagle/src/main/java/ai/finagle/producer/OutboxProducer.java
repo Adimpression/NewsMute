@@ -4,8 +4,6 @@ import com.datastax.driver.core.*;
 import com.twitter.finagle.Service;
 import com.twitter.finagle.builder.ServerBuilder;
 import com.twitter.finagle.http.Http;
-import com.twitter.finagle.http.MockResponse;
-import com.twitter.finagle.http.Response;
 import com.twitter.util.ExecutorServiceFuturePool;
 import com.twitter.util.Function0;
 import com.twitter.util.Future;
@@ -16,7 +14,6 @@ import org.jboss.netty.handler.codec.http.*;
 import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
@@ -27,10 +24,6 @@ import java.util.concurrent.Executors;
  * Time: 2:23 PM
  */
 public class OutboxProducer implements Runnable {
-
-    ExecutorService pool = Executors.newFixedThreadPool(4);                     // Java thread pool
-
-    ExecutorServiceFuturePool futurePool = new ExecutorServiceFuturePool(pool); // Java Future thread pool
 
     private Cluster cluster;
 
@@ -46,13 +39,17 @@ public class OutboxProducer implements Runnable {
         //outboxProducer.close();
     }
 
+    /**
+     * @TODO:
+     * Command line config for IP, Port, Thread Pool Size
+     */
     @Override
     public void run() {
+        this.open("10.208.27.21");
 
         Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
-            ExecutorService es = Executors.newFixedThreadPool(4); // Number of threads to devote to blocking requests
 
-            ExecutorServiceFuturePool esfp = new ExecutorServiceFuturePool(es); // Pool to process blockng requests so server thread doesn't
+            ExecutorServiceFuturePool esfp = new ExecutorServiceFuturePool(Executors.newFixedThreadPool(100)); // Pool to process blockng requests so server thread doesn't
 
             public Future<HttpResponse> apply(final HttpRequest request) {
                 return esfp.apply(new Function0<HttpResponse>() {
@@ -60,7 +57,7 @@ public class OutboxProducer implements Runnable {
                     public HttpResponse apply() {
                         final String result = blocking(request);
 
-                        final HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_0,HttpResponseStatus.FOUND);
+                        final HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_0,HttpResponseStatus.OK);
                         final List<Map.Entry<String, String>> headers = request.getHeaders();
 
                         for (Map.Entry<String, String> header : headers) {
@@ -104,36 +101,37 @@ public class OutboxProducer implements Runnable {
         ServerBuilder.safeBuild(service, ServerBuilder.get()
                 .codec(Http.get())
                 .name("HttpServer")
-                .bindTo(new InetSocketAddress("localhost", 10000)));
+                .bindTo(new InetSocketAddress("192.237.246.113", 80)));
 
         //OutboxProducer.this.close();
 
     }
 
     private String blocking(HttpRequest request) {
-        this.open("127.0.0.1");
         final Session connect = cluster.connect("Test1");
-        try {
-            connect.execute("drop table Inbox;");
-
-
-        } catch (Exception e) {//Table created for the first time
-            e.printStackTrace(System.err);//Temp Fix
-        }
-
-        connect.execute("create table Inbox(\n" +
-                "      humanId varchar,\n" +
-                "      urlHash varchar,\n" +
-                "      value varchar,\n" +
-                "      PRIMARY KEY (humanId, urlHash));");
+//        try {
+//            connect.execute("drop table Inbox;");
+//
+//
+//        } catch (Exception e) {//Table created for the first time
+//            e.printStackTrace(System.err);//Temp Fix
+//        }
+//
+//        connect.execute("create table Inbox(\n" +
+//                "      humanId varchar,\n" +
+//                "      urlHash varchar,\n" +
+//                "      value varchar,\n" +
+//                "      PRIMARY KEY (humanId, urlHash));");
 
         final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
         final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
 
         final List<String> url = parameters.get("url");
-        for (String s : url) {
-            System.out.println("url:" + s);
-            connect.execute("insert into Inbox(humanId, urlHash, value) values('testuser','" + s + "','" + s + "');");//Yet to hash the urlHash value
+        if(url != null){
+            for (String s : url) {
+                System.out.println("url:" + s);
+                connect.execute("insert into Inbox(humanId, urlHash, value) values('testuser','" + s + "','" + s + "');");//Yet to hash the urlHash value
+            }
         }
         System.out.println("Values in table as follows");
         final ResultSet execute = connect.execute("select * from Inbox");
@@ -162,13 +160,14 @@ public class OutboxProducer implements Runnable {
 //            System.out.println("Keyspace exists. Hence using it.");
 //            final Session test = cluster.connect("Test1");
 //        }
-        this.close();//Haha, aren't we hacking through. We also might encounter probelms on concurrent access!
         return allRows.toString();
     }
 
     public String open(String node) {
         cluster = Cluster.builder()
-                .addContactPoint(node).build();
+                .addContactPoint(node)
+                .build();
+        cluster.connect();
         Metadata metadata = cluster.getMetadata();
         System.out.printf("Connected to cluster: %s\n",
                 metadata.getClusterName());
