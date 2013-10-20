@@ -136,7 +136,7 @@ function WakeUp(){
         beforeSend : function() {alert('Retrieving data')},
         complete   : function() {alert('Retrieved data')},
         data       : {},
-        dataType   : 'text',
+        dataType   : 'text', //json
         success    : function(response) {
             alert('Works!' + response.toString());
         },

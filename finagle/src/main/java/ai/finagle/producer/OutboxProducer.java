@@ -1,6 +1,7 @@
 package ai.finagle.producer;
 
 import com.datastax.driver.core.*;
+import com.google.gson.Gson;
 import com.twitter.finagle.Service;
 import com.twitter.finagle.builder.ServerBuilder;
 import com.twitter.finagle.http.Http;
@@ -136,18 +137,16 @@ public class OutboxProducer implements Runnable {
         System.out.println("Values in table as follows");
         final ResultSet execute = connect.execute("select * from Inbox");
         final List<Row> all = execute.all();
-        StringBuilder allRows = new StringBuilder("");
-        for (Row row : all) {
-            final String humanId = row.getString("humanId");
-            System.out.println("humanId:"+humanId);
-            allRows.append(humanId+"|");
-            final String urlHash = row.getString("urlHash");
-            System.out.println("urlHash:"+urlHash);
-            allRows.append(urlHash+"|");
-            final String value = row.getString("value");
-            System.out.println("value:"+value);
-            allRows.append(value+"\n");
+        String[] results= new String[all.size()];
+        for (int i = 0; i < results.length; i++) {
+
+//            final String humanId = row.getString("humanId");
+
+//            final String urlHash = row.getString("urlHash");
+
+            results[i] = all.get(i).getString("value");
         }
+
 
 
 //        final ResultSet execute = connect.execute("CREATE KEYSPACE Test WITH strategy_class = 'SimpleStrategy' AND strategy_options:replication_factor = 1;");
@@ -160,7 +159,7 @@ public class OutboxProducer implements Runnable {
 //            System.out.println("Keyspace exists. Hence using it.");
 //            final Session test = cluster.connect("Test1");
 //        }
-        return allRows.toString();
+        return new Gson().toJson(results);
     }
 
     public String open(String node) {

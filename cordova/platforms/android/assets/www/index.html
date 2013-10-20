@@ -17,7 +17,7 @@
         }
 
         .invert_active {
-            background-color: #444444;
+            background-color: #ffffff;
         }
 
         .active_bg {
@@ -25,24 +25,44 @@
         }
 
         .invert_active_bg {
-            color: #444444;
+            color: #ffffff;
         }
     </style>
 </head>
 <!-- Let's keep the style of the body simple. Just the laying out. -->
-<body style="width: 100%; height: 100%; overflow:hidden; background-color: #444444;" class="invert_active_bg">
+<body style="width: 100%; height: 100%; overflow:hidden; background-color;" class="invert_active_bg">
 <div class="container bordered invert_active_bg"
-     style="border: 5px #444444;width: 100%; height: 100%;">
+     style="border: 5px;width: 100%; height: 100%;">
+    <div class="one">
+        <nav class="nav" title="iPad Menu">
+            <ul>
+                <li><button>Nav Item 1</button></li>
+                <li><button>Nav Menu 1</button>
+                    <ul>
+                        <li><button>Menu Item 1</button></li>
+                        <li><button>Sub Menu 1</button>
+                            <ul>
+                                <li><button>Sub Menu Item 1</button></li>
+                                <li><button>Sub Menu Item 2</button></li>
+                            </ul>
+                        </li>
+                        <li><button>Menu Item 2</button></li>
+                    </ul>
+                </li>
+                <li><button>Nav Item 3</button></li>
+            </ul>
+        </nav>
+    </div>
     <div class="use100 userFeedSection active active_bg active_border"
-         style="height: 12%;border-top-width: 5px;border-right-width: 5px;border-left-width: 5px;border-bottom-width: 5px; border-style: solid;border-radius: 10px;">
+         style="height: 12%;border-top-width: 0px;border-right-width: 0px;border-left-width: 0px;border-bottom-width: 5px; border-style: solid;border-radius: 10px;">
         <div class="use100">
             <input type="text" value="" class="use100 active"
-                   style="height: 95%; font-size: 3em; text-align: center; border-width: 0; background-color: transparent;"
+                   style="height: 95%; font-size: 3em; text-align: center; border-width: 0; background-color: transparent; font-family: arial;"
                    onclick="javascript:$('.feedDataSection').hide();"
                    placeholder="e.g. fox news . com or feed link" id="userFeed"/>
         </div>
     </div>
-    <div class="use100 feedDataSection  active active_bg" style="height: 50%;border: 5px solid;border-radius: 10px;">
+    <div class="use100 feedDataSection  active active_bg" style="height: 50%;border: 0px solid;border-radius: 10px;">
         <!-- This is the second half of the page, used for viewing items, and showing the playlist-->
         <div class="use100"
              style="height: 100%;padding: 10px;">
@@ -60,7 +80,7 @@
         </div>
 
     </div>
-    <div class="use100 active_bg active_border" style="height: 38%;border: 5px solid;border-radius: 10px;padding: 10px; border-color: #444444;">
+    <div class="use100 active_bg active_border" style="height: 38%;border: 5px solid;border-radius: 10px;padding: 10px; border-color: #ffffff;">
         <!-- This is the first half of the page, used for controlling items, URL, play/pause, stop, next, previous-->
         <div class="use100 padded" style="height: 100%;overflow: hidden;">
             <div class="use100" style="height: 25%; overflow: hidden;">
