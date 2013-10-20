@@ -1,6 +1,8 @@
+var humanId;
+
 function InitializeHuman() {
     try {
-        var humanId = window.localStorage.getItem("humanId");
+        humanId = window.localStorage.getItem("humanId");
         if(humanId == null || humanId == ""){
             var username = prompt("Please enter your username");
             window.localStorage.setItem("humanId", username);
@@ -93,14 +95,10 @@ var app = {
         try {
             $userFeed.focus();
             InitializeHuman();
-            DB = openDatabase('NewsMute', '1.0', 'News Mute Feed Entries', 2 * 1024 * 1024);
-            DB.transaction(function (tx) {
-                tx.executeSql('CREATE TABLE IF NOT EXISTS Feed (url UNIQUE)');
-                tx.executeSql('CREATE TABLE IF NOT EXISTS FeedTitle (url UNIQUE, title)');
-                updateFeedListFromDB();
-                $feedsList.slideDown();
-                $feedNowSpeaking.slideUp();
-            });
+            WakeUp();
+            //updateFeedListFromDB();
+            $feedsList.slideDown();
+            $feedNowSpeaking.slideUp();
 
 
             document.addEventListener("touchstart", function () {
@@ -130,86 +128,98 @@ var app = {
 
 var DB;
 
+function WakeUp(){
+    $.ajax({
+        type       : "GET",
+        url        : "http://192.237.246.113/",
+        crossDomain: true,
+        beforeSend : function() {alert('Retrieving data')},
+        complete   : function() {alert('Retrieved data')},
+        data       : {},
+        dataType   : 'text', //json
+        success    : function(response) {
+            alert('Works!' + response.toString());
+        },
+        error      : function() {
+            alert('Now working!');
+        }
+    });
+}
+
 function updateFeedListFromDB() {
     try {
         $feedsList.empty();
-        DB.transaction(function (tx) {
-            tx.executeSql('SELECT * FROM Feed', [], function (tx, results) {
-                try {
-                    var len = results.rows.length, i;
-                    var feedList = $feedsList;
+        try {
+            var len = results.rows.length, i;
+            var feedList = $feedsList;
 
-                    for (i = 0; i < len; i++) {
-                        (function(i){
-                            var feedTitle;
+            for (i = 0; i < len; i++) {
+                (function (i) {
+                    var feedTitle;
 
-                            tx.executeSql('SELECT * FROM FeedTitle WHERE url=?', [results.rows.item(i).url], function (tx, titles) {
-                                feedTitle =  titles.rows.item(0).title;
+                    tx.executeSql('SELECT * FROM FeedTitle WHERE url=?', [results.rows.item(i).url], function (tx, titles) {
+                        feedTitle = titles.rows.item(0).title;
 
-                                feedList.append(feedList.add("<div class='use100'  style='background-color:#444444;color: #ffffff; border-radius: 2px;'><div class='use10 center' id='" + 'Deletefeed' + i + "'>X</div><div class='use90'><b id='" + 'feed' + i + "'>" + feedTitle + "</b><input id='" + 'URLfeed' + i + "' type='hidden' value='"+results.rows.item(i).url+"'/></div></div>"));
-                                $('#feed' + i).click(function (event) {
-                                    try {
-                                        var feedItem = '#' + event.target.id;
+                        feedList.append(feedList.add("<div class='use100'  style='background-color:#444444;color: #ffffff; border-radius: 2px;'><div class='use10 center' id='" + 'Deletefeed' + i + "'>X</div><div class='use90'><b id='" + 'feed' + i + "'>" + feedTitle + "</b><input id='" + 'URLfeed' + i + "' type='hidden' value='" + results.rows.item(i).url + "'/></div></div>"));
+                        $('#feed' + i).click(function (event) {
+                            try {
+                                var feedItem = '#' + event.target.id;
 
-                                        var URLfeed = '#URLfeed' + feedItem.substr(5, feedItem.length - 1);//7 = # and Delete...
+                                var URLfeed = '#URLfeed' + feedItem.substr(5, feedItem.length - 1);//7 = # and Delete...
 
-                                        //alert(URLfeed);
+                                //alert(URLfeed);
 
-                                        $userFeed.val($(URLfeed).val());
-                                        $userFeed.text($(URLfeed).val());
+                                $userFeed.val($(URLfeed).val());
+                                $userFeed.text($(URLfeed).val());
 
-                                        //alert($(URLfeed).val());
+                                //alert($(URLfeed).val());
 
-                                        //alert($('#' + event.target.id).text());
-                                        $('#play').click();
-                                    } catch (e) {
-                                        alert(e);
-                                    }
-                                })
+                                //alert($('#' + event.target.id).text());
+                                $('#play').click();
+                            } catch (e) {
+                                alert(e);
+                            }
+                        })
 
-                                $('#Deletefeed' + i).click(function (event) {
-                                    try {
-                                        try {
-                                            var feedItem = '#' + event.target.id;
-                                            feedItem = feedItem.substr(11, feedItem.length - 1);//7 = # and Deletefeed...
+                        $('#Deletefeed' + i).click(function (event) {
+                            try {
+                                try {
+                                    var feedItem = '#' + event.target.id;
+                                    feedItem = feedItem.substr(11, feedItem.length - 1);//7 = # and Deletefeed...
 
-                                            var confirmed = confirm('Remove:' + $('#feed' + feedItem).text());
+                                    var confirmed = confirm('Remove:' + $('#feed' + feedItem).text());
 
-                                            if(confirmed){
+                                    if (confirmed) {
+                                        DB.transaction(function (tx) {
+                                            tx.executeSql('DELETE FROM Feed WHERE url=?', [$('#URLfeed' + feedItem).val()], function (success) {
                                                 DB.transaction(function (tx) {
-                                                    tx.executeSql('DELETE FROM Feed WHERE url=?', [$('#URLfeed' + feedItem).val()], function (success) {
-                                                        DB.transaction(function (tx) {
-                                                            tx.executeSql('DELETE FROM FeedTitle WHERE url=?', [$('#URLfeed' + feedItem).val()], function (success) {
-                                                                updateFeedListFromDB();
-                                                            }, function (error) {
-                                                                updateFeedListFromDB();//Since we successfully deleted from master table anyway
-                                                                alert(error);
-                                                            });
-                                                        });
+                                                    tx.executeSql('DELETE FROM FeedTitle WHERE url=?', [$('#URLfeed' + feedItem).val()], function (success) {
+                                                        updateFeedListFromDB();
                                                     }, function (error) {
+                                                        updateFeedListFromDB();//Since we successfully deleted from master table anyway
                                                         alert(error);
                                                     });
                                                 });
-                                            }
-
-                                        } catch (e) {
-                                            alert(e);
-                                        }
-                                    } catch (e) {
-                                        alert(e);
+                                            }, function (error) {
+                                                alert(error);
+                                            });
+                                        });
                                     }
-                                })
-                            });
-                        })(i);
 
-                    }
-                } catch (e) {
-                    alert(e);
-                }
-            }, function (error) {
-                alert(error)
-            });
-        });
+                                } catch (e) {
+                                    alert(e);
+                                }
+                            } catch (e) {
+                                alert(e);
+                            }
+                        })
+                    });
+                })(i);
+
+            }
+        } catch (e) {
+            alert(e);
+        }
     } catch (e) {
         alert(e);
     }
