@@ -1,8 +1,9 @@
 /*
  *
- *  jQuery ResponsiveText by Gary Hepting - https://github.com/ghepting/jquery-responsive-text
- *  
- *  Open source under the MIT License. 
+ *  jQuery ResponsiveText by Gary Hepting
+ *  https://github.com/ghepting/jquery-responsive-text
+ *
+ *  Open source under the MIT License.
  *
  *  Copyright © 2013 Gary Hepting. All rights reserved.
  *
@@ -39,7 +40,12 @@
     };
 
     ResponsiveText.prototype.resizeText = function() {
-      return $(this.el).css("font-size", Math.floor(Math.max(Math.min($(this.el).width() / this.compression, this.maxFontSize), this.minFontSize)));
+      var calculatedFontSize, fontSize;
+      calculatedFontSize = $(this.el).width() / this.compression;
+      fontSize = Math.max(Math.min(calculatedFontSize, this.maxFontSize), this.minFontSize);
+      return $(this.el).css({
+        "font-size": Math.floor(fontSize)
+      });
     };
 
     ResponsiveText.prototype.adjustOnLoad = function() {

@@ -1,8 +1,9 @@
 /*
  *
- *  jQuery truncateLines by Gary Hepting - https://github.com/ghepting/jquery-truncate-lines
- *  
- *  Open source under the MIT License. 
+ *  jQuery TruncateLines by Gary Hepting
+ *  https://github.com/ghepting/jquery-truncate-lines
+ *
+ *  Open source under the MIT License.
  *
  *  Copyright © 2013 Gary Hepting. All rights reserved.
  *
@@ -115,7 +116,11 @@
     truncatedLineElements = [];
     return $.fn.truncateLines = function() {
       if (!truncateInitialized) {
-        $('head').append('<style type="text/css"> [data-truncated="true"] { overflow: hidden; } [data-truncated="true"]:after { content: "..."; position: absolute; } </style>');
+        $('head').append('\
+<style type="text/css">\
+  [data-truncated="true"] { overflow: hidden; }\
+  [data-truncated="true"]:after { content: "..."; position: absolute; }\
+</style>');
       }
       return this.each(function() {
         return truncatedLineElements.push(new TruncateLines(this));
