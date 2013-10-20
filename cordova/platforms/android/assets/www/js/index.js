@@ -1,3 +1,18 @@
+function InitializeHuman() {
+    try {
+        var humanId = window.localStorage.getItem("humanId");
+        if(humanId == null || humanId == ""){
+            var username = prompt("Please enter your username");
+            window.localStorage.setItem("humanId", username);
+        }else{
+            alert(humanId);
+        }
+    } catch (e) {
+        alert(e);
+    }
+}
+
+
 /**
  *
  * // Feeds to retrieve
@@ -77,6 +92,7 @@ var app = {
         app.receivedEvent('deviceready');
         try {
             $userFeed.focus();
+            InitializeHuman();
             DB = openDatabase('NewsMute', '1.0', 'News Mute Feed Entries', 2 * 1024 * 1024);
             DB.transaction(function (tx) {
                 tx.executeSql('CREATE TABLE IF NOT EXISTS Feed (url UNIQUE)');
