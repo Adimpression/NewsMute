@@ -10,10 +10,10 @@ function InitializeHuman() {
             var username = prompt("Please enter your username");
             window.localStorage.setItem("humanId", username);
         } else {
-            alert(humanId);
+            //alert(humanId);
         }
     } catch (e) {
-        alert(e);
+        //alert(e);
     }
 }
 
@@ -67,10 +67,10 @@ function WakeUp() {
         data: {},
         dataType: 'text', //json
         success: function (response) {
-            alert('Works!' + response.toString());
+            alert(response.toString());
         },
-        error: function () {
-            alert('Now working!');
+        error: function (e) {
+            alert(e.toString());
         }
     });
 }

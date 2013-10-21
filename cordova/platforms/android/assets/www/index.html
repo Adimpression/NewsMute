@@ -33,17 +33,8 @@
 <body style="width: 100%; height: 100%; overflow:hidden; background-color;" class="invert_active_bg">
 <div class="container bordered invert_active_bg"
      style="border: 5px;width: 100%; height: 100%;">
-        <div class="use100 userFeedSection active active_bg active_border"
-             style="height: 12%;border-top-width: 0px;border-right-width: 0px;border-left-width: 0px;border-bottom-width: 5px; border-style: solid;border-radius: 10px;">
-            <div class="use100">
-                <input type="text" value="" class="use100 active"
-                       style="height: 95%; font-size: 3em; text-align: center; border-width: 0; background-color: transparent; font-family: arial;"
-                       onclick="javascript:$('.feedDataSection').hide();"
-                       placeholder="e.g. fox news . com or feed link" id="userFeed"/>
-            </div>
-        </div>
-    <div class="use100 feedDataSection  active active_bg" style="height: 50%;border: 0px solid;border-radius: 10px;">
-        <!-- This is the second half of the page, used for viewing items, and showing the playlist-->
+    <div class="use100 feedDataSection  active active_bg" style="height: 80%;border: 0px solid;border-radius: 10px;">
+        <!-- This is the firs half of the page, used for viewing items, and showing the playlist-->
         <div class="use100"
              style="height: 100%;padding: 10px;">
             <div class="use100" style="height: 100%;">
@@ -54,60 +45,55 @@
                      style="display:none;font-size: 30px;line-height: 116%;overflow: scroll; padding: 2%; height: 100%;">
                 </div>
                 <div class="use100 active active_bg" id="feedsList"
-                     style="display:block; font-size: 30px;line-height: 116%;overflow: scroll;  padding: 2%; height: 100%;">
+                     style="display:block; overflow: scroll;  padding: 2%; height: 100%;">
+                    <ul>
+                        <li>
+                            <div>
+                                <h3><a href="http://www.channelnewsasia.com/news/singapore/lawrence-wong-welcomes/856090.html">The earth was found round</a></h3>
+                                <p>
+                                   While one scientist was digging a well in his home, he realized that his well showed the sky. Hence he deduced the earth is round.
+                                </p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <h3>
+                                    <a href="http://www.channelnewsasia.com/news/singapore/former-straits-times/854952.html">There was a cat on the sync which was leaking</a></h3>
+                                <p>
+                                    Lately, people have been speculating over the curious incident where a cat was sitting on sync which had a leaking tap.
+                                    This behaviour is considered to be extremely rare as cats do not like water!
+                                </p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <h3>
+                                    <a href="http://www.todayonline.com/singapore/smrt-introduce-600-environmentally-friendly-prius-taxis">Finally, Mars needs water</a></h3>
+                                <p>
+                                    On the contrary to popular believe that Mars contains water, scientists now believe Mars is a giant sponge and if we happen to go there to get water out of it, we might as well be sucked off of our water!
+                                </p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <h3>
+                                    <a href="http://www.kansascity.com/2013/10/21/4566887/european-world-cup-playoffs-draw.html">Fake lion</a></h3>
+                                <p>
+                                    A 21 year old young kid has been arrested for scaring a 11 year old kid by pretending to be a Lion. Apparently, the 11 yeaar old freaked and smashed a pan over his own head to put himself out of the misery.
+                                </p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <h3><a href="http://adimpression.mobi/">Judge found bribing a judge</a></h3>
+                                <p>For the first time in recorded history, today a judge made a historical record. He had bribed another judge. This has never happen before. This act is also considered now as the stupidest act ever done by a mature adult.</p>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
 
-    </div>
-    <div class="use100 active_bg active_border" style="height: 38%;border: 5px solid;border-radius: 10px;padding: 10px; border-color: #ffffff;">
-        <!-- This is the first half of the page, used for controlling items, URL, play/pause, stop, next, previous-->
-        <div class="use100 padded" style="height: 100%;overflow: hidden;">
-            <div class="use100" style="height: 25%; overflow: hidden;">
-                <div class="eq use100 center" style="vertical-align: bottom;height: 100%;overflow: hidden;">
-                    <span class="bar invert_active" style="vertical-align: bottom;"></span>
-                    <span class="bar invert_active" style="vertical-align: bottom;"></span>
-                    <span class="bar invert_active" style="vertical-align: bottom;"></span>
-                    <span class="bar invert_active" style="vertical-align: bottom;"></span>
-                    <span class="bar invert_active" style="vertical-align: bottom;"></span>
-                    <span class="bar invert_active" style="vertical-align: bottom;"></span>
-                    <span class="bar invert_active" style="vertical-align: bottom;"></span>
-                    <span class="bar invert_active" style="vertical-align: bottom;"></span>
-                    <span class="bar invert_active" style="vertical-align: bottom;"></span>
-                </div>
-            </div>
-            <div class="use100" style="height: 5%;overflow: hidden;">
-                &nbsp;
-            </div>
-            <div class="use100" style="height: 70%;overflow: hidden;">
-
-                <div class="one" style="height: 100%;">
-                    <div class="use25 center cursor_pointer"
-                         onclick="javascript:speakFeedEntriesPrevious(); $('.feedDataSection').hide();">
-                        <h2 class="responsive success active" data-compression="1" data-max="120" data-min="40">
-                            <i class="icon-fast-backward"></i></h2>
-                    </div>
-                    <div class="use50">
-                        <div class="half center cursor_pointer"
-                             id="play"
-                             onclick="javascript:$('.userFeedSection').hide();$('.feedDataSection').show();$('.feedDataSection').css('height','62%');speakFeed($('#userFeed').val());">
-                            <h2 class="responsive success active" data-compression="1" data-max="120" data-min="40">
-                                <i class="icon-play-sign" style="text-shadow: Highlight;"></i></h2>
-                        </div>
-                        <div class="half center cursor_pointer"
-                             onclick="javascript:$('.userFeedSection').show();$('.feedDataSection').show();$('.feedDataSection').css('height','50%');unspeakFeed();">
-                            <h2 class="responsive success active" data-compression="1" data-max="120" data-min="40">
-                                <i class="icon-stop"></i></h2>
-                        </div>
-                    </div>
-                    <div class="use25 center cursor_pointer"
-                         onclick="javascript:speakFeedEntriesNext();$('.feedDataSection').show();">
-                        <h2 class="responsive success active" data-compression="1" data-max="120" data-min="40">
-                            <i class="icon-fast-forward"></i></h2>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 <script type="text/javascript" src="cordova.js"></script>
