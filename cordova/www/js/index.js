@@ -1,7 +1,6 @@
 var humanId;
 var $feedNowSpeaking = $('#feedNowSpeaking');
 var $feedsList = $('#feedsList');
-var $userFeed = $('#userFeed');
 
 function InitializeHuman() {
     try {
@@ -37,7 +36,6 @@ var app = {
     onDeviceReady: function () {
         app.receivedEvent('deviceready');
         try {
-            $userFeed.focus();
             InitializeHuman();
             WakeUp();
             $feedsList.slideDown();
@@ -51,7 +49,6 @@ var app = {
     }
 };
 
-var DB;
 
 function WakeUp() {
     $.ajax({
@@ -67,7 +64,8 @@ function WakeUp() {
         data: {},
         dataType: 'text', //json
         success: function (response) {
-            alert(response.toString());
+            var json = JSON.parse(response)
+            alert(JSON.stringify(json));
         },
         error: function (e) {
             alert(e.toString());
