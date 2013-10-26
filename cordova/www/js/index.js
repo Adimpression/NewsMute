@@ -70,7 +70,7 @@ function WakeUp() {
                     "data": [
                         {
                             "link": "http://www.channelnewsasia.com/news/singapore/lawrence-wong-welcomes/856090.html",
-                            "title":"The earth was found round",
+                            "title": "The earth was found round",
                             "description": "While one scientist was digging a well in his home, he realized that his well showed the sky. Hence he deduced the earth is round."
                         },
                         {
@@ -100,11 +100,33 @@ function WakeUp() {
             };
             var json = response; //JSON.parse(response)
             alert(JSON.stringify(json));
-            alert(json.returnValue.data[0].link);
+            var data = json.returnValue.data;
 
-            $feedsList.append('<li><div><h3><a>Test</a></h3><p><blockquote>Test</blockquote></p></div></li>'
+            alert(data[0].link);
 
-            );
+            for (var i = 0; i < data.length; i++) {
+                var item = data[i];
+                $feedsList.append("" +
+                    "<li>" +
+                    "<div>" +
+                    "<h3>" +
+                    "<a href='" +
+                    item.link +
+                    "'>" +
+                    item.title +
+                    "</a>" +
+                    "</h3>" +
+                    "<p>" +
+                    "<blockquote>" +
+                    item.description +
+                    "</blockquote>" +
+                    "</p>" +
+                    "</div>" +
+                    "</li>"
+                );
+
+            }
+
 
         },
         error: function (e) {
