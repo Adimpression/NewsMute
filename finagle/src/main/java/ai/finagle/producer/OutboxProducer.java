@@ -134,18 +134,31 @@ public class OutboxProducer implements Runnable {
                 connect.execute("insert into Inbox(humanId, urlHash, value) values('testuser','" + s + "','" + s + "');");//Yet to hash the urlHash value
             }
         }
-        System.out.println("Values in table as follows");
-        final ResultSet execute = connect.execute("select * from Inbox");
-        final List<Row> all = execute.all();
-        String[] results= new String[all.size()];
-        for (int i = 0; i < results.length; i++) {
+
+        final List<String> user = parameters.get("user");
+
+        String[] results =  null;
+
+        if(user != null){
+            System.out.println("Values in table as follows");
+            final ResultSet execute = connect.execute("select * from Inbox where humanId='"+ user.get(0) +"'");
+            final List<Row> all = execute.all();
+
+            results = new String[all.size()];
+
+            for (int i = 0; i < results.length; i++) {
 
 //            final String humanId = row.getString("humanId");
 
 //            final String urlHash = row.getString("urlHash");
 
-            results[i] = all.get(i).getString("value");
+                results[i] = all.get(i).getString("value");
+            }
+
+        } else {
+            results = new String[0];
         }
+
 
 
 
