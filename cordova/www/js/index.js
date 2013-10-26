@@ -101,6 +101,11 @@ function WakeUp() {
             var json = response; //JSON.parse(response)
             alert(JSON.stringify(json));
             alert(json.returnValue.data[0].link);
+
+            $feedsList.append('<li><div><h3><a>Test</a></h3><p><blockquote>Test</blockquote></p></div></li>'
+
+            );
+
         },
         error: function (e) {
             alert(e.toString());
