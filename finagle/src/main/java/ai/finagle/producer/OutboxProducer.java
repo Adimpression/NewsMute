@@ -1,5 +1,8 @@
 package ai.finagle.producer;
 
+import ai.finagle.model.Return;
+import ai.finagle.model.ReturnValue;
+import ai.finagle.model.YawnItem;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
 import com.twitter.finagle.Service;
@@ -12,6 +15,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.http.*;
 
+import java.io.OptionalDataException;
 import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Map;
@@ -127,37 +131,39 @@ public class OutboxProducer implements Runnable {
         final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
         final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
 
+        final List<String> user = parameters.get("user");
+
+
         final List<String> url = parameters.get("url");
         if(url != null){
             for (String s : url) {
                 System.out.println("url:" + s);
-                connect.execute("insert into Inbox(humanId, urlHash, value) values('testuser','" + s + "','" + s + "');");//Yet to hash the urlHash value
+                connect.execute("insert into Inbox(humanId, urlHash, value) values('" + url.get(0) + "','" + s + "','" + s + "');");//Yet to hash the urlHash value
             }
         }
 
-        final List<String> user = parameters.get("user");
 
-        String[] results =  null;
+        Return results;
+
+        final YawnItem[] yawnItems;
 
         if(user != null){
             System.out.println("Values in table as follows");
             final ResultSet execute = connect.execute("select * from Inbox where humanId='"+ user.get(0) +"'");
             final List<Row> all = execute.all();
 
-            results = new String[all.size()];
+            yawnItems = new YawnItem[all.size()];
 
-            for (int i = 0; i < results.length; i++) {
-
-//            final String humanId = row.getString("humanId");
-
-//            final String urlHash = row.getString("urlHash");
-
-                results[i] = all.get(i).getString("value");
+            for (int i = 0; i < yawnItems.length; i++) {
+                yawnItems[i] = new YawnItem(all.get(i).getString("value"), all.get(i).getString("value"), all.get(i).getString("value"));
             }
 
         } else {
-            results = new String[0];
+            yawnItems = new YawnItem[0];
         }
+
+        results = new Return(new ReturnValue(yawnItems),"No Error", "OK");
+
 
 
 
