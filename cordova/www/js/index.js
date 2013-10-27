@@ -6,8 +6,8 @@ function InitializeHuman() {
     try {
         humanId = window.localStorage.getItem("humanId");
         if (humanId == null || humanId == "") {
-            var username = prompt("Please enter your username");
-            window.localStorage.setItem("humanId", username);
+            humanId = prompt("Please enter your username");
+            window.localStorage.setItem("humanId", humanId);
         } else {
             //alert(humanId);
         }
@@ -53,13 +53,11 @@ var app = {
 function WakeUp() {
     $.ajax({
         type: "GET",
-        url: "http://192.237.246.113/?user=testuser",
+        url: "http://192.237.246.113/?user=" + humanId,
         crossDomain: true,
         beforeSend: function () {
-            alert('Retrieving data')
         },
         complete: function () {
-            alert('Retrieved data')
         },
         data: {},
         dataType: 'text', //json
@@ -68,7 +66,6 @@ function WakeUp() {
                 var json = JSON.parse(response);
 
                 var data = json.returnValue.data;
-                alert(data[0].link);
 
                 for (var i = 0; i < data.length; i++) {
                     var item = data[i];

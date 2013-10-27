@@ -40,12 +40,12 @@ package ai.finagle.model;
  * Date: 26/10/13
  * Time: 11:43 PM
  */
-public class Return {
-    final ReturnValue returnValue;
+public class Return<T extends ReturnValue> {
+    final T returnValue;
     final String returnError;
     final String returnStatus;
 
-    public Return(final ReturnValue returnValue, final String returnError, final String returnStatus) {
+    public Return(final T returnValue, final String returnError, final String returnStatus) {
         this.returnValue = returnValue;
         this.returnError = returnError;
         this.returnStatus = returnStatus;

@@ -21,7 +21,6 @@
 
     <dependencies>
 
-
         <dependency>
             <groupId>reaver</groupId>
             <artifactId>reaver</artifactId>
@@ -33,14 +32,6 @@
             <artifactId>scribble</artifactId>
             <version>1.0.1-SNAPSHOT</version>
         </dependency>
-
-
-        <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>3.1</version>
-        </dependency>
-
 
         <!-- At the very least you will need finagle-core, and probably
              some other sub modules as well (see below) -->
@@ -54,64 +45,6 @@
             <artifactId>finagle-http_2.9.2</artifactId>
             <version>6.6.2</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka_2.9.2</artifactId>
-            <version>0.8.0-beta1</version>
-        </dependency>
-
-
-
-
-
-        <dependency>
-            <groupId>jopt-simple</groupId>
-            <artifactId>jopt-simple</artifactId>
-            <version>3.2</version>
-            <scope>system</scope>
-            <systemPath>/Users/ravindranathakila/ilikeplaces/kafka_2.8.0-0.8.0-beta1/libs/jopt-simple-3.2.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.15</version>
-            <scope>system</scope>
-            <systemPath>/Users/ravindranathakila/ilikeplaces/kafka_2.8.0-0.8.0-beta1/libs/log4j-1.2.15.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>metrics-annotation</groupId>
-            <artifactId>metrics-annotation</artifactId>
-            <version>2.2.0</version>
-            <scope>system</scope>
-            <systemPath>/Users/ravindranathakila/ilikeplaces/kafka_2.8.0-0.8.0-beta1/libs/metrics-annotation-2.2.0.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>metrics-core</groupId>
-            <artifactId>metrics-core</artifactId>
-            <version>2.2.0</version>
-            <scope>system</scope>
-            <systemPath>/Users/ravindranathakila/ilikeplaces/kafka_2.8.0-0.8.0-beta1/libs/metrics-core-2.2.0.jar</systemPath>
-        </dependency>
-
-
-
-        <dependency>
-            <groupId>slf4j-api</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.2</version>
-            <scope>system</scope>
-            <systemPath>/Users/ravindranathakila/ilikeplaces/kafka_2.8.0-0.8.0-beta1/libs/slf4j-api-1.7.2.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>slf4j-simple</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.6.4</version>
-            <scope>system</scope>
-            <systemPath>/Users/ravindranathakila/ilikeplaces/kafka_2.8.0-0.8.0-beta1/libs/slf4j-simple-1.6.4.jar</systemPath>
-        </dependency>
-
-
 
         <!--Avro Dependencies-->
         <dependency>
