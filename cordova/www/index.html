@@ -8,21 +8,6 @@
     <title>News Mute</title>
     <link type="text/css" rel="stylesheet" href="css/groundwork.css">
     <style type="text/css">
-        .active {
-            color: #444444;
-        }
-
-        .active_border {
-            border-color: #444444;
-        }
-
-        .invert_active {
-            background-color: #ffffff;
-        }
-
-        .active_bg {
-            background-color: #ffffff;
-        }
 
         .invert_active_bg {
             color: #ffffff;
@@ -32,22 +17,28 @@
 <!-- Let's keep the style of the body simple. Just the laying out. -->
 <body style="width: 100%; height: 100%; overflow:hidden; background-color:#23CC9F;" class="invert_active_bg">
 <div class="container bordered invert_active_bg"
-     style="border: 5px;width: 100%; height: 100%;background-color: #23CC9F;">
-    <div class="use100 feedDataSection  active active_bg" style="height: 100%;border: 0px solid;border-radius: 10px;">
-        <!-- This is the firs half of the page, used for viewing items, and showing the playlist-->
+     style="border: 5px;width: 100%; height: 100%;background-color: #23CC9F; padding: 10px;">
+    <div class="use100 feedDataSection">
         <div class="use100"
-             style="height: 100%;padding: 10px; background-color: #23CC9F;">
-            <div class="use100" style="height: 100%;background-color: #23CC9F;">
+             style="height: 100%;padding: 10px; background-color: #7BCCAE;">
+            <div class="use100" style="height: 100%;">
+                <div class="one">
+                    <nav class="nav" title="Go" style="font-size:28px;background-color: #DDFFEF;">
+                        <ul>
+                            <li><button style="background-color: #DDFFEF; color: #23CC9F;" onclick="scream();">Add News Broadcast</button></li>
+                        </ul>
+                    </nav>
+                </div>
+
                 <div class="use100 active" id="feed"
                      style="display:none;  font-size: 30px;line-height: 116%;overflow: scroll; padding: 2%; height: 100%;">
                 </div>
-                <div class="use100 active active_bg" id="feedNowSpeaking"
+                <div class="use100" id="feedNowSpeaking"
                      style="display:none;font-size: 30px;line-height: 116%;overflow: scroll; padding: 2%; height: 100%;">
                 </div>
-                <div class="use100 active active_bg quicksand"
-                     style="display:block; background-color: #23CC9F; overflow: scroll;  padding: 2%; height: 100%; font-size: 17px;">
+                <div class="use100 quicksand"
+                     style="display:block; background-color: #E2EDE8; overflow: scroll;  padding: 2%; height: 100%; font-size: 17px;">
                     <ul id="feedsList" style="list-style: none;">
-
                     </ul>
                 </div>
             </div>

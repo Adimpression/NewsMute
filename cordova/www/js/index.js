@@ -53,7 +53,7 @@ var app = {
 function WakeUp() {
     $.ajax({
         type: "GET",
-        url: "http://192.237.246.113/?user=" + humanId,
+        url: "http://192.237.246.113:40000/?user=" + humanId,
         crossDomain: true,
         beforeSend: function () {
         },
@@ -69,25 +69,26 @@ function WakeUp() {
 
                 for (var i = 0; i < data.length; i++) {
                     var item = data[i];
-                    $feedsList.append("" +
-                        "<li>" +
-                        "<div>" +
-                        "<h3>" +
-                        "<a href='" +
-                        item.link +
-                        "'>" +
-                        item.title +
-                        "</a>" +
-                        "</h3>" +
-                        "<p>" +
-                        "<blockquote>" +
-                        item.description +
-                        "</blockquote>" +
-                        "</p>" +
-                        "</div>" +
-                        "</li>"
-                    );
-
+                    if (item.link != "null" && item.link != "") {//@TODO remove me, temp fix until server fixed
+                        $feedsList.append("" +
+                            "<li>" +
+                            "<div>" +
+                            "<h3>" +
+                            "<a href='" +
+                            item.link +
+                            "'>" +
+                            item.title +
+                            "</a>" +
+                            "</h3>" +
+                            "<p>" +
+                            "<blockquote>" +
+                            item.description +
+                            "</blockquote>" +
+                            "</p>" +
+                            "</div>" +
+                            "</li>"
+                        );
+                    }
                 }
             } catch (e) {
                 alert(e);
@@ -99,4 +100,33 @@ function WakeUp() {
             alert(e.toString());
         }
     });
+}
+
+function scream() {
+    var url = prompt("Enter link");
+
+    $.ajax({
+        type: "GET",
+        url: "http://192.237.246.113:30000/?user=" + humanId + "&url=" + encodeURIComponent(url),
+        crossDomain: true,
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        data: {},
+        dataType: 'text', //json
+        success: function (response) {
+            try {
+                alert(response);
+            } catch (e) {
+                alert(e);
+            }
+
+
+        },
+        error: function (e) {
+            alert(e.toString());
+        }
+    });
+
 }
