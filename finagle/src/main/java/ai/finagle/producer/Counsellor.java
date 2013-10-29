@@ -40,8 +40,8 @@ public class Counsellor implements Runnable {
                     int totalInsertions = 0;
 
                     for (final Row scream : allScreams) {
-                        for (final Row friends : allScreams) {//Ideally, all screams are not friends of this person, but we do so for now for testing
-                            connect.execute("insert into Yawn(humanId, urlHash, value) values('" + scream.getString("humanId") + "','" + friends.getString("urlHash") + "','" + friends.getString("value") + "');");
+                        for (final Row friend : allScreams) {//Ideally, all screams are not friends of this person, but we do so for now for testing
+                            connect.execute("insert into Yawn(humanId, urlHash, value) values('" + scream.getString("humanId") + "','" + friend.getString("urlHash") + "','" + friend.getString("value") + "');");
                             totalInsertions++;
                         }
                     }

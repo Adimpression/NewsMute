@@ -103,6 +103,27 @@ function WakeUp() {
 }
 
 function scream() {
+//    function findAllContactsSuccess(contacts) {
+//        alert('Found contacts: ' + contacts.length);
+//
+//    }
+//
+//    function findAllContactsFailure(e) {
+//        alert(e)
+//    }
+//
+//    try {
+//        var options      = new ContactFindOptions();
+//        options.filter   = "";
+//        options.multiple = true;
+//
+//        navigator.contacts.find(['emails'], findAllContactsSuccess, findAllContactsFailure, options);
+//    } catch (e) {
+//        alert(e);
+//    }
+//
+//    return;
+
     var url = prompt("Enter link");
 
     $.ajax({
