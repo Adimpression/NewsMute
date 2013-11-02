@@ -105,8 +105,9 @@ public class Yawner implements Runnable {
             yawnItems = new YawnItem[all.size()];
 
             for (int i = 0; i < yawnItems.length; i++) {
-                yawnItems[i] = new YawnItem(all.get(i).getString("value"), all.get(i).getString("value"), all.get(i).getString("value"));
+                yawnItems[i] = new Gson().fromJson(all.get(i).getString("value"), YawnItem.class);
             }
+
         } else {
             yawnItems = new YawnItem[0];
         }

@@ -15,9 +15,17 @@ import com.twitter.util.Future;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.http.*;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.concurrent.Executors;
 
@@ -99,7 +107,17 @@ public class Screamer implements Runnable {
         if(user != null && url != null){
             for (String s : url) {
                 System.out.println("url:" + s);
-                connect.execute("insert into Scream(humanId, urlHash, value) values('" + user.get(0) + "','" + s + "','" + s + "');");//Yet to hash the urlHash value
+                try {
+                    final Document document = Jsoup.connect(s).get();
+                    final String title = document.getElementsByTag("title").first().text();
+                    System.out.println("title:" + title);
+                    final String description = document.getElementsByTag("description").first().text();
+                    System.out.println("description:" + description);
+                    connect.execute("insert into Scream(humanId, urlHash, value) values('" + user.get(0) + "','" + s + "','" + new Gson().toJson(new YawnItem(s, title, description)) + "');");//Yet to hash the urlHash value
+                } catch (final Throwable e) {
+                    connect.execute("insert into Scream(humanId, urlHash, value) values('" + user.get(0) + "','" + s + "','" + new Gson().toJson(new YawnItem(s, s, s)) + "');");//Yet to hash the urlHash value
+                }
+
             }
         }
 
