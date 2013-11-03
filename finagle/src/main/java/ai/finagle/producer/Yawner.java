@@ -23,6 +23,8 @@ import java.util.concurrent.Executors;
 
 
 /**
+ * Answers the question: What have my super friends found interesting
+ *
  * Created with IntelliJ IDEA Ultimate.
  * User: http://www.NewsMute.com
  * Date: 15/9/13
