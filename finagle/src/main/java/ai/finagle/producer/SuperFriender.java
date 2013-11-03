@@ -97,11 +97,10 @@ public class SuperFriender implements Runnable {
         final String returnVal;
 
         if (user != null) {
+            System.out.println("user:" + user);
             if (usersParameterValues != null) {//Adding friends
-                    System.out.println("usersParameterValue:" + usersParameterValues.get(0));
-                final String[] split = usersParameterValues.get(0).split("|");
-
-                connect.execute("insert into SuperFriend(humanId, value) values('" + user.get(0) + "','" + new Gson().toJson(new SuperFriendValue(user.get(0), split)) + "');");//Yet to hash the urlHash value
+                    System.out.println("users:" + usersParameterValues.get(0));
+                    connect.execute("insert into SuperFriend(humanId, value) values('" + user.get(0) + "','" + new Gson().toJson(new SuperFriendValue(user.get(0), usersParameterValues.get(0).split("\\|"))) + "');");//Yet to hash the urlHash value
                 returnVal = new Gson().toJson(new Return<ReturnValueSuperFriend>(new ReturnValueSuperFriend(new SuperFriendValue[]{}), "", "OK"));
 
             } else {//querying friends
