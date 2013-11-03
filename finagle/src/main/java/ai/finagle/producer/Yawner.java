@@ -5,6 +5,7 @@ import ai.finagle.model.ReturnValueYawn;
 import ai.finagle.model.YawnItem;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.twitter.finagle.Service;
 import com.twitter.finagle.builder.ServerBuilder;
 import com.twitter.finagle.http.Http;
@@ -105,7 +106,11 @@ public class Yawner implements Runnable {
             yawnItems = new YawnItem[all.size()];
 
             for (int i = 0; i < yawnItems.length; i++) {
-                yawnItems[i] = new Gson().fromJson(all.get(i).getString("value"), YawnItem.class);
+                try {
+                    yawnItems[i] = new Gson().fromJson(all.get(i).getString("value"), YawnItem.class);
+                } catch (JsonSyntaxException e) { //@TODO: Remove after table cleanup
+                    yawnItems[i] = new YawnItem(all.get(i).getString("value"),all.get(i).getString("value"),all.get(i).getString("value"));
+                }
             }
 
         } else {

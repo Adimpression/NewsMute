@@ -111,7 +111,13 @@ public class Screamer implements Runnable {
                     final Document document = Jsoup.connect(s).get();
                     final String title = document.getElementsByTag("title").first().text();
                     System.out.println("title:" + title);
-                    final String description = document.getElementsByTag("description").first().text();
+                    String description = title;
+                    for (final Element meta : document.getElementsByTag("meta")) {
+                        if (meta.attr("name").equals("description")) {
+                            description = meta.attr("content");
+                            break;
+                        }
+                    }
                     System.out.println("description:" + description);
                     connect.execute("insert into Scream(humanId, urlHash, value) values('" + user.get(0) + "','" + s + "','" + new Gson().toJson(new YawnItem(s, title, description)) + "');");//Yet to hash the urlHash value
                 } catch (final Throwable e) {
