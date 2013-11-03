@@ -1,5 +1,6 @@
 import ai.finagle.producer.Counsellor;
 import ai.finagle.producer.Screamer;
+import ai.finagle.producer.SuperFriender;
 import ai.finagle.producer.Yawner;
 
 /**
@@ -13,6 +14,7 @@ public class run {
         StartThreadSafely(new Thread(new Screamer()));
         StartThreadSafely(new Thread(new Yawner()));
         StartThreadSafely(new Thread(new Counsellor()));
+        StartThreadSafely(new Thread(new SuperFriender()));
     }
 
     private static void StartThreadSafely(final Thread thread) {
@@ -20,6 +22,7 @@ public class run {
             thread.run();
         } catch (final Exception e) {
             e.printStackTrace(System.err);
+
         }
     }
 
