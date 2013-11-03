@@ -31,6 +31,8 @@ import java.util.concurrent.Executors;
 
 
 /**
+ * Answers the question: What do I find interesting that I can share with my super friends
+ *
  * Created with IntelliJ IDEA Ultimate.
  * User: http://www.NewsMute.com
  * Date: 15/9/13
