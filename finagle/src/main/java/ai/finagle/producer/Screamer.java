@@ -20,10 +20,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.InetSocketAddress;
+import java.net.URL;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -104,13 +103,14 @@ public class Screamer implements Runnable {
         final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
 
         final List<String> user = parameters.get("user");
-        final List<String> url = parameters.get("url");
+        final List<String> urlParameter = parameters.get("url");
 
-        if(user != null && url != null){
-            for (String s : url) {
+        if(user != null && urlParameter != null){
+            for (String s : urlParameter) {
                 System.out.println("url:" + s);
                 try {
-                    final Document document = Jsoup.connect(s).get();
+                    final Document document = Jsoup.parse(new URL(s).openStream(), "UTF-8", s);
+
                     final String title = document.getElementsByTag("title").first().text();
                     System.out.println("title:" + title);
                     String description = title;
