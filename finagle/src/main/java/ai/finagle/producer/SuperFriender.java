@@ -16,6 +16,8 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.http.*;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -101,7 +103,31 @@ public class SuperFriender implements Runnable {
             System.out.println("user:" + user);
             if (usersParameterValues != null) {//Adding friends
                     System.out.println("users:" + usersParameterValues.get(0));
-                    connect.execute("insert into SuperFriend(humanId, value) values('" + user.get(0) + "','" + new Gson().toJson(new SuperFriendValue(user.get(0), usersParameterValues.get(0).split("\\|"))) + "');");//Yet to hash the urlHash value
+                final ResultSet execute = connect.execute("select * from SuperFriend where humanId='" + user.get(0) + "'");
+                final List<Row> all = execute.all();
+                final SuperFriendValue superFriendValue;
+                if (all.size() != 0) {
+                    superFriendValue = new Gson().fromJson(all.get(0).getString("value"), SuperFriendValue.class);
+                } else {
+                    superFriendValue = null;
+                }
+                final List<String> contacts = new ArrayList<String>();
+
+                if (superFriendValue != null) {
+                    contacts.addAll(Arrays.asList(superFriendValue.superFriends));
+                }
+
+                final String[] newContacts = usersParameterValues.get(0).split("\\|");
+
+                for (final String newContact : newContacts) {
+                    if (newContact != null && !newContact.isEmpty()) {
+                        contacts.add(newContact);
+                    }
+                }
+
+                final String[] finalContacts = new String[contacts.size()];
+
+                connect.execute("insert into SuperFriend(humanId, value) values('" + user.get(0) + "','" + new Gson().toJson(new SuperFriendValue(user.get(0), contacts.toArray(finalContacts))) + "');");//Yet to hash the urlHash value
                 returnVal = new Gson().toJson(new Return<ReturnValueSuperFriend>(new ReturnValueSuperFriend(new SuperFriendValue[]{}), "", "OK"));
 
             } else {//querying friends
@@ -111,9 +137,9 @@ public class SuperFriender implements Runnable {
                 if (all.size() == 0) {
                     superFriendValue = new Gson().fromJson(all.get(0).getString("value"), SuperFriendValue.class);
                 } else {
-                    superFriendValue = new Gson().fromJson(all.get(0).getString("value"), SuperFriendValue.class);
+                    superFriendValue = null;
                 }
-                returnVal = new Gson().toJson(new Return<ReturnValueSuperFriend>(new ReturnValueSuperFriend(new SuperFriendValue[]{superFriendValue}), "", "OK"));
+                returnVal = new Gson().toJson(new Return<ReturnValueSuperFriend>(new ReturnValueSuperFriend(superFriendValue != null ? new SuperFriendValue[]{superFriendValue} : new SuperFriendValue[0]), "", "OK"));
 
             }
         } else {
