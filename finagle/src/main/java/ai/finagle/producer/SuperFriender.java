@@ -16,10 +16,7 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.http.*;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executors;
 
 
@@ -111,7 +108,7 @@ public class SuperFriender implements Runnable {
                 } else {
                     superFriendValue = null;
                 }
-                final List<String> contacts = new ArrayList<String>();
+                final Set<String> contacts = new HashSet<String>();
 
                 if (superFriendValue != null) {
                     contacts.addAll(Arrays.asList(superFriendValue.superFriends));
@@ -134,7 +131,7 @@ public class SuperFriender implements Runnable {
                 final ResultSet execute = connect.execute("select * from SuperFriend where humanId='" + user.get(0) + "'");
                 final List<Row> all = execute.all();
                 final SuperFriendValue superFriendValue;
-                if (all.size() == 0) {
+                if (all.size() != 0) {
                     superFriendValue = new Gson().fromJson(all.get(0).getString("value"), SuperFriendValue.class);
                 } else {
                     superFriendValue = null;
