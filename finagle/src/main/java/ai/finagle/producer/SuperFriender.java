@@ -71,6 +71,7 @@ public class SuperFriender implements Runnable {
                         final ChannelBuffer buffer = ChannelBuffers.buffer(resultBytes.length);
                         buffer.writeBytes(resultBytes);
                         httpResponse.setContent(buffer);
+                        httpResponse.setHeader("Content-Type","text/html; charset=utf-8");
                         return httpResponse;
                     }
                 });
