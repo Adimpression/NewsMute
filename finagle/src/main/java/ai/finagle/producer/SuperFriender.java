@@ -98,6 +98,7 @@ public class SuperFriender implements Runnable {
 
         if (user != null) {
             System.out.println("user:" + user);
+            //@TODO: Remove unwanted emails such as unsubscribe@mailinglist.com(limit by keyword) or 123123980u09203412341343@_23e234LLgmail.com(limit by length)
             if (usersParameterValues != null) {//Adding friends
                     System.out.println("users:" + usersParameterValues.get(0));
                 final ResultSet execute = connect.execute("select * from SuperFriend where humanId='" + user.get(0) + "'");
