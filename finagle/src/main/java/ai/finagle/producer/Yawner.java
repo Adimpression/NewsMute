@@ -16,6 +16,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.http.*;
 
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Map;
@@ -71,10 +72,17 @@ public class Yawner implements Runnable {
                         for (Map.Entry<String, String> header : headers) {
                             System.out.println("Header:" + header.getKey() + " value:" + header.getValue());
                         }
-                        final byte[] resultBytes = result.getBytes();
+                        byte[] resultBytes;
+                        try {
+                            resultBytes = result.getBytes("UTF-8");
+                        } catch (UnsupportedEncodingException e) {
+                            resultBytes = new byte[0];
+                        }
+
                         final ChannelBuffer buffer = ChannelBuffers.buffer(resultBytes.length);
                         buffer.writeBytes(resultBytes);
                         httpResponse.setContent(buffer);
+                        httpResponse.setHeader("Content-Type","text/html; charset=utf-8");
                         return httpResponse;
                     }
                 });
@@ -109,6 +117,17 @@ public class Yawner implements Runnable {
 
             for (int i = 0; i < yawnItems.length; i++) {
                 try {
+                    final File file = new File("/tmp/" + System.currentTimeMillis() + ".yaw");
+                    FileOutputStream fileOutputStream = new FileOutputStream(file);
+                    OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
+                    outputStreamWriter.write(all.get(i).getString("value"));
+                    outputStreamWriter.close();
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace(System.err);  //To change body of catch statement use File | Settings | File Templates.
+                }
+
+                try {
                     yawnItems[i] = new Gson().fromJson(all.get(i).getString("value"), YawnItem.class);
                 } catch (JsonSyntaxException e) { //@TODO: Remove after table cleanup
                     yawnItems[i] = new YawnItem(all.get(i).getString("value"),all.get(i).getString("value"),all.get(i).getString("value"));
@@ -119,7 +138,20 @@ public class Yawner implements Runnable {
             yawnItems = new YawnItem[0];
         }
 
-        return new Gson().toJson(new Return<ReturnValueYawn>(new ReturnValueYawn(yawnItems),"No Error", "OK"));
+        final String result = new Gson().toJson(new Return<ReturnValueYawn>(new ReturnValueYawn(yawnItems), "No Error", "OK"));
+
+        try {
+            final File file = new File("/tmp/" + System.currentTimeMillis() + ".yaw");
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
+            outputStreamWriter.write(result);
+            outputStreamWriter.close();
+            fileOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace(System.err);  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        return result;
     }
 
     public String open(String node) {
