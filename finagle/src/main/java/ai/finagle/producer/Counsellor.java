@@ -1,6 +1,8 @@
 package ai.finagle.producer;
 
+import ai.finagle.model.SuperFriendValue;
 import com.datastax.driver.core.*;
+import com.google.gson.Gson;
 
 import java.util.List;
 import java.util.Timer;
@@ -31,17 +33,31 @@ public class Counsellor implements Runnable {
 
                     final ResultSet executeScreamFetch = connect.execute("select * from Scream;");
                     final ResultSet executeYawnFetch = connect.execute("select * from Yawn;");
+                    final ResultSet executeSuperFriendFetch = connect.execute("select * from SuperFriend;");
+
                     final List<Row> allScreams = executeScreamFetch.all();
                     final List<Row> allYawns = executeYawnFetch.all();
+//                    final List<Row> allSuperFriends = executeSuperFriendFetch.all();
 
                     System.out.println("Counselling " + allScreams.size() + " screams");
                     System.out.println("Counselling " + allYawns.size() + " yawns");
+//                    System.out.println("Counselling " + allSuperFriends.size() + " super friends");
 
                     int totalInsertions = 0;
 
                     for (final Row scream : allScreams) {
-                        for (final Row friend : allScreams) {//Ideally, all screams are not friends of this person, but we do so for now for testing
-                            connect.execute("insert into Yawn(humanId, urlHash, value) values('" + scream.getString("humanId") + "','" + friend.getString("urlHash") + "','" + friend.getString("value") + "');");
+                        //@FIXME: Duplicate fetches. Can we fetch by partition? For, humanId on one partition will be the same
+                        final ResultSet executeSuperFriendsFetch = connect.execute("select * from SuperFriend where humanId='" + scream.getString(0) + "'");
+                        final List<Row> all = executeSuperFriendsFetch.all();
+                        final SuperFriendValue superFriendValue;
+                        if (all.size() != 0) {
+                            superFriendValue = new Gson().fromJson(all.get(0).getString("value"), SuperFriendValue.class);
+                        } else {
+                            superFriendValue = new SuperFriendValue (scream.getString(0) , new String[0]);
+                        }
+
+                        for (final String friend : superFriendValue.superFriends) {//Ideally, all screams are not friends of this person, but we do so for now for testing
+                            connect.execute("insert into Yawn(humanId, urlHash, value) values('" + friend + "','" + scream.getString("urlHash") + "','" + scream.getString("value") + "');");
                             totalInsertions++;
                         }
                     }
