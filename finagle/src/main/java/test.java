@@ -10,6 +10,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
+ *
+ * "java -cp . Finagle.jar test" //See test class
+ *
  * Created with IntelliJ IDEA Ultimate.
  * User: http://www.ilikeplaces.com
  * Date: 3/11/13
