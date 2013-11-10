@@ -4,6 +4,12 @@ import ai.finagle.producer.SuperFriender;
 import ai.finagle.producer.Yawner;
 
 /**
+ * You want to know how we do it? We just do
+ * "java -cp . Finagle.jar run"
+ * "java -cp . Finagle.jar test" //See test class
+ *
+ * Thought it was a cool way to do things and keep it memorable.
+ *
  * Created with IntelliJ IDEA Ultimate.
  * User: http://www.ilikeplaces.com
  * Date: 27/10/13
