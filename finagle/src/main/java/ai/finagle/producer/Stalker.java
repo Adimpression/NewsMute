@@ -1,8 +1,6 @@
 package ai.finagle.producer;
 
-import ai.finagle.model.Return;
-import ai.finagle.model.ReturnValueScream;
-import ai.finagle.model.YawnItem;
+import ai.finagle.model.*;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -92,7 +90,7 @@ public class Stalker implements Runnable {
         ServerBuilder.safeBuild(service, ServerBuilder.get()
                 .codec(Http.get())
                 .name("HttpServer")
-                .bindTo(new InetSocketAddress("192.237.246.113", 16181)));
+                .bindTo(new InetSocketAddress("192.237.246.113", 16185)));
 
         //this.close();
     }
@@ -107,35 +105,6 @@ public class Stalker implements Runnable {
         final List<String> urlParameter = parameters.get("url");
 
         if(user != null && urlParameter != null){
-
-
-            System.out.println("Values in table as follows");
-            final ResultSet execute = connect.execute("select * from Yawn where humanId='"+ user.get(0) +"'");
-            final List<Row> all = execute.all();
-
-            yawnItems = new YawnItem[all.size()];
-
-            for (int i = 0; i < yawnItems.length; i++) {
-                try {
-                    final File file = new File("/tmp/" + System.currentTimeMillis() + ".yaw");
-                    FileOutputStream fileOutputStream = new FileOutputStream(file);
-                    OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
-                    outputStreamWriter.write(all.get(i).getString("value"));
-                    outputStreamWriter.close();
-                    fileOutputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace(System.err);  //To change body of catch statement use File | Settings | File Templates.
-                }
-
-                try {
-                    yawnItems[i] = new Gson().fromJson(all.get(i).getString("value"), YawnItem.class);
-                } catch (JsonSyntaxException e) { //@TODO: Remove after table cleanup
-                    yawnItems[i] = new YawnItem(all.get(i).getString("value"),all.get(i).getString("value"),all.get(i).getString("value"));
-                }
-            }
-
-
-
 
             for (String s : urlParameter) {
                 System.out.println("url:" + s);
@@ -152,15 +121,15 @@ public class Stalker implements Runnable {
                         }
                     }
                     System.out.println("description:" + description);
-                    connect.execute("insert into Scream(humanId, urlHash, value) values('" + user.get(0) + "','" + s + "','" + new Gson().toJson(new YawnItem(s, title, description)) + "');");//Yet to hash the urlHash value
+                    connect.execute("insert into Stalk(humanId, urlHash, value) values('" + user.get(0) + "','" + s + "','" + new Gson().toJson(new StalkItem(s, title, description)) + "');");//Yet to hash the urlHash value
                 } catch (final Throwable e) {
-                    connect.execute("insert into Scream(humanId, urlHash, value) values('" + user.get(0) + "','" + s + "','" + new Gson().toJson(new YawnItem(s, s, s)) + "');");//Yet to hash the urlHash value
+                    connect.execute("insert into Stalk(humanId, urlHash, value) values('" + user.get(0) + "','" + s + "','" + new Gson().toJson(new StalkItem(s, s, s)) + "');");//Yet to hash the urlHash value
                 }
 
             }
         }
 
-        return new Gson().toJson(new Return<ReturnValueScream>(new ReturnValueScream(new YawnItem[0]), "", "OK"));
+        return new Gson().toJson(new Return<ReturnValueStalk>(new ReturnValueStalk(new StalkItem[0]), "", "OK"));
     }
 
     public String open(String node) {

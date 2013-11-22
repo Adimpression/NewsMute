@@ -19,11 +19,10 @@
 
 package ai.newsmute;
 
+import android.content.Context;
 import android.os.Bundle;
-import android.widget.LinearLayout;
-import com.google.ads.AdRequest;
-import com.google.ads.AdSize;
-import com.google.ads.AdView;
+import android.view.LayoutInflater;
+import android.view.View;
 import org.apache.cordova.*;
 
 public class Main extends DroidGap
