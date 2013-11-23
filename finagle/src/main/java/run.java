@@ -1,7 +1,4 @@
-import ai.finagle.producer.Counsellor;
-import ai.finagle.producer.Screamer;
-import ai.finagle.producer.SuperFriender;
-import ai.finagle.producer.Yawner;
+import ai.finagle.producer.*;
 
 /**
  * You want to know how we do it? We just do
@@ -20,7 +17,11 @@ public class run {
         StartThreadSafely(new Thread(new Screamer()));
         StartThreadSafely(new Thread(new Yawner()));
         StartThreadSafely(new Thread(new Counsellor()));
+
         StartThreadSafely(new Thread(new SuperFriender()));
+
+        StartThreadSafely(new Thread(new Stalker()));
+        StartThreadSafely(new Thread(new Harvester()));
     }
 
     private static void StartThreadSafely(final Thread thread) {

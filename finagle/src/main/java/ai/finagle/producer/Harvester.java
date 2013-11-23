@@ -74,7 +74,7 @@ public class Harvester implements Runnable {
                         totalInsertions++;
                     }
 
-                    System.out.println("Counselled successfully " + totalInsertions + " sessions");
+                    System.out.println("Harvested successfully " + totalInsertions + " sessions");
                 } catch (final Exception e) {
                     e.printStackTrace(System.err);
                 }
