@@ -1,2 +1,1 @@
-By the time the client gets here, it knows it's session.
-So, we here, are stateless.
+Done with coding the RSS feed on server. Rest of the work is for later.
