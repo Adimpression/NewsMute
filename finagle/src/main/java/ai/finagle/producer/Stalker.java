@@ -29,8 +29,31 @@ import java.util.concurrent.Executors;
 
 
 /**
- * Answers the question: What do I find interesting that I can share with my super friends
  *
+ * Example RSS Feed:
+ *
+ * <code>
+ * <rss version="2.0">
+ *
+ * <channel>
+ * <title>W3Schools Home Page</title>
+ * <link>http://www.w3schools.com</link>
+ * <description>Free web building tutorials</description>
+ * <item>
+ * <title>RSS Tutorial</title>
+ * <link>http://www.w3schools.com/rss</link>
+ * <description>New RSS tutorial on W3Schools</description>
+ * </item>
+ * <item>
+ * <title>XML Tutorial</title>
+ * <link>http://www.w3schools.com/xml</link>
+ * <description>New XML tutorial on W3Schools</description>
+ * </item>
+ * </channel>
+ *
+ * </rss>
+ *
+ * </code>
  * Created with IntelliJ IDEA Ultimate.
  * User: http://www.NewsMute.com
  * Date: 15/9/13
@@ -113,14 +136,9 @@ public class Stalker implements Runnable {
 
                     final String title = document.getElementsByTag("title").first().text();
                     System.out.println("title:" + title);
-                    String description = title;
-                    for (final Element meta : document.getElementsByTag("meta")) {
-                        if (meta.attr("name").equals("description")) {
-                            description = meta.attr("content");
-                            break;
-                        }
-                    }
+                    final String description = document.getElementsByTag("title").first().text();
                     System.out.println("description:" + description);
+
                     connect.execute("insert into Stalk(humanId, urlHash, value) values('" + user.get(0) + "','" + s + "','" + new Gson().toJson(new StalkItem(s, title, description)) + "');");//Yet to hash the urlHash value
                 } catch (final Throwable e) {
                     connect.execute("insert into Stalk(humanId, urlHash, value) values('" + user.get(0) + "','" + s + "','" + new Gson().toJson(new StalkItem(s, s, s)) + "');");//Yet to hash the urlHash value
