@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
 import java.net.URL;
@@ -49,7 +50,7 @@ public class Harvester implements Runnable {
                         final StalkItem value = new Gson().fromJson(stalk.getString("value"), StalkItem.class);
 
                         try {
-                            final Document document = Jsoup.parse(new URL(value.link).openStream(), "UTF-8", value.link);
+                            final Document document = Jsoup.parse(new URL(value.link).openStream(), "UTF-8", value.link, Parser.xmlParser());
 
 
                             final Elements itemElements = document.getElementsByTag("item");
