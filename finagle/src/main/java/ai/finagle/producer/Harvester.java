@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.net.URL;
 import java.util.List;
@@ -50,7 +51,10 @@ public class Harvester implements Runnable {
                         try {
                             final Document document = Jsoup.parse(new URL(value.link).openStream(), "UTF-8", value.link);
 
-                            final Element[] items = (Element[]) document.getElementsByTag("item").toArray();
+
+                            final Elements itemElements = document.getElementsByTag("item");
+                            Element[]  items = new Element[itemElements.size()];
+                            items =  itemElements.toArray(items);
 
                             for (final Element item : items) {
 

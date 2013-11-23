@@ -127,23 +127,24 @@ public class Stalker implements Runnable {
         final List<String> user = parameters.get("user");
         final List<String> urlParameter = parameters.get("url");
 
-        if(user != null && urlParameter != null){
+        if(user != null){
+            if(urlParameter != null){
+                for (String s : urlParameter) {
+                    System.out.println("url:" + s);
+                    try {
+                        final Document document = Jsoup.parse(new URL(s).openStream(), "UTF-8", s);
 
-            for (String s : urlParameter) {
-                System.out.println("url:" + s);
-                try {
-                    final Document document = Jsoup.parse(new URL(s).openStream(), "UTF-8", s);
+                        final String title = document.getElementsByTag("title").first().text();
+                        System.out.println("title:" + title);
+                        final String description = document.getElementsByTag("title").first().text();
+                        System.out.println("description:" + description);
 
-                    final String title = document.getElementsByTag("title").first().text();
-                    System.out.println("title:" + title);
-                    final String description = document.getElementsByTag("title").first().text();
-                    System.out.println("description:" + description);
+                        connect.execute("insert into Stalk(humanId, urlHash, value) values('" + user.get(0) + "','" + s + "','" + new Gson().toJson(new StalkItem(s, title, description)) + "');");//Yet to hash the urlHash value
+                    } catch (final Throwable e) {
+                        connect.execute("insert into Stalk(humanId, urlHash, value) values('" + user.get(0) + "','" + s + "','" + new Gson().toJson(new StalkItem(s, s, s)) + "');");//Yet to hash the urlHash value
+                    }
 
-                    connect.execute("insert into Stalk(humanId, urlHash, value) values('" + user.get(0) + "','" + s + "','" + new Gson().toJson(new StalkItem(s, title, description)) + "');");//Yet to hash the urlHash value
-                } catch (final Throwable e) {
-                    connect.execute("insert into Stalk(humanId, urlHash, value) values('" + user.get(0) + "','" + s + "','" + new Gson().toJson(new StalkItem(s, s, s)) + "');");//Yet to hash the urlHash value
                 }
-
             }
         }
 
