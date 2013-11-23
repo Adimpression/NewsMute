@@ -16,7 +16,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.http.*;
 
-import java.io.*;
+import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,7 @@ import java.util.concurrent.Executors;
 
 /**
  * Answers the question: What have my super friends found interesting
- *
+ * <p/>
  * Created with IntelliJ IDEA Ultimate.
  * User: http://www.NewsMute.com
  * Date: 15/9/13
@@ -36,8 +36,7 @@ public class Yawner implements Runnable {
     private Cluster cluster;
 
     /**
-     * @TODO:
-     * Command line config for IP, Port, Thread Pool Size
+     * @TODO: Command line config for IP, Port, Thread Pool Size
      */
     @Override
     public void run() {
@@ -67,7 +66,7 @@ public class Yawner implements Runnable {
                     @Override
                     public HttpResponse apply() {
                         final String result = blocking(request);
-                        final HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_0,HttpResponseStatus.OK);
+                        final HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_0, HttpResponseStatus.OK);
                         final List<Map.Entry<String, String>> headers = request.getHeaders();
                         for (Map.Entry<String, String> header : headers) {
                             System.out.println("Header:" + header.getKey() + " value:" + header.getValue());
@@ -82,7 +81,7 @@ public class Yawner implements Runnable {
                         final ChannelBuffer buffer = ChannelBuffers.buffer(resultBytes.length);
                         buffer.writeBytes(resultBytes);
                         httpResponse.setContent(buffer);
-                        httpResponse.setHeader("Content-Type","text/html; charset=utf-8");
+                        httpResponse.setHeader("Content-Type", "text/html; charset=utf-8");
                         return httpResponse;
                     }
                 });
@@ -108,29 +107,18 @@ public class Yawner implements Runnable {
 
         final YawnItem[] yawnItems;
 
-        if(user != null){
+        if (user != null) {
             System.out.println("Values in table as follows");
-            final ResultSet execute = connect.execute("select * from Yawn where humanId='"+ user.get(0) +"'");
+            final ResultSet execute = connect.execute("select * from Yawn where humanId='" + user.get(0) + "'");
             final List<Row> all = execute.all();
 
             yawnItems = new YawnItem[all.size()];
 
             for (int i = 0; i < yawnItems.length; i++) {
                 try {
-                    final File file = new File("/tmp/" + System.currentTimeMillis() + ".yaw");
-                    FileOutputStream fileOutputStream = new FileOutputStream(file);
-                    OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
-                    outputStreamWriter.write(all.get(i).getString("value"));
-                    outputStreamWriter.close();
-                    fileOutputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace(System.err);  //To change body of catch statement use File | Settings | File Templates.
-                }
-
-                try {
                     yawnItems[i] = new Gson().fromJson(all.get(i).getString("value"), YawnItem.class);
                 } catch (JsonSyntaxException e) { //@TODO: Remove after table cleanup
-                    yawnItems[i] = new YawnItem(all.get(i).getString("value"),all.get(i).getString("value"),all.get(i).getString("value"));
+                    yawnItems[i] = new YawnItem(all.get(i).getString("value"), all.get(i).getString("value"), all.get(i).getString("value"));
                 }
             }
 
@@ -138,20 +126,7 @@ public class Yawner implements Runnable {
             yawnItems = new YawnItem[0];
         }
 
-        final String result = new Gson().toJson(new Return<ReturnValueYawn>(new ReturnValueYawn(yawnItems), "No Error", "OK"));
-
-        try {
-            final File file = new File("/tmp/" + System.currentTimeMillis() + ".yaw");
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
-            outputStreamWriter.write(result);
-            outputStreamWriter.close();
-            fileOutputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace(System.err);  //To change body of catch statement use File | Settings | File Templates.
-        }
-
-        return result;
+        return new Gson().toJson(new Return<ReturnValueYawn>(new ReturnValueYawn(yawnItems), "No Error", "OK"));
     }
 
     public String open(String node) {

@@ -62,11 +62,12 @@ public class Harvester implements Runnable {
                                 System.out.println("title:" + title);
 
                                 final String link = item.getElementsByTag("link").first().text();
+                                System.out.println("link:" + link);
 
                                 final String description = item.getElementsByTag("description").first().text();
                                 System.out.println("description:" + description);
 
-                                connect.execute("insert into Yawn(humanId, urlHash, value) values('" + link + "','" + link + "','" + new Gson().toJson(new YawnItem(link, title, description)) + "');");//Yet to hash the urlHash value
+                                connect.execute("insert into Yawn(humanId, urlHash, value) values('" + stalk.getString(0) + "','" + link + "','" + new Gson().toJson(new YawnItem(link, title, description)) + "');");//Yet to hash the urlHash value
                                 totalInsertions++;
                             }
                         } catch (final Throwable throwable) {

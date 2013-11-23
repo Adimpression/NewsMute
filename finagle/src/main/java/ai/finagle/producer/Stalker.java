@@ -1,6 +1,9 @@
 package ai.finagle.producer;
 
-import ai.finagle.model.*;
+import ai.finagle.model.Return;
+import ai.finagle.model.ReturnValueStalk;
+import ai.finagle.model.StalkItem;
+import ai.finagle.model.YawnItem;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -15,12 +18,7 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.http.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.net.InetSocketAddress;
 import java.net.URL;
 import java.util.List;
@@ -29,12 +27,11 @@ import java.util.concurrent.Executors;
 
 
 /**
- *
  * Example RSS Feed:
- *
+ * <p/>
  * <code>
  * <rss version="2.0">
- *
+ * <p/>
  * <channel>
  * <title>W3Schools Home Page</title>
  * <link>http://www.w3schools.com</link>
@@ -50,9 +47,9 @@ import java.util.concurrent.Executors;
  * <description>New XML tutorial on W3Schools</description>
  * </item>
  * </channel>
- *
+ * <p/>
  * </rss>
- *
+ * <p/>
  * </code>
  * Created with IntelliJ IDEA Ultimate.
  * User: http://www.NewsMute.com
@@ -64,8 +61,7 @@ public class Stalker implements Runnable {
     private Cluster cluster;
 
     /**
-     * @TODO:
-     * Command line config for IP, Port, Thread Pool Size
+     * @TODO: Command line config for IP, Port, Thread Pool Size
      */
     @Override
     public void run() {
@@ -94,7 +90,7 @@ public class Stalker implements Runnable {
                     @Override
                     public HttpResponse apply() {
                         final String result = blocking(request);
-                        final HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_0,HttpResponseStatus.OK);
+                        final HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_0, HttpResponseStatus.OK);
                         final List<Map.Entry<String, String>> headers = request.getHeaders();
                         for (Map.Entry<String, String> header : headers) {
                             System.out.println("Header:" + header.getKey() + " value:" + header.getValue());
@@ -126,9 +122,10 @@ public class Stalker implements Runnable {
 
         final List<String> user = parameters.get("user");
         final List<String> urlParameter = parameters.get("url");
+        StalkItem[] stalkItems = new StalkItem[]{};
 
-        if(user != null){
-            if(urlParameter != null){
+        if (user != null) {
+            if (urlParameter != null) {
                 for (String s : urlParameter) {
                     System.out.println("url:" + s);
                     try {
@@ -145,10 +142,26 @@ public class Stalker implements Runnable {
                     }
 
                 }
+            } else {
+
+                    System.out.println("Values in table as follows");
+                    final ResultSet execute = connect.execute("select * from Stalk where humanId='" + user.get(0) + "'");
+                    final List<Row> all = execute.all();
+
+                    stalkItems = new StalkItem[all.size()];
+
+                    for (int i = 0; i < stalkItems.length; i++) {
+                        try {
+                            stalkItems[i] = new Gson().fromJson(all.get(i).getString("value"), StalkItem.class);
+                        } catch (JsonSyntaxException e) { //@TODO: Remove after table cleanup
+                            stalkItems[i] = new StalkItem(all.get(i).getString("value"), all.get(i).getString("value"), all.get(i).getString("value"));
+                        }
+                    }
+
             }
         }
 
-        return new Gson().toJson(new Return<ReturnValueStalk>(new ReturnValueStalk(new StalkItem[0]), "", "OK"));
+        return new Gson().toJson(new Return<ReturnValueStalk>(new ReturnValueStalk(stalkItems), "", "OK"));
     }
 
     public String open(String node) {
