@@ -7,9 +7,9 @@ package ai.finagle.model;
  * Time: 11:46 PM
  */
 public class StalkItem {
-    final String link;
-    final String title;
-    final String description;
+    public final String link;
+    public final String title;
+    public final String description;
 
     public StalkItem(final String link, final String title, final String description) {
         this.link = link;
