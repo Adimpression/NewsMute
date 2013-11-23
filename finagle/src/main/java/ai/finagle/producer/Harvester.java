@@ -66,7 +66,8 @@ public class Harvester implements Runnable {
                                 final String description = item.getElementsByTag("description").first().text();
                                 System.out.println("description:" + description);
 
-                                connect.execute("insert into Yawn(humanId, urlHash, value) values('" + stalk.getString(0) + "','" + link + "','" + new Gson().toJson(new YawnItem(link, title, description)) + "');");//Yet to hash the urlHash value
+                                connect.execute("insert into Yawn(humanId, urlHash, value) values('" + link + "','" + link + "','" + new Gson().toJson(new YawnItem(link, title, description)) + "');");//Yet to hash the urlHash value
+                                totalInsertions++;
                             }
                         } catch (final Throwable throwable) {
                             throwable.printStackTrace(System.err);
@@ -76,7 +77,6 @@ public class Harvester implements Runnable {
                         totalInsertions++;
                     }
 
-                    System.out.println("Harvested successfully " + totalInsertions + " sessions");
                 } catch (final Exception e) {
                     e.printStackTrace(System.err);
                 }
