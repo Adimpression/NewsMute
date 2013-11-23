@@ -1,5 +1,7 @@
 package ai.finagle.producer;
 
+import ai.finagle.model.StalkItem;
+import ai.finagle.model.SuperFriendValue;
 import ai.finagle.model.YawnItem;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
@@ -42,15 +44,15 @@ public class Harvester implements Runnable {
                     int totalInsertions = 0;
 
                     for (final Row stalk : allStalks) {
-                        final String rssFeed = stalk.getString("urlHash");
+
+                        final StalkItem value = new Gson().fromJson(stalk.getString("value"), StalkItem.class);
 
                         try {
-                            final Document document = Jsoup.parse(new URL(rssFeed).openStream(), "UTF-8", rssFeed);
+                            final Document document = Jsoup.parse(new URL(value.link).openStream(), "UTF-8", value.link);
 
                             final Element[] items = (Element[]) document.getElementsByTag("item").toArray();
 
                             for (final Element item : items) {
-
 
                                 System.out.println("title:" + item.getElementsByTag("title").first().val());
                                 final String title = item.getElementsByTag("title").first().text();
@@ -68,7 +70,7 @@ public class Harvester implements Runnable {
                         }
 
 
-                        connect.execute("insert into Yawn(humanId, urlHash, value) values('" + stalk.getString(0) + "','" + rssFeed + "','" + stalk.getString("value") + "');");
+                        connect.execute("insert into Yawn(humanId, urlHash, value) values('" + stalk.getString(0) + "','" + value.link+ "','" + stalk.getString("value") + "');");
                         totalInsertions++;
                     }
 
