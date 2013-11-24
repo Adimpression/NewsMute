@@ -1,4 +1,5 @@
 import ai.finagle.model.YawnItem;
+import ai.finagle.producer.StalkerActions;
 import com.google.gson.Gson;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -29,7 +30,21 @@ public class test {
         //getLinkInfo("http://www.bbc.co.uk/sinhala/sri_lanka/2013/11/131102_wilpattu.shtml");
         //getLinkInfo("http://mobile.bbc.co.uk/hindi/international/2013/11/131103_us_pakistan_taliban_aa");
         //Try not to use BBC, they most probably will do everything right and most sources might not
-        testFeed("http://feeds.rssboard.org/rssboard");
+        //testFeed("http://feeds.rssboard.org/rssboard");
+        String action = "s";
+        StalkerActions temp;
+        final StalkerActions to = (temp = StalkerActions.FORMATER.to(StalkerActions.class, action)) != null ?  temp : StalkerActions.ERROR;
+        switch (to) {
+            case CREATE:
+                System.out.println(to.actionId());
+                break;
+            case DELETE:
+                System.out.println(to.actionId());
+                break;
+            default:
+                System.out.println(to.actionId());
+                ;
+        }
     }
 
     private static void testFeed(final String feedUrl) throws IOException {
