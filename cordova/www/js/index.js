@@ -74,7 +74,7 @@ function WakeUp() {
                         var clone = $itemTemplate.clone();
                         clone.find('.itemTitle').text(item.title);
                         clone.find('.itemTitle').attr('href',item.link);
-                        clone.find('.itemDescription').text(item.description);
+                        clone.find('.itemDescription').html (item.description);
                         $feedsList.append(clone);
                     }
                 }
