@@ -119,7 +119,41 @@ function scream() {
             }
         });
     } else {
-      alert('Sorry :-( This link is not recognized by News Mute')
+        alert('Sorry :-( This link is not recognized by News Mute')
+    }
+
+}
+
+function stalk() {
+
+    var url = prompt("Enter feed");
+
+    if (isValidURL(url)) {
+        $.ajax({
+            type: "GET",
+            url: "http://192.237.246.113:16185/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&action=CREATE",
+            crossDomain: true,
+            beforeSend: function () {
+            },
+            complete: function () {
+            },
+            data: {},
+            dataType: 'text', //json
+            success: function (response) {
+                try {
+                    alert(response);
+                } catch (e) {
+                    alert(e);
+                }
+
+
+            },
+            error: function (e) {
+                alert(e.toString());
+            }
+        });
+    } else {
+        alert('Sorry :-( This feed is not recognized by News Mute')
     }
 
 }

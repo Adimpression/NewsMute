@@ -2,6 +2,7 @@ package ai.finagle.producer;
 
 import ai.finagle.model.StalkItem;
 import ai.finagle.model.SuperFriendValue;
+import ai.finagle.model.YawnFeedItem;
 import ai.finagle.model.YawnItem;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
@@ -68,16 +69,18 @@ public class Harvester implements Runnable {
                                 final String description = item.getElementsByTag("description").first().text();
                                 System.out.println("description:" + description);
 
-                                connect.execute("insert into Yawn(humanId, urlHash, value) values('" + stalk.getString(0) + "','" + link + "','" + new Gson().toJson(new YawnItem(link, title, description)) + "');");//Yet to hash the urlHash value
+                                connect.execute("insert into Yawn(humanId, urlHash, value) values('" + stalk.getString(0) + "','" + link + "','" + new Gson().toJson(new YawnFeedItem(link, title, description, value.link)) + "');");//Yet to hash the urlHash value
                                 totalInsertions++;
                             }
                         } catch (final Throwable throwable) {
                             throwable.printStackTrace(System.err);
                         }
 
-
                         totalInsertions++;
                     }
+
+                    System.out.println("Harvested successfully " + totalInsertions + " sessions");
+
 
                 } catch (final Exception e) {
                     e.printStackTrace(System.err);

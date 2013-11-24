@@ -2,6 +2,7 @@ package ai.finagle.producer;
 
 import ai.finagle.model.Return;
 import ai.finagle.model.ReturnValueYawn;
+import ai.finagle.model.YawnFeedItem;
 import ai.finagle.model.YawnItem;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
@@ -105,25 +106,21 @@ public class Yawner implements Runnable {
 
         final List<String> user = parameters.get("user");
 
-        final YawnItem[] yawnItems;
+        final YawnFeedItem[] yawnItems;
 
         if (user != null) {
             System.out.println("Values in table as follows");
             final ResultSet execute = connect.execute("select * from Yawn where humanId='" + user.get(0) + "'");
             final List<Row> all = execute.all();
 
-            yawnItems = new YawnItem[all.size()];
+            yawnItems = new YawnFeedItem[all.size()];
 
             for (int i = 0; i < yawnItems.length; i++) {
-                try {
-                    yawnItems[i] = new Gson().fromJson(all.get(i).getString("value"), YawnItem.class);
-                } catch (JsonSyntaxException e) { //@TODO: Remove after table cleanup
-                    yawnItems[i] = new YawnItem(all.get(i).getString("value"), all.get(i).getString("value"), all.get(i).getString("value"));
-                }
+                yawnItems[i] = new Gson().fromJson(all.get(i).getString("value"), YawnFeedItem.class);
             }
 
         } else {
-            yawnItems = new YawnItem[0];
+            yawnItems = new YawnFeedItem[0];
         }
 
         return new Gson().toJson(new Return<ReturnValueYawn>(new ReturnValueYawn(yawnItems), "No Error", "OK"));

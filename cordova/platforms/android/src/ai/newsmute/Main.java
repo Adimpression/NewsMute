@@ -35,18 +35,7 @@ public class Main extends DroidGap
         super.loadUrl(Config.getStartUrl());
         //super.loadUrl("file:///android_asset/www/index.html")
 
-        //renderAdMobAds();
     }
 
-    /**
-     * http://kineticsproject.com/phonegap-2-8-0-for-android-and-admob/
-     */
-    private void renderAdMobAds() {
-        final AdView adView = new AdView(this, AdSize.SMART_BANNER , "a15222c59b1f090");
-        final LinearLayout layout = super.root;
-        layout.addView(adView);
-        layout.setHorizontalGravity(android.view.Gravity.CENTER_HORIZONTAL); //This centers the ads in landscape mode.
-        adView.loadAd(new AdRequest());
-    }
 }
 
