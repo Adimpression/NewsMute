@@ -1,6 +1,4 @@
-import ai.finagle.model.YawnItem;
-import ai.finagle.producer.StalkerActions;
-import com.google.gson.Gson;
+import ai.finagle.producer.StalkerAction;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -11,7 +9,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -32,17 +29,14 @@ public class test {
         //Try not to use BBC, they most probably will do everything right and most sources might not
         //testFeed("http://feeds.rssboard.org/rssboard");
         String action = "s";
-        StalkerActions temp;
-        final StalkerActions to = (temp = StalkerActions.FORMATER.to(StalkerActions.class, action)) != null ?  temp : StalkerActions.ERROR;
+        StalkerAction temp;
+        final StalkerAction to = (temp = StalkerAction.FORMATER.to(StalkerAction.class, action)) != null ?  temp : StalkerAction.ERROR;
         switch (to) {
             case CREATE:
-                System.out.println(to.actionId());
                 break;
             case DELETE:
-                System.out.println(to.actionId());
                 break;
             default:
-                System.out.println(to.actionId());
                 ;
         }
     }

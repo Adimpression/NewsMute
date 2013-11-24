@@ -113,6 +113,75 @@ public class Stalker implements Runnable {
         //this.close();
     }
 
+    private String blocking(HttpRequest request) {
+        final Session connect = cluster.connect("Test1");
+
+        final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
+        final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
+
+        final List<String> user = parameters.get("user");
+        final List<String> urlParameter = parameters.get("url");
+        final List<String> action = parameters.get("action");
+        StalkItem[] stalkItems = new StalkItem[]{};
+
+        if (user != null) {
+                StalkerAction stalkerAction = (stalkerAction = StalkerAction.FORMATER.to(StalkerAction.class, action.get(0))) != null ? stalkerAction : StalkerAction.ERROR;
+                switch (stalkerAction) {
+                    case CREATE: {
+                        try {
+                            System.out.println(stalkerAction.toString());
+                            final String s = urlParameter.get(0);
+                            System.out.println("url:" + s);
+
+                            final Document document = Jsoup.parse(new URL(s).openStream(), "UTF-8", s);
+
+                            final String title = document.getElementsByTag("title").first().text();
+                            System.out.println("title:" + title);
+                            final String description = document.getElementsByTag("title").first().text();
+                            System.out.println("description:" + description);
+
+                            connect.execute("insert into Stalk(humanId, urlHash, value) values('" + user.get(0) + "','" + s + "','" + new Gson().toJson(new StalkItem(s, title, description)) + "');");//Yet to hash the urlHash value
+                        } catch (final Throwable e) {
+                            e.printStackTrace(System.err);
+                        }
+                    }
+                    break;
+                    case READ:{
+                        System.out.println("Values in table as follows");
+                        final ResultSet execute = connect.execute("select * from Stalk where humanId='" + user.get(0) + "'");
+                        final List<Row> all = execute.all();
+
+                        stalkItems = new StalkItem[all.size()];
+
+                        for (int i = 0; i < stalkItems.length; i++) {
+                            try {
+                                stalkItems[i] = new Gson().fromJson(all.get(i).getString("value"), StalkItem.class);
+                            } catch (JsonSyntaxException e) { //@TODO: Remove after table cleanup
+                                stalkItems[i] = new StalkItem(all.get(i).getString("value"), all.get(i).getString("value"), all.get(i).getString("value"));
+                            }
+                        }
+                    }
+                    break;
+                    case DELETE: {
+                        try {
+                            System.out.println(stalkerAction.toString());
+                            final String s = urlParameter.get(0);
+                            System.out.println("url:" + s);
+                            connect.execute("delete from Stalk where humanId='" + user.get(0) + "' and urlHash='" + s + "';");//Yet to hash the urlHash value
+                        } catch (Exception e) {
+                            e.printStackTrace(System.err);
+                        }
+                    }
+                    break;
+                    case ERROR:
+                        break;
+                }
+
+        }
+
+        return new Gson().toJson(new Return<ReturnValueStalk>(new ReturnValueStalk(stalkItems), "", "OK"));
+    }
+
     public String open(String node) {
         cluster = Cluster.builder()
                 .addContactPoint(node)
@@ -128,46 +197,6 @@ public class Stalker implements Runnable {
             stringBuilder.append("Datacenter: ").append(host.getDatacenter()).append("; Host: ").append(host.getAddress()).append("; Rack: ").append(host.getRack());
         }
         return stringBuilder.toString();
-    }
-
-    private String blocking(HttpRequest request) {
-        final Session connect = cluster.connect("Test1");
-
-        final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
-        final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
-
-        final List<String> user = parameters.get("user");
-        final List<String> urlParameter = parameters.get("url");
-        final List<String> action = parameters.get("action");
-        StalkItem[] stalkItems = new StalkItem[]{};
-
-        if (user != null) {
-            if (urlParameter != null) {
-                final StalkerActions to = StalkerActions.FORMATER.to(StalkerActions.class, action.get(0));
-                if(to != null){
-
-                }
-
-            } else {
-
-                System.out.println("Values in table as follows");
-                final ResultSet execute = connect.execute("select * from Stalk where humanId='" + user.get(0) + "'");
-                final List<Row> all = execute.all();
-
-                stalkItems = new StalkItem[all.size()];
-
-                for (int i = 0; i < stalkItems.length; i++) {
-                    try {
-                        stalkItems[i] = new Gson().fromJson(all.get(i).getString("value"), StalkItem.class);
-                    } catch (JsonSyntaxException e) { //@TODO: Remove after table cleanup
-                        stalkItems[i] = new StalkItem(all.get(i).getString("value"), all.get(i).getString("value"), all.get(i).getString("value"));
-                    }
-                }
-
-            }
-        }
-
-        return new Gson().toJson(new Return<ReturnValueStalk>(new ReturnValueStalk(stalkItems), "", "OK"));
     }
 
     public void close() {
