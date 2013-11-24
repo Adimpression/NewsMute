@@ -18,6 +18,12 @@ public final class FORMATTER<RE> {
         return new FORMATTER<RE>();
     }
 
+    /**
+     *
+     * @param REQUIRED_ENUM The enum's class to which the @param enumAsString will be converted
+     * @param enumAsString The required enum types option, e.g CAR.TOYOTA where CAR is the enum
+     * @return The required enum constant, of type @param REQUIRED_ENUM with constant corresponding to @param enumAsString
+     */
     public RE to(final Class REQUIRED_ENUM, final String enumAsString) {
 
         RE returnVal;
