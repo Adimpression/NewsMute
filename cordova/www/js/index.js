@@ -3,6 +3,9 @@ var $feedNowSpeaking = $('#feedNowSpeaking');
 var $feedsList = $('#feedsList');
 var $itemTemplate = $('.itemTemplate');
 
+var flag_super_friend = "flag_super_friend";
+
+
 function InitializeHuman() {
     try {
         humanId = window.localStorage.getItem("humanId");
@@ -38,6 +41,16 @@ function NewsMute() {
     } else {
         justVisiting();
 
+    }
+
+
+    var flag_super_friend = window.localStorage.getItem(flag_super_friend);
+    if(flag_super_friend == null){
+        superFriend();
+        window.localStorage.setItem(flag_super_friend, "true");
+    } else {
+        //Check for time and update after several days?
+        //Remember that we can run a hash check
     }
 }
 
