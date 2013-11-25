@@ -17,6 +17,30 @@ function InitializeHuman() {
     }
 }
 
+function justVisiting() {
+    var lastVisited = window.localStorage.getItem("lastVisited");
+    if (lastVisited != null) {
+        share(lastVisited.value);
+    } else {
+        alert('The share url is null');
+    }
+
+}
+
+function NewsMute() {
+    var initialAppLaunch = window.localStorage.getItem("initialAppLaunch");
+    if (initialAppLaunch == null) {
+        InitializeHuman();
+        WakeUp();
+        $feedsList.slideDown();
+        $feedNowSpeaking.slideUp();
+        lawnchair.save({initialAppLaunch: "false"});
+    } else {
+        justVisiting();
+
+    }
+}
+
 var app = {
     // Application Constructor
     initialize: function () {
@@ -37,11 +61,18 @@ var app = {
     onDeviceReady: function () {
         app.receivedEvent('deviceready');
         try {
-            InitializeHuman();
-            WakeUp();
-            $feedsList.slideDown();
-            $feedNowSpeaking.slideUp();
+            alert("Initializing...");
+
+            NewsMute();
+
+            document.addEventListener("pause", function () {
+                window.localStorage.removeItem("initialAppLaunch");
+                window.localStorage.removeItem("lastVisited");
+            }, false);
+
+
         } catch (e) {
+            alert('init error');
             alert(e);
         }
     },
@@ -73,13 +104,15 @@ function WakeUp() {
                     if (item.link != "null" && item.link != "") {//@TODO remove me, temp fix until server fixed
                         var clone = $itemTemplate.clone();
                         clone.find('.itemTitle').text(item.title);
-                        clone.find('.itemTitle').attr('href',item.link);
-                        clone.find('.itemDescription').html (item.description);
+                        clone.find('.itemTitle').attr('href', item.link);
+                        clone.find('.itemTitle').attr("title", item.link);
+                        clone.find('.itemDescription').html(item.description);
+                        clone.find('.itemBookmark').attr("title", item.link);
                         $feedsList.append(clone);
                     }
                 }
             } catch (e) {
-                alert(e);
+                alert('Data render error' + e);
             }
 
 
@@ -158,7 +191,19 @@ function stalk() {
 
 }
 
-function superFriend(){
+function share(link) {
+    try {
+        var message = {
+            url: link
+        };
+        window.socialmessage.send(message);
+    } catch (e) {
+        alert(e);
+    }
+
+}
+
+function superFriend() {
     function findAllContactsSuccess(contacts) {
         alert('Found contacts: ' + contacts.length);
         try {
@@ -173,30 +218,30 @@ function superFriend(){
                 }
 
                 if (i % 20 == 0) {//Why? Because we might hit the maximum length of the URL. Right now my contacts count on the phone is some 1900+
-                        $.ajax({
-                            type: "GET",
-                            url: "http://192.237.246.113:20000/?user=" + humanId + "&users=" + contactSet,
-                            crossDomain: true,
-                            beforeSend: function () {
-                            },
-                            complete: function () {
-                            },
-                            data: {},
-                            dataType: 'text', //json
-                            success: function (response) {
-                                try {
-                                    alert(response);
-                                } catch (e) {
-                                    alert(e);
-                                }
-
-
-                            },
-                            error: function (e) {
-                                alert(e.toString());
+                    $.ajax({
+                        type: "GET",
+                        url: "http://192.237.246.113:20000/?user=" + humanId + "&users=" + contactSet,
+                        crossDomain: true,
+                        beforeSend: function () {
+                        },
+                        complete: function () {
+                        },
+                        data: {},
+                        dataType: 'text', //json
+                        success: function (response) {
+                            try {
+                                alert(response);
+                            } catch (e) {
+                                alert(e);
                             }
-                        });
-                        contactSet = "";
+
+
+                        },
+                        error: function (e) {
+                            alert(e.toString());
+                        }
+                    });
+                    contactSet = "";
 
                 }
             }
@@ -211,8 +256,8 @@ function superFriend(){
     }
 
     try {
-        var options      = new ContactFindOptions();
-        options.filter   = "";
+        var options = new ContactFindOptions();
+        options.filter = "";
         options.multiple = true;
 
         navigator.contacts.find(['emails'], findAllContactsSuccess, findAllContactsFailure, options);
@@ -223,7 +268,7 @@ function superFriend(){
     return;
 }
 
-window.isValidURL = (function() {// wrapped in self calling function to prevent global pollution
+window.isValidURL = (function () {// wrapped in self calling function to prevent global pollution
 
     //URL pattern based on rfc1738 and rfc3986
     var rg_pctEncoded = "%[0-9a-fA-F]{2}";
