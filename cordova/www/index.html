@@ -39,8 +39,8 @@
                 <div class="one quicksand"
                      style="display:block; background-color: #ffffff; overflow: scroll;  height: 100%; font-size: 17px; font-family: FontAwesome, serif;">
                     <div id="feedsList" style="list-style: none;" class="one">
-                        <div class="one hidden">
-                            <div class="one itemTemplate">
+                        <div class="one">
+                            <div class="one itemTemplate" id="http%3A%2F%2Fwww.newsmute.com">
                                 <div class="one">
                                     <div class="one left">
                                         <a class="itemTitle" href=""
@@ -58,11 +58,14 @@
                                     <div class="one" style="opacity: 0.5;">
                                         <div class="use50 left">
                                             <button href="#" class="itemBookmark" style="text-decoration: underline;"
-                                                    onclick="share(this.title);" title="">Bookmark
+                                                    onclick="share(this.title);" title="">
+                                                Bookmark
                                             </button>
                                         </div>
                                         <div class="use50 right">
-                                            <button href="#" style="text-decoration: underline;">&nbsp;&nbsp;&nbsp;&nbsp;Hide&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                                            <button  class="itemHide" href="#" title="http://www.google.com" onclick="$(this).parent().parent().parent().parent().slideUp();hide(this.title);">
+                                                &nbsp;&nbsp;&nbsp;&nbsp;<span style="text-decoration: underline;">Hide</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="use100" style="height: 5%;">
@@ -79,7 +82,7 @@
 </div>
 <script type="text/javascript">
 </script>
-<script type="text/javascript" src="cordova.js"></script>
+<!--<script type="text/javascript" src="cordova.js"></script>-->
 <script src="js/jquery-2.0.3.min.js"></script>
 <script src="js/jquery.feeds.min.js"></script>
 <script src="js/libs/modernizr-2.6.2.min.js"></script>

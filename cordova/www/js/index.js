@@ -103,11 +103,13 @@ function WakeUp() {
                     var item = data[i];
                     if (item.link != "null" && item.link != "") {//@TODO remove me, temp fix until server fixed
                         var clone = $itemTemplate.clone();
+                        clone.attr("id", encodeURIComponent(item.link));
                         clone.find('.itemTitle').text(item.title);
                         clone.find('.itemTitle').attr('href', item.link);
                         clone.find('.itemTitle').attr("title", item.link);
                         clone.find('.itemDescription').html(item.description);
                         clone.find('.itemBookmark').attr("title", item.link);
+                        clone.find('.itemHide').attr("title", item.link);
                         $feedsList.append(clone);
                     }
                 }
@@ -265,7 +267,13 @@ function superFriend() {
         alert(e);
     }
 
-    return;
+}
+
+
+function hide(url){
+    var id = encodeURIComponent(url);
+    $("#" + id).slideUp();
+
 }
 
 window.isValidURL = (function () {// wrapped in self calling function to prevent global pollution
