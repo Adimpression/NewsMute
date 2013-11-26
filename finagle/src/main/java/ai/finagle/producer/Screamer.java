@@ -2,7 +2,6 @@ package ai.finagle.producer;
 
 import ai.finagle.model.Return;
 import ai.finagle.model.ReturnValueScream;
-import ai.finagle.model.ReturnValueYawn;
 import ai.finagle.model.YawnItem;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
@@ -18,13 +17,10 @@ import org.jboss.netty.handler.codec.http.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
-import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.URL;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.concurrent.Executors;
 
@@ -121,9 +117,9 @@ public class Screamer implements Runnable {
                         }
                     }
                     System.out.println("description:" + description);
-                    connect.execute("insert into Scream(humanId, urlHash, value) values('" + user.get(0) + "','" + s + "','" + new Gson().toJson(new YawnItem(s, title, description)) + "');");//Yet to hash the urlHash value
+                    connect.execute("insert into Scream(humanId, urlHash, value) values('" + user.get(0) + "','" + s + "','" + new Gson().toJson(new YawnItem(s, title, description, "0")) + "');");//Yet to hash the urlHash value
                 } catch (final Throwable e) {
-                    connect.execute("insert into Scream(humanId, urlHash, value) values('" + user.get(0) + "','" + s + "','" + new Gson().toJson(new YawnItem(s, s, s)) + "');");//Yet to hash the urlHash value
+                    connect.execute("insert into Scream(humanId, urlHash, value) values('" + user.get(0) + "','" + s + "','" + new Gson().toJson(new YawnItem(s, s, s, "0")) + "');");//Yet to hash the urlHash value
                 }
 
             }

@@ -10,10 +10,12 @@ public class YawnItem {
     final String link;
     final String title;
     final String description;
+    final String shocks;
 
-    public YawnItem(final String link, final String title, final String description) {
+    public YawnItem(final String link, final String title, final String description, final String shocks) {
         this.link = link;
         this.title = title;
         this.description = description;
+        this.shocks = shocks;
     }
 }
