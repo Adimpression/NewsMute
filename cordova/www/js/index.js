@@ -4,6 +4,7 @@ var $feedsList = $('#feedsList');
 var $itemTemplate = $('.itemTemplate');
 
 var flag_super_friend = "flag_super_friend";
+var flag_initial_app_launch = "flag_initial_app_launch";
 
 
 function InitializeHuman() {
@@ -11,7 +12,7 @@ function InitializeHuman() {
         humanId = window.localStorage.getItem("humanId");
         if (humanId == null || humanId == "") {
             humanId = prompt("Please enter your username");
-            window.localStorage.setItem("humanId", humanId);
+            window.localStorage.setItem("humanId", getDeviceHashForEmail(humanId));
         } else {
             //alert(humanId);
         }
@@ -23,7 +24,7 @@ function InitializeHuman() {
 function justVisiting() {
     var lastVisited = window.localStorage.getItem("lastVisited");
     if (lastVisited != null) {
-        share(lastVisited.value);
+        share(lastVisited);
     } else {
         alert('The share url is null');
     }
@@ -31,27 +32,34 @@ function justVisiting() {
 }
 
 function NewsMute() {
-    var initialAppLaunch = window.localStorage.getItem("initialAppLaunch");
+    var initialAppLaunch = window.localStorage.getItem(flag_initial_app_launch);
     if (initialAppLaunch == null) {
+        window.localStorage.setItem(flag_initial_app_launch, "true");
         InitializeHuman();
         WakeUp();
         $feedsList.slideDown();
         $feedNowSpeaking.slideUp();
-        lawnchair.save({initialAppLaunch: "false"});
     } else {
         justVisiting();
-
+        InitializeHuman();
+        WakeUp();
+        $feedsList.slideDown();
+        $feedNowSpeaking.slideUp();
     }
 
 
     var flag_super_friend = window.localStorage.getItem(flag_super_friend);
     if(flag_super_friend == null){
-        superFriend();
+        //superFriend();
         window.localStorage.setItem(flag_super_friend, "true");
     } else {
         //Check for time and update after several days?
         //Remember that we can run a hash check
     }
+}
+
+function getDeviceHashForEmail(email){
+    return CryptoJS.SHA512(email);
 }
 
 var app = {
@@ -74,13 +82,12 @@ var app = {
     onDeviceReady: function () {
         app.receivedEvent('deviceready');
         try {
-            alert("Initializing...");
-
+            //alert("Initializing...");
             NewsMute();
-
             document.addEventListener("pause", function () {
-                window.localStorage.removeItem("initialAppLaunch");
+                window.localStorage.removeItem(flag_initial_app_launch);
                 window.localStorage.removeItem("lastVisited");
+                app.exitApp();//@FIXME: If the use is reading and article and receives a call?
             }, false);
 
 
@@ -226,9 +233,9 @@ function superFriend() {
             for (var i = 0; i < contacts.length; i++) {
                 for (var j = 0; contacts[i].emails != null && j < contacts[i].emails.length; j++) {
                     if (contacts != "") {
-                        contactSet = contactSet + "%7C" + contacts[i].emails[j].value; //%7C is the pipe | sign
+                        contactSet = contactSet + "%7C" + getDeviceHashForEmail(contacts[i].emails[j].value); //%7C is the pipe | sign
                     } else {
-                        contactSet = contacts[i].emails[j].value;
+                        contactSet = getDeviceHashForEmail(contacts[i].emails[j].value);
                     }
                 }
 
