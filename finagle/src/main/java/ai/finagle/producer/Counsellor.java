@@ -1,6 +1,8 @@
 package ai.finagle.producer;
 
 import ai.finagle.model.SuperFriendValue;
+import ai.finagle.model.YawnFeedItem;
+import ai.finagle.model.YawnItem;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
 
@@ -57,7 +59,16 @@ public class Counsellor implements Runnable {
                         }
 
                         for (final String friend : superFriendValue.superFriends) {//Ideally, all screams are not friends of this person, but we do so for now for testing
-                            connect.execute("insert into Yawn(humanId, urlHash, value) values('" + friend + "','" + scream.getString("urlHash") + "','" + scream.getString("value") + "');");
+
+                            final ResultSet rows = connect.execute("select * from Yawn where humanId='" + friend + "' AND urlHash='" + scream.getString("urlHash") + "'");
+                            if(rows.all().isEmpty()){
+                                connect.execute("insert into Yawn(humanId, urlHash, value) values('" + friend + "','" + scream.getString("urlHash") + "','" + scream.getString("value") + "');");
+                            }else {
+                                final YawnFeedItem yawnFeedItem = new Gson().fromJson(all.get(0).getString("value"), YawnFeedItem.class);
+                                yawnFeedItem.shock();
+                                connect.execute("insert into Yawn(humanId, urlHash, value) values('" + friend + "','" + scream.getString("urlHash") + "','" + new Gson().toJson(yawnFeedItem)+ "');");
+                            }
+
                             totalInsertions++;
                         }
                     }

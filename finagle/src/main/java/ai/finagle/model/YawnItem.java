@@ -10,12 +10,16 @@ public class YawnItem {
     final String link;
     final String title;
     final String description;
-    final String shocks;
+    String shocks;
 
     public YawnItem(final String link, final String title, final String description, final String shocks) {
         this.link = link;
         this.title = title;
         this.description = description;
         this.shocks = shocks;
+    }
+
+    public void shock(){
+        final int shocks = Integer.parseInt(this.shocks) + 1;
     }
 }
