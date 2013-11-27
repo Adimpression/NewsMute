@@ -3,7 +3,6 @@ package ai.finagle.producer;
 import ai.finagle.model.Return;
 import ai.finagle.model.ReturnValueScream;
 import ai.finagle.model.YawnItem;
-import ai.finagle.util.blowfish.jbcrypt.BCrypt;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
 import com.twitter.finagle.Service;
@@ -18,6 +17,7 @@ import org.jboss.netty.handler.codec.http.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.net.InetSocketAddress;
 import java.net.URL;

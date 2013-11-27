@@ -79,6 +79,15 @@
         </dependency>
         <!--End of Jsoup Dependencies-->
 
+        <!--BCrypt Dependencies -->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.3m</version>
+        </dependency>
+        <!--End of BCrypt Dependencies -->
+
+
     </dependencies>
 
 

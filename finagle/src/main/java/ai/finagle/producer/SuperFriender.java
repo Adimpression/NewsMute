@@ -3,7 +3,6 @@ package ai.finagle.producer;
 import ai.finagle.model.Return;
 import ai.finagle.model.ReturnValueSuperFriend;
 import ai.finagle.model.SuperFriendValue;
-import ai.finagle.util.blowfish.jbcrypt.BCrypt;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
 import com.twitter.finagle.Service;
@@ -15,6 +14,7 @@ import com.twitter.util.Future;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.http.*;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.net.InetSocketAddress;
 import java.util.*;
