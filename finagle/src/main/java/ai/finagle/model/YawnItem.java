@@ -20,6 +20,10 @@ public class YawnItem {
     }
 
     public void shock(){
-        final int shocks = Integer.parseInt(this.shocks) + 1;
+        shocks = String.valueOf(Integer.parseInt(this.shocks) + 1);
+    }
+
+    public int shocks(){
+        return Integer.parseInt(shocks);
     }
 }
