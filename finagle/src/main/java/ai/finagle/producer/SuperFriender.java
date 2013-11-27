@@ -3,6 +3,7 @@ package ai.finagle.producer;
 import ai.finagle.model.Return;
 import ai.finagle.model.ReturnValueSuperFriend;
 import ai.finagle.model.SuperFriendValue;
+import ai.finagle.util.blowfish.jbcrypt.BCrypt;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
 import com.twitter.finagle.Service;
@@ -119,6 +120,7 @@ public class SuperFriender implements Runnable {
 
                 for (final String newContact : newContacts) {
                     if (newContact != null && !newContact.isEmpty()) {
+                        BCrypt.hashpw(newContact, "random_text_todo");
                         contacts.add(newContact);
                     }
                 }

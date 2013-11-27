@@ -3,6 +3,7 @@ package ai.finagle.producer;
 import ai.finagle.model.Return;
 import ai.finagle.model.ReturnValueScream;
 import ai.finagle.model.YawnItem;
+import ai.finagle.util.blowfish.jbcrypt.BCrypt;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
 import com.twitter.finagle.Service;
@@ -104,6 +105,8 @@ public class Screamer implements Runnable {
         if(user != null && urlParameter != null){
             for (String s : urlParameter) {
                 System.out.println("url:" + s);
+                final String unhashedUser = user.get(0);
+                final String hashedUser = BCrypt.hashpw(unhashedUser, "random_text_todo");
                 try {
                     final Document document = Jsoup.parse(new URL(s).openStream(), "UTF-8", s);
 
@@ -117,9 +120,9 @@ public class Screamer implements Runnable {
                         }
                     }
                     System.out.println("description:" + description);
-                    connect.execute("insert into Scream(humanId, urlHash, value) values('" + user.get(0) + "','" + s + "','" + new Gson().toJson(new YawnItem(s, title, description, "0")) + "');");//Yet to hash the urlHash value
+                    connect.execute("insert into Scream(humanId, urlHash, value) values('" + hashedUser + "','" + s + "','" + new Gson().toJson(new YawnItem(s, title, description, "0")) + "');");//Yet to hash the urlHash value
                 } catch (final Throwable e) {
-                    connect.execute("insert into Scream(humanId, urlHash, value) values('" + user.get(0) + "','" + s + "','" + new Gson().toJson(new YawnItem(s, s, s, "0")) + "');");//Yet to hash the urlHash value
+                    connect.execute("insert into Scream(humanId, urlHash, value) values('" + hashedUser + "','" + s + "','" + new Gson().toJson(new YawnItem(s, s, s, "0")) + "');");//Yet to hash the urlHash value
                 }
 
             }
