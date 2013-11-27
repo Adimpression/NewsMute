@@ -23,7 +23,7 @@ public class YawnItem {
         shocks = String.valueOf(Integer.parseInt(this.shocks) + 1);
     }
 
-    public int shocks(){
-        return Integer.parseInt(shocks);
+    public String shocks(){
+        return shocks;
     }
 }

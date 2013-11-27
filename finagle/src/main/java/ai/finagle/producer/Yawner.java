@@ -49,6 +49,7 @@ public class Yawner implements Runnable {
             //connect.execute("drop table Yawn;");
             connect.execute("create table Yawn(\n" +
                     "      humanId varchar,\n" +
+                    "      shocks varchar,\n" +
                     "      urlHash varchar,\n" +
                     "      value varchar,\n" +
                     "      PRIMARY KEY (humanId, urlHash));");
