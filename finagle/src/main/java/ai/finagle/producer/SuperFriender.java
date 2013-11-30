@@ -1,5 +1,6 @@
 package ai.finagle.producer;
 
+import ai.finagle.db.DBScripts;
 import ai.finagle.model.Return;
 import ai.finagle.model.ReturnValueSuperFriend;
 import ai.finagle.model.SuperFriendValue;
@@ -45,10 +46,7 @@ public class SuperFriender implements Runnable {
         final Session connect = cluster.connect("Test1");
         try {
             //connect.execute("drop table SuperFriend;");
-            connect.execute("create table SuperFriend(\n" +
-                    "      humanId varchar,\n" +
-                    "      value varchar,\n" +
-                    "      PRIMARY KEY (humanId));");
+            connect.execute(DBScripts.CREATE_SUPERFRIEND);
 
         } catch (final Exception e) {//Table already exists
             System.out.println(e.getMessage());

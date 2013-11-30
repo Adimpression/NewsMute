@@ -1,5 +1,6 @@
 package ai.finagle.producer;
 
+import ai.finagle.db.DBScripts;
 import ai.finagle.model.Return;
 import ai.finagle.model.ReturnValueScream;
 import ai.finagle.model.YawnItem;
@@ -49,11 +50,7 @@ public class Screamer implements Runnable {
         final Session connect = cluster.connect("Test1");
         try {
             //connect.execute("drop table Scream;");
-            connect.execute("create table Scream(\n" +
-                    "      humanId varchar,\n" +
-                    "      urlHash varchar,\n" +
-                    "      value varchar,\n" +
-                    "      PRIMARY KEY (humanId, urlHash));");
+            connect.execute(DBScripts.CREATE_SCREAM);
 
         } catch (final Exception e) {//Table already exists
             System.out.println(e.getMessage());

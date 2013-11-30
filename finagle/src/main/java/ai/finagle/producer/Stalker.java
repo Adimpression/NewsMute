@@ -1,5 +1,6 @@
 package ai.finagle.producer;
 
+import ai.finagle.db.DBScripts;
 import ai.finagle.model.Return;
 import ai.finagle.model.ReturnValueStalk;
 import ai.finagle.model.StalkItem;
@@ -69,11 +70,7 @@ public class Stalker implements Runnable {
         final Session connect = cluster.connect("Test1");
         try {
             //connect.execute("drop table Scream;");
-            connect.execute("create table Stalk(\n" +
-                    "      humanId varchar,\n" +
-                    "      urlHash varchar,\n" +
-                    "      value varchar,\n" +
-                    "      PRIMARY KEY (humanId, urlHash));");
+            connect.execute(DBScripts.CREATE_STALK);
 
         } catch (final Exception e) {//Table already exists
             System.out.println(e.getMessage());
