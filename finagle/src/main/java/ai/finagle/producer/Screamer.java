@@ -117,9 +117,9 @@ public class Screamer implements Runnable {
                         }
                     }
                     System.out.println("description:" + description);
-                    connect.execute("insert into Scream(humanId, urlHash, value) values('" + hashedUser + "','" + s + "','" + new Gson().toJson(new YawnItem(s, title, description, "0")) + "');");//Yet to hash the urlHash value
-                } catch (final Throwable e) {
-                    connect.execute("insert into Scream(humanId, urlHash, value) values('" + hashedUser + "','" + s + "','" + new Gson().toJson(new YawnItem(s, s, s, "0")) + "');");//Yet to hash the urlHash value
+                    connect.execute("insert into Scream(humanId, urlHash, value) values('" + hashedUser + "','" + s + "','" + new Gson().toJson(new YawnItem(s, title, description, "0")) + "') USING TTL 60;");//Yet to hash the urlHash value
+                } catch (final Throwable e) {//@TODO: Get rid of this, plan for missing title and description inside try
+                    connect.execute("insert into Scream(humanId, urlHash, value) values('" + hashedUser + "','" + s + "','" + new Gson().toJson(new YawnItem(s, s, s, "0")) + "') USING TTL 60;");//Yet to hash the urlHash value
                 }
 
             }
