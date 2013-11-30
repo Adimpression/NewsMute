@@ -52,7 +52,7 @@ public class Yawner implements Runnable {
                     "      shocks varchar,\n" +
                     "      urlHash varchar,\n" +
                     "      value varchar,\n" +
-                    "      PRIMARY KEY (humanId, urlHash));");
+                    "      PRIMARY KEY (humanId, shocks, urlHash));");
 
         } catch (final Exception e) {//Table already exists
             System.out.println(e.getMessage());
