@@ -1,9 +1,6 @@
 package ai.finagle.producer;
 
-import ai.finagle.model.Return;
-import ai.finagle.model.ReturnValueYawn;
-import ai.finagle.model.YawnFeedItem;
-import ai.finagle.model.YawnItem;
+import ai.finagle.model.*;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -16,9 +13,12 @@ import com.twitter.util.Future;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.http.*;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -106,23 +106,53 @@ public class Yawner implements Runnable {
         final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
 
         final List<String> user = parameters.get("user");
+        final List<String> urlParameter = parameters.get("url");
+        final List<String> action = parameters.get("action");
 
         final YawnFeedItem[] yawnItems;
 
-        if (user != null) {
-            System.out.println("Values in table as follows");
-            final ResultSet execute = connect.execute("select * from Yawn where humanId='" + user.get(0) + "'");
-            final List<Row> all = execute.all();
+        YawnerAction yawnerAction = (yawnerAction = YawnerAction.FORMATER.to(YawnerAction.class, action.get(0))) != null ? yawnerAction : YawnerAction.ERROR;
 
-            yawnItems = new YawnFeedItem[all.size()];
+        switch (yawnerAction) {
+            case READ:{
+                if (user != null) {
+                    System.out.println("Values in table as follows");
+                    final ResultSet execute = connect.execute("select * from Yawn where humanId='" + user.get(0) + "'");
+                    final List<Row> all = execute.all();
 
-            for (int i = 0; i < yawnItems.length; i++) {
-                yawnItems[i] = new Gson().fromJson(all.get(i).getString("value"), YawnFeedItem.class);
+                    yawnItems = new YawnFeedItem[all.size()];
+
+                    for (int i = 0; i < yawnItems.length; i++) {
+                        yawnItems[i] = new Gson().fromJson(all.get(i).getString("value"), YawnFeedItem.class);
+                    }
+
+                } else {
+                    yawnItems = new YawnFeedItem[0];
+                }
             }
-
-        } else {
-            yawnItems = new YawnFeedItem[0];
+            break;
+            case DELETE: {
+                yawnItems = new YawnFeedItem[0];//@TODO: This is just to supply the return value, have to move things round
+                if(user != null){
+                    try {
+                        System.out.println(yawnerAction.toString());
+                        final String s = urlParameter.get(0);
+                        System.out.println("url:" + s);
+                        connect.execute("delete from Yawn where humanId='" + user.get(0) + "' and urlHash='" + s + "';");//Yet to hash the urlHash value
+                    } catch (Exception e) {
+                        e.printStackTrace(System.err);
+                    }
+                }
+            }
+            break;
+            case ERROR:
+                yawnItems = new YawnFeedItem[0];//@TODO: This is just to supply the return value, have to move things round
+                break;
+            default:
+                yawnItems = new YawnFeedItem[0];//@TODO: This is just to supply the return value, have to move things round
         }
+
+
 
         return new Gson().toJson(new Return<ReturnValueYawn>(new ReturnValueYawn(yawnItems), "No Error", "OK"));
     }
