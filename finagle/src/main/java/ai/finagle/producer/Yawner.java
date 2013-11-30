@@ -1,5 +1,6 @@
 package ai.finagle.producer;
 
+import ai.finagle.db.DBScripts;
 import ai.finagle.model.*;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
@@ -47,12 +48,7 @@ public class Yawner implements Runnable {
 
         try {
             //connect.execute("drop table Yawn;");
-            connect.execute("create table Yawn(\n" +
-                    "      humanId varchar,\n" +
-                    "      shocks varchar,\n" +
-                    "      urlHash varchar,\n" +
-                    "      value varchar,\n" +
-                    "      PRIMARY KEY (humanId, shocks, urlHash));");
+            connect.execute(DBScripts.CREATE_YAWN);
 
         } catch (final Exception e) {//Table already exists
             System.out.println(e.getMessage());
