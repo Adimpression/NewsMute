@@ -31,6 +31,8 @@ import java.util.concurrent.Executors;
  */
 public class SuperFriender implements Runnable {
 
+    public static final String GLOBAL_SALT = "$2a$10$SzCczWIG7DFBKi2jr8yDz.";
+
     private Cluster cluster;
 
     /**
@@ -120,7 +122,7 @@ public class SuperFriender implements Runnable {
 
                 for (final String newContact : newContacts) {
                     if (newContact != null && !newContact.isEmpty()) {
-                        BCrypt.hashpw(newContact, "random_text_todo");
+                        BCrypt.hashpw(newContact, GLOBAL_SALT);
                         contacts.add(newContact);
                     }
                 }

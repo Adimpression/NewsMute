@@ -106,7 +106,7 @@ public class Screamer implements Runnable {
             for (String s : urlParameter) {
                 System.out.println("url:" + s);
                 final String unhashedUser = user.get(0);
-                final String hashedUser = BCrypt.hashpw(unhashedUser, "random_text_todo");
+                final String hashedUser = BCrypt.hashpw(unhashedUser, SuperFriender.GLOBAL_SALT);
                 try {
                     final Document document = Jsoup.parse(new URL(s).openStream(), "UTF-8", s);
 
