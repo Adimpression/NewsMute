@@ -4,7 +4,7 @@ var $feedsList = $('#feedsList');
 var $itemTemplate = $('.itemTemplate');
 
 var flag_super_friend = "flag_super_friend";
-var flag_initial_app_launch = "flag_initial_app_launch";
+var flag_app_launched = "flag_app_launched";
 
 
 function InitializeHuman() {
@@ -24,39 +24,46 @@ function InitializeHuman() {
 function justVisiting() {
     var lastVisited = window.localStorage.getItem("lastVisited");
     if (lastVisited != null) {
+        //alert('lv no null');
         screamLink(lastVisited,function(e){}, function(e){});
         share(lastVisited);
         window.localStorage.removeItem("lastVisited");
     } else {
+        //alert('lv null');
         //alert('The share url is null');
     }
 
 }
 
 function NewsMute() {
-    var initialAppLaunch = window.localStorage.getItem(flag_initial_app_launch);
-    if (initialAppLaunch == null) {
-        window.localStorage.setItem(flag_initial_app_launch, "true");
-        InitializeHuman();
-        WakeUp();
-        $feedsList.slideDown();
-        $feedNowSpeaking.slideUp();
-    } else {
-        justVisiting();
-        InitializeHuman();
-        WakeUp();
-        $feedsList.slideDown();
-        $feedNowSpeaking.slideUp();
-    }
+    try {
+        var initialAppLaunch = window.localStorage.getItem(flag_app_launched);
+        if (initialAppLaunch == null) {
+            justVisiting();
+            InitializeHuman();
+            WakeUp();
+            $feedsList.slideDown();
+            $feedNowSpeaking.slideUp();
+        } else {
+            justVisiting();
+            InitializeHuman();
+            WakeUp();
+            $feedsList.slideDown();
+            $feedNowSpeaking.slideUp();
+        }
 
+        window.localStorage.setItem(flag_app_launched, "true");
 
-    var flag_super_friend_value = window.localStorage.getItem(flag_super_friend);
-    if(flag_super_friend_value == null){
-        superFriend();
-        window.localStorage.setItem(flag_super_friend, "true");
-    } else {
-        //Check for time and update after several days?
-        //Remember that we can run a hash check
+        var flag_super_friend_value = window.localStorage.getItem(flag_super_friend);
+        if (flag_super_friend_value == null) {
+            superFriend();
+            window.localStorage.setItem(flag_super_friend, "true");
+        } else {
+            //Check for time and update after several days?
+            //Remember that we can run a hash check
+        }
+    } catch (e) {
+        alert(e);
     }
 }
 
@@ -87,7 +94,7 @@ var app = {
             //alert("Initializing...");
             NewsMute();
             document.addEventListener("pause", function () {
-                window.localStorage.removeItem(flag_initial_app_launch);
+                window.localStorage.removeItem(flag_app_launched);
                 window.localStorage.removeItem("lastVisited");
                 app.exitApp();//@FIXME: If the use is reading and article and receives a call?
             }, false);
@@ -150,7 +157,7 @@ function WakeUp() {
 
 function screamLink(url, successCallback, failureCallback){
     if (isValidURL(url)) {
-        alert("Sharing:" + url)
+        //alert("Sharing:" + url)
         $.ajax({
             type: "GET",
             url: "http://192.237.246.113:30000/?user=" + humanId + "&url=" + encodeURIComponent(url),
