@@ -130,6 +130,7 @@ function WakeUp() {
                         clone.find('.itemDescription').html(item.description);
                         clone.find('.itemBookmark').attr("title", item.link);
                         clone.find('.itemHide').attr("title", item.link);
+                        clone.find('.itemAdvanced').attr("title", item.source);
                         $feedsList.append(clone);
                     }
                 }
@@ -222,6 +223,34 @@ function share(link) {
         window.socialmessage.send(message);
     } catch (e) {
         alert(e);
+    }
+
+}
+function unshare(url) {
+    if (isValidURL(url)) {
+        $.ajax({
+            type: "GET",
+            url: "http://192.237.246.113:16185/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=DELETE",
+            crossDomain: true,
+            beforeSend: function () {
+            },
+            complete: function () {
+            },
+            data: {},
+            dataType: 'text', //json
+            success: function (response) {
+                try {
+                    alert(response);
+                } catch (e) {
+                    alert(e);
+                }
+            },
+            error: function (e) {
+                alert(e.toString());
+            }
+        });
+    } else {//Then this is a spammy user, get rid of it?
+        alert('Noted as spam');
     }
 
 }

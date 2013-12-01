@@ -1,4 +1,4 @@
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8"/>
     <meta name="format-detection" content="telephone=no"/>
@@ -55,13 +55,19 @@
                                     <div class="one" style="height: 2%;">
                                     </div>
                                     <div class="one" style="opacity: 0.5;">
-                                        <div class="use50 left">
+                                        <div class="use30 left">
                                             <button href="#" class="itemBookmark" style="text-decoration: underline;"
                                                     onclick="share(this.title);" title="">
                                                 Bookmark
                                             </button>
                                         </div>
-                                        <div class="use50 right">
+                                        <div class="use40 center">
+                                            <spanhref="#" class="itemAdvanced" style="text-decoration: none;"
+                                                    onclick="unshare(this.title);" title="">
+                                                *
+                                            </span>
+                                        </div>
+                                        <div class="use30 right">
                                             <button  class="itemHide" href="#" title="http://www.google.com" onclick="$(this).parent().parent().parent().parent().slideUp();hide(this.title);">
                                                 &nbsp;&nbsp;&nbsp;&nbsp;<span style="text-decoration: underline;">Hide</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                             </button>
