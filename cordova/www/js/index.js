@@ -24,9 +24,11 @@ function InitializeHuman() {
 function justVisiting() {
     var lastVisited = window.localStorage.getItem("lastVisited");
     if (lastVisited != null) {
+        screamLink(lastVisited,function(e){}, function(e){});
         share(lastVisited);
+        window.localStorage.removeItem("lastVisited");
     } else {
-        alert('The share url is null');
+        //alert('The share url is null');
     }
 
 }
@@ -125,7 +127,7 @@ function WakeUp() {
                         var clone = $itemTemplate.clone();
                         clone.attr("id", encodeURIComponent(item.link));
                         clone.find('.itemTitle').text(item.title);
-                        clone.find('.itemTitle').attr('href', item.link);
+                        //clone.find('.itemTitle').attr('href', item.link);
                         clone.find('.itemTitle').attr("title", item.link);
                         clone.find('.itemDescription').html(item.description);
                         clone.find('.itemBookmark').attr("title", item.link);
@@ -146,10 +148,7 @@ function WakeUp() {
     });
 }
 
-function scream() {
-
-    var url = prompt("Enter link");
-
+function screamLink(url, successCallback, failureCallback){
     if (isValidURL(url)) {
         alert("Sharing:" + url)
         $.ajax({
@@ -163,22 +162,21 @@ function scream() {
             data: {},
             dataType: 'text', //json
             success: function (response) {
-                try {
-                    alert(response);
-                } catch (e) {
-                    alert(e);
-                }
-
-
+                successCallback(response);
             },
             error: function (e) {
                 alert("Error sharing link:" + e.toString());
+                failureCallback(e);
             }
         });
     } else {
         alert('Sorry :-( This link is not recognized by News Mute')
     }
+}
 
+function scream() {
+    var url = prompt("Enter link");
+    screamLink(url, function(e){}, function(e){});
 }
 
 function stalk() {
