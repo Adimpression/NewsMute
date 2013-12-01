@@ -105,7 +105,7 @@ var app = {
 function WakeUp() {
     $.ajax({
         type: "GET",
-        url: "http://192.237.246.113:40000/?action=READ&user=" + humanId,
+        url: "http://192.237.246.113:40000/?nmact=READ&user=" + humanId,
         crossDomain: true,
         beforeSend: function () {
         },
@@ -187,7 +187,7 @@ function stalk() {
     if (isValidURL(url)) {
         $.ajax({
             type: "GET",
-            url: "http://192.237.246.113:16185/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&action=CREATE",
+            url: "http://192.237.246.113:16185/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=CREATE",
             crossDomain: true,
             beforeSend: function () {
             },
