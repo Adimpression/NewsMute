@@ -1,6 +1,6 @@
 package ai.finagle.producer;
 
-public enum StalkerAction{
+public enum StalkerAction {
     CREATE,
     READ,
     DELETE,
@@ -20,5 +20,12 @@ public enum StalkerAction{
      */
     ERROR;
 
-    public static FORMATTER<StalkerAction> FORMATER = FORMATTER.DEFAULT();
+    public static StalkerAction to(final String enumAsString) {
+        try {
+            return StalkerAction.valueOf(enumAsString);
+        } catch (final Throwable e) {
+            return StalkerAction.ERROR;
+
+        }
+    }
 }

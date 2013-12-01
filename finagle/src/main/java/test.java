@@ -1,9 +1,11 @@
 import ai.finagle.producer.StalkerAction;
+import ai.finagle.producer.YawnerAction;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,17 +30,24 @@ public class test {
         //getLinkInfo("http://mobile.bbc.co.uk/hindi/international/2013/11/131103_us_pakistan_taliban_aa");
         //Try not to use BBC, they most probably will do everything right and most sources might not
         //testFeed("http://feeds.rssboard.org/rssboard");
-        String action = "s";
-        StalkerAction temp;
-        final StalkerAction to = (temp = StalkerAction.FORMATER.to(StalkerAction.class, action)) != null ?  temp : StalkerAction.ERROR;
-        switch (to) {
-            case CREATE:
-                break;
-            case DELETE:
-                break;
-            default:
-                ;
-        }
+//        String action = "s";
+//        StalkerAction temp;
+//        final StalkerAction to = (temp = StalkerAction.FORMATER.to(StalkerAction.class, action)) != null ?  temp : StalkerAction.ERROR;
+//        switch (to) {
+//            case CREATE:
+//                break;
+//            case DELETE:
+//                break;
+//            default:
+//                ;
+//        }
+//        System.out.println(BCrypt.gensalt(2));
+//        try {
+//            YawnerAction yawnerAction = (yawnerAction = YawnerAction.FORMATER.to(YawnerAction.class, "READ")) != null ? yawnerAction : YawnerAction.ERROR;
+//            System.out.println(yawnerAction);
+//        } catch (Exception e) {
+//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//        }
     }
 
     private static void testFeed(final String feedUrl) throws IOException {

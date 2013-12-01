@@ -19,5 +19,12 @@ public enum YawnerAction {
      */
     ERROR;
 
-    public static FORMATTER<YawnerAction> FORMATER = FORMATTER.DEFAULT();
+    public static YawnerAction to(final String enumAsString) {
+        try {
+            return YawnerAction.valueOf(enumAsString);
+        } catch (final Throwable e) {
+            return YawnerAction.ERROR;
+        }
+    }
+
 }

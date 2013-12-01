@@ -1,14 +1,14 @@
 package ai.finagle.producer;
 
 /**
- * Note that {@link RE} and {@link REQUIRED_ENUM} are both the same but we unfortunately have to
- * specify it in two places
+ * Frankly, we short-circuited a requirement and now this is just a stupid idea
  *
  * Created with IntelliJ IDEA Ultimate.
  * User: http://www.ilikeplaces.com
  * Date: 24/11/13
  * Time: 3:27 PM
  */
+@Deprecated
 public final class FORMATTER<RE> {
 
     private FORMATTER(){

@@ -93,16 +93,19 @@ public class SuperFriender implements Runnable {
         final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
         final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
 
-        final List<String> user = parameters.get("user");
+        final List<String> userParameterValues = parameters.get("user");
         final List<String> usersParameterValues = parameters.get("users");
         final String returnVal;
 
-        if (user != null) {
-            System.out.println("user:" + user);
+        if (userParameterValues != null) {
             //@TODO: Remove unwanted emails such as unsubscribe@mailinglist.com(limit by keyword) or 123123980u09203412341343@_23e234LLgmail.com(limit by length)
+            final String user = userParameterValues.get(0);
+            System.out.println("user:" +user);
+            final String hasheduser = BCrypt.hashpw(user, new String(SuperFriender.GLOBAL_SALT));
+            System.out.println("hashed user:" + hasheduser);
             if (usersParameterValues != null) {//Adding friends
                     System.out.println("users:" + usersParameterValues.get(0));
-                final ResultSet execute = connect.execute("select * from SuperFriend where humanId='" + user.get(0) + "'");
+                final ResultSet execute = connect.execute("select * from SuperFriend where humanId='" + hasheduser + "'");
                 final List<Row> all = execute.all();
                 final SuperFriendValue superFriendValue;
                 if (all.size() != 0) {
@@ -118,20 +121,19 @@ public class SuperFriender implements Runnable {
 
                 final String[] newContacts = usersParameterValues.get(0).split("\\|");
 
-                for (final String newContact : newContacts) {
-                    if (newContact != null && !newContact.isEmpty()) {
-                        BCrypt.hashpw(newContact, GLOBAL_SALT);
-                        contacts.add(newContact);
+                for (final String contact : newContacts) {
+                    if (contact != null && !contact.isEmpty()) {
+                        contacts.add(BCrypt.hashpw(contact, new String(GLOBAL_SALT)));
                     }
                 }
 
                 final String[] finalContacts = new String[contacts.size()];
 
-                connect.execute("insert into SuperFriend(humanId, value) values('" + user.get(0) + "','" + new Gson().toJson(new SuperFriendValue(user.get(0), contacts.toArray(finalContacts))) + "');");//Yet to hash the urlHash value
+                connect.execute("insert into SuperFriend(humanId, value) values('" + hasheduser + "','" + new Gson().toJson(new SuperFriendValue(hasheduser, contacts.toArray(finalContacts))) + "');");//Yet to hash the urlHash value
                 returnVal = new Gson().toJson(new Return<ReturnValueSuperFriend>(new ReturnValueSuperFriend(new SuperFriendValue[]{}), "", "OK"));
 
             } else {//querying friends
-                final ResultSet execute = connect.execute("select * from SuperFriend where humanId='" + user.get(0) + "'");
+                final ResultSet execute = connect.execute("select * from SuperFriend where humanId='" + hasheduser + "'");
                 final List<Row> all = execute.all();
                 final SuperFriendValue superFriendValue;
                 if (all.size() != 0) {

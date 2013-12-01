@@ -118,26 +118,24 @@ public class Stalker implements Runnable {
 
         final List<String> user = parameters.get("user");
         final List<String> urlParameter = parameters.get("url");
-        final List<String> action = parameters.get("action");
+        final List<String> action = parameters.get(Yawner.ACTION);
         StalkItem[] stalkItems = new StalkItem[]{};
 
         if (user != null) {
-                StalkerAction stalkerAction = (stalkerAction = StalkerAction.FORMATER.to(StalkerAction.class, action.get(0))) != null ? stalkerAction : StalkerAction.ERROR;
+                StalkerAction stalkerAction =StalkerAction.valueOf(action.get(0));
                 switch (stalkerAction) {
                     case CREATE: {
                         try {
                             System.out.println(stalkerAction.toString());
-                            final String s = urlParameter.get(0);
-                            System.out.println("url:" + s);
-
-                            final Document document = Jsoup.parse(new URL(s).openStream(), "UTF-8", s);
-
+                            final String url = urlParameter.get(0);
+                            System.out.println("url:" + url);
+                            final Document document = Jsoup.parse(new URL(url).openStream(), "UTF-8", url);
                             final String title = document.getElementsByTag("title").first().text();
                             System.out.println("title:" + title);
                             final String description = document.getElementsByTag("title").first().text();
                             System.out.println("description:" + description);
 
-                            connect.execute("insert into Stalk(humanId, urlHash, value) values('" + user.get(0) + "','" + s + "','" + new Gson().toJson(new StalkItem(s, title, description)) + "');");//Yet to hash the urlHash value
+                            connect.execute("insert into Stalk(humanId, urlHash, value) values('" + user.get(0) + "','" + url + "','" + new Gson().toJson(new StalkItem(url, title, description)) + "');");//Yet to hash the urlHash value
                         } catch (final Throwable e) {
                             e.printStackTrace(System.err);
                         }

@@ -91,41 +91,52 @@ public class Screamer implements Runnable {
     }
 
     private String blocking(HttpRequest request) {
-        final Session connect = cluster.connect("Test1");
+        try {
+            final Session connect = cluster.connect("Test1");
 
-        final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
-        final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
+            final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
+            final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
 
-        final List<String> user = parameters.get("user");
-        final List<String> urlParameter = parameters.get("url");
+            final List<String> user = parameters.get("user");
+            final List<String> urlParameter = parameters.get("url");
 
-        if(user != null && urlParameter != null){
-            for (String s : urlParameter) {
-                System.out.println("url:" + s);
-                final String unhashedUser = user.get(0);
-                final String hashedUser = BCrypt.hashpw(unhashedUser, SuperFriender.GLOBAL_SALT);
-                try {
-                    final Document document = Jsoup.parse(new URL(s).openStream(), "UTF-8", s);
+            if(user != null && urlParameter != null){
+                for (String s : urlParameter) {
+                    try {
+                        System.out.println("url:" + s);
+                        final String unhashedUser = user.get(0);
+                        System.out.println("user:" +unhashedUser);
+                        final String hashedUser = BCrypt.hashpw(unhashedUser, new String(SuperFriender.GLOBAL_SALT));
+                        System.out.println("hashed user:" + hashedUser);
+                        try {
+                            final Document document = Jsoup.parse(new URL(s).openStream(), "UTF-8", s);
 
-                    final String title = document.getElementsByTag("title").first().text();
-                    System.out.println("title:" + title);
-                    String description = title;
-                    for (final Element meta : document.getElementsByTag("meta")) {
-                        if (meta.attr("name").equals("description")) {
-                            description = meta.attr("content");
-                            break;
+                            final String title = document.getElementsByTag("title").first().text();
+                            System.out.println("title:" + title);
+                            String description = title;
+                            for (final Element meta : document.getElementsByTag("meta")) {
+                                if (meta.attr("name").equals("description")) {
+                                    description = meta.attr("content");
+                                    break;
+                                }
+                            }
+                            System.out.println("description:" + description);
+                            connect.execute("insert into Scream(humanId, urlHash, value) values('" + hashedUser + "','" + s + "','" + new Gson().toJson(new YawnItem(s, title, description, "0")) + "') USING TTL 600;");//Yet to hash the urlHash value
+                        } catch (final Throwable e) {//@TODO: Get rid of this, plan for missing title and description inside try
+                            connect.execute("insert into Scream(humanId, urlHash, value) values('" + hashedUser + "','" + s + "','" + new Gson().toJson(new YawnItem(s, s, s, "0")) + "') USING TTL 600;");//Yet to hash the urlHash value
                         }
+                    } catch (final Throwable e) {
+                        e.printStackTrace(System.err);
                     }
-                    System.out.println("description:" + description);
-                    connect.execute("insert into Scream(humanId, urlHash, value) values('" + hashedUser + "','" + s + "','" + new Gson().toJson(new YawnItem(s, title, description, "0")) + "') USING TTL 60;");//Yet to hash the urlHash value
-                } catch (final Throwable e) {//@TODO: Get rid of this, plan for missing title and description inside try
-                    connect.execute("insert into Scream(humanId, urlHash, value) values('" + hashedUser + "','" + s + "','" + new Gson().toJson(new YawnItem(s, s, s, "0")) + "') USING TTL 60;");//Yet to hash the urlHash value
+
                 }
-
             }
-        }
 
-        return new Gson().toJson(new Return<ReturnValueScream>(new ReturnValueScream(new YawnItem[0]), "", "OK"));
+            return new Gson().toJson(new Return<ReturnValueScream>(new ReturnValueScream(new YawnItem[0]), "", "OK"));
+        } catch (final Throwable e) {
+            e.printStackTrace(System.out);  //To change body of catch statement use File | Settings | File Templates.
+            throw new RuntimeException(e);
+        }
     }
 
     public String open(String node) {

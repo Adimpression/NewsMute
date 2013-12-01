@@ -50,7 +50,7 @@ function NewsMute() {
 
     var flag_super_friend = window.localStorage.getItem(flag_super_friend);
     if(flag_super_friend == null){
-        //superFriend();
+        superFriend();
         window.localStorage.setItem(flag_super_friend, "true");
     } else {
         //Check for time and update after several days?
@@ -105,7 +105,7 @@ var app = {
 function WakeUp() {
     $.ajax({
         type: "GET",
-        url: "http://192.237.246.113:40000/?user=" + humanId,
+        url: "http://192.237.246.113:40000/?action=READ&user=" + humanId,
         crossDomain: true,
         beforeSend: function () {
         },
@@ -150,6 +150,7 @@ function scream() {
     var url = prompt("Enter link");
 
     if (isValidURL(url)) {
+        alert("Sharing:" + url)
         $.ajax({
             type: "GET",
             url: "http://192.237.246.113:30000/?user=" + humanId + "&url=" + encodeURIComponent(url),
@@ -170,7 +171,7 @@ function scream() {
 
             },
             error: function (e) {
-                alert(e.toString());
+                alert("Error sharing link:" + e.toString());
             }
         });
     } else {
@@ -226,6 +227,7 @@ function share(link) {
 }
 
 function superFriend() {
+    alert('Finding contacts');
     function findAllContactsSuccess(contacts) {
         alert('Found contacts: ' + contacts.length);
         try {
@@ -251,13 +253,6 @@ function superFriend() {
                         data: {},
                         dataType: 'text', //json
                         success: function (response) {
-                            try {
-                                alert(response);
-                            } catch (e) {
-                                alert(e);
-                            }
-
-
                         },
                         error: function (e) {
                             alert(e.toString());

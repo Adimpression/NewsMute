@@ -26,8 +26,7 @@ public class DBScripts {
 
     public static final String CREATE_YAWN = "create table Yawn(\n" +
             "      humanId varchar,\n" +
-            "      shocks varchar,\n" +
             "      urlHash varchar,\n" +
             "      value varchar,\n" +
-            "      PRIMARY KEY (humanId, shocks, urlHash));";
+            "      PRIMARY KEY (humanId, urlHash));";
 }

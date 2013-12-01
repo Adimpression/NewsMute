@@ -16,6 +16,7 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.http.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
@@ -34,6 +35,8 @@ import java.util.concurrent.Executors;
  * Time: 2:23 PM
  */
 public class Yawner implements Runnable {
+
+    public static final String ACTION = "nmact";
 
     private Cluster cluster;
 
@@ -101,43 +104,35 @@ public class Yawner implements Runnable {
         final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
         final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
 
-        final List<String> user = parameters.get("user");
-        final List<String> urlParameter = parameters.get("url");
-        final List<String> action = parameters.get("action");
+        final String user = getParameter(parameters.get("user"));
+        final String hashUser = BCrypt.hashpw(user, SuperFriender.GLOBAL_SALT);
+        System.out.println("user:" + hashUser);
+        final String url = getParameter(parameters.get("url") );
+        System.out.println("url:" + url);
+        final String action = getParameter(parameters.get(ACTION));
+        System.out.println("action:" + action);
 
         final YawnFeedItem[] yawnItems;
-
-        YawnerAction yawnerAction = (yawnerAction = YawnerAction.FORMATER.to(YawnerAction.class, action.get(0))) != null ? yawnerAction : YawnerAction.ERROR;
-
-        switch (yawnerAction) {
+        switch (YawnerAction.to(action.toUpperCase())) {
             case READ:{
-                if (user != null) {
-                    System.out.println("Values in table as follows");
-                    final ResultSet execute = connect.execute("select * from Yawn where humanId='" + user.get(0) + "'");
-                    final List<Row> all = execute.all();
+                System.out.println("Values in table as follows");
+                final ResultSet execute = connect.execute("select * from Yawn where humanId='" + hashUser + "'");
+                final List<Row> all = execute.all();
 
-                    yawnItems = new YawnFeedItem[all.size()];
+                yawnItems = new YawnFeedItem[all.size()];
 
-                    for (int i = 0; i < yawnItems.length; i++) {
-                        yawnItems[i] = new Gson().fromJson(all.get(i).getString("value"), YawnFeedItem.class);
-                    }
-
-                } else {
-                    yawnItems = new YawnFeedItem[0];
+                for (int i = 0; i < yawnItems.length; i++) {
+                    yawnItems[i] = new Gson().fromJson(all.get(i).getString("value"), YawnFeedItem.class);
                 }
+
             }
             break;
             case DELETE: {
                 yawnItems = new YawnFeedItem[0];//@TODO: This is just to supply the return value, have to move things round
-                if(user != null){
-                    try {
-                        System.out.println(yawnerAction.toString());
-                        final String s = urlParameter.get(0);
-                        System.out.println("url:" + s);
-                        connect.execute("delete from Yawn where humanId='" + user.get(0) + "' and urlHash='" + s + "';");//Yet to hash the urlHash value
-                    } catch (Exception e) {
-                        e.printStackTrace(System.err);
-                    }
+                try {
+                    connect.execute("delete from Yawn where humanId='" + hashUser + "' and urlHash='" + url + "';");//Yet to hash the urlHash value
+                } catch (Exception e) {
+                    e.printStackTrace(System.err);
                 }
             }
             break;
@@ -174,6 +169,15 @@ public class Yawner implements Runnable {
         cluster.shutdown();
     }
 
+    public static String getParameter(final List<String> urlParameter){
+        final String returnVal;
+        if (urlParameter != null){
+            returnVal = urlParameter.get(0);
+        } else {
+            returnVal = null;
+        }
+        return returnVal;
+    }
 
 }
 

@@ -11,6 +11,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
+ *         at com.datastax.driver.core.Session.execute(Session.java:77)
+ *         at ai.finagle.producer.Counsellor$1.run(Counsellor.java:63)
+ *         at java.util.TimerThread.mainLoop(Timer.java:555)
+ *         at java.util.TimerThread.run(Timer.java:505)
+ *         Caused by: com.datastax.driver.core.exceptions.InvalidQueryException: PRIMARY KEY part urlhash cannot be restricted (preceding part shocks is either not restricted or by a non-EQ relation)
  * Created with IntelliJ IDEA Ultimate.
  * User: http://www.ilikeplaces.com
  * Date: 27/10/13
@@ -47,26 +52,26 @@ public class Counsellor implements Runnable {
 
                     int totalInsertions = 0;
 
-                    for (final Row scream : allScreams) {
+                    for (final Row screamRow : allScreams) {
                         //@FIXME: Duplicate fetches. Can we fetch by partition? For, humanId on one partition will be the same
-                        final ResultSet executeSuperFriendsFetch = connect.execute("select * from SuperFriend where humanId='" + scream.getString(0) + "'");
-                        final List<Row> all = executeSuperFriendsFetch.all();
+                        final ResultSet executeSuperFriendsFetch = connect.execute("select * from SuperFriend where humanId='" + screamRow.getString(0) + "'");
+                        final List<Row> allSuperFriends = executeSuperFriendsFetch.all();
                         final SuperFriendValue superFriendValue;
-                        if (all.size() != 0) {
-                            superFriendValue = new Gson().fromJson(all.get(0).getString("value"), SuperFriendValue.class);
+                        if (allSuperFriends.size() != 0) {
+                            superFriendValue = new Gson().fromJson(allSuperFriends.get(0).getString("value"), SuperFriendValue.class);
                         } else {
-                            superFriendValue = new SuperFriendValue (scream.getString(0) , new String[0]);
+                            superFriendValue = new SuperFriendValue (screamRow.getString(0) , new String[0]);
                         }
 
                         for (final String friend : superFriendValue.superFriends) {//Ideally, all screams are not friends of this person, but we do so for now for testing
 
-                            final ResultSet rows = connect.execute("select * from Yawn where humanId='" + friend + "' AND urlHash='" + scream.getString("urlHash") + "'");
-                            if(rows.all().isEmpty()){
-                                connect.execute("insert into Yawn(humanId, shocks, urlHash, value) values('" + friend + "','" + "','" + 0 + scream.getString("urlHash") + "','" + scream.getString("value") + "') USING TTL 60;;");
-                            }else {
-                                final YawnFeedItem yawnFeedItem = new Gson().fromJson(all.get(0).getString("value"), YawnFeedItem.class);
+                            final ResultSet yawnRows = connect.execute("select * from Yawn where humanId='" + friend + "' AND urlHash='" + screamRow.getString("urlHash") + "'");
+                            if(yawnRows.all().isEmpty()){
+                                connect.execute("insert into Yawn(humanId, urlHash, value) values('" + friend + "','" + screamRow.getString("urlHash") + "','" + screamRow.getString("value") + "') USING TTL 600;");
+                            } else {
+                                final YawnFeedItem yawnFeedItem = new Gson().fromJson(screamRow.getString("value"), YawnFeedItem.class);
                                 yawnFeedItem.shock();
-                                connect.execute("insert into Yawn(humanId, shocks, urlHash, value) values('" + friend + "','" + "','" + yawnFeedItem.shocks() + scream.getString("urlHash") + "','" + new Gson().toJson(yawnFeedItem)+ "');");
+                                connect.execute("insert into Yawn(humanId, urlHash, value) values('" + friend + "','" + screamRow.getString("urlHash") + "','" + new Gson().toJson(yawnFeedItem)+ "');");
                             }
 
                             totalInsertions++;

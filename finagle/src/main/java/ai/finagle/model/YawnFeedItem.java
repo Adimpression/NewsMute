@@ -8,8 +8,8 @@ package ai.finagle.model;
  */
 public class YawnFeedItem extends YawnItem {
     final String source;
-    public YawnFeedItem(final String link, final String title, final String description, final String source, final String count) {
-        super(link, title, description, count);
+    public YawnFeedItem(final String link, final String title, final String description, final String shocks, final String source) {
+        super(link, title, description, shocks);
         this.source = source;
     }
 }
