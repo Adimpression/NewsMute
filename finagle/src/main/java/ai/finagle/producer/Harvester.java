@@ -73,7 +73,7 @@ public class Harvester implements Runnable {
 
                                 final boolean feedItemLinkMissing = stalkRows.all().isEmpty();
                                 if(feedItemLinkMissing){
-                                    connect.execute("insert into Yawn(humanId, urlHash, value) values('" + stalk.getString(0) + "','" + feedItemLink + "','" + new Gson().toJson(new YawnFeedItem(feedItemLink, feedItemTitle, feedItemDescription, stalkItem.link, "0")) + "') USING TTL " + DBScripts.YAWN_TTL + ";");//Yet to hash the urlHash value
+                                    connect.execute("insert into Yawn(humanId, urlHash, value) values('" + stalk.getString(0) + "','" + feedItemLink + "','" + new Gson().toJson(new YawnItem(feedItemLink, feedItemTitle, feedItemDescription, stalkItem.link, "0")) + "') USING TTL " + DBScripts.YAWN_TTL + ";");//Yet to hash the urlHash value
                                 } else {
                                     //Ignoring insert
                                 }

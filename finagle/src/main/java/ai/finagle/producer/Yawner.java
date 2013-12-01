@@ -113,23 +113,23 @@ public class Yawner implements Runnable {
         final String action = getParameter(parameters.get(ACTION));
         System.out.println("action:" + action);
 
-        final YawnFeedItem[] yawnItems;
+        final YawnItem[] yawnItems;
         switch (YawnerAction.to(action.toUpperCase())) {
             case READ:{
                 System.out.println("Values in table as follows");
                 final ResultSet execute = connect.execute("select * from Yawn where humanId='" + hashUser + "'");
                 final List<Row> all = execute.all();
 
-                yawnItems = new YawnFeedItem[all.size()];
+                yawnItems = new YawnItem[all.size()];
 
                 for (int i = 0; i < yawnItems.length; i++) {
-                    yawnItems[i] = new Gson().fromJson(all.get(i).getString("value"), YawnFeedItem.class);
+                    yawnItems[i] = new Gson().fromJson(all.get(i).getString("value"), YawnItem.class);
                 }
 
             }
             break;
             case DELETE: {
-                yawnItems = new YawnFeedItem[0];//@TODO: This is just to supply the return value, have to move things round
+                yawnItems = new YawnItem[0];//@TODO: This is just to supply the return value, have to move things round
                 try {
                     connect.execute("delete from Yawn where humanId='" + hashUser + "' and urlHash='" + url + "';");//Yet to hash the urlHash value
                 } catch (Exception e) {
@@ -138,10 +138,10 @@ public class Yawner implements Runnable {
             }
             break;
             case ERROR:
-                yawnItems = new YawnFeedItem[0];//@TODO: This is just to supply the return value, have to move things round
+                yawnItems = new YawnItem[0];//@TODO: This is just to supply the return value, have to move things round
                 break;
             default:
-                yawnItems = new YawnFeedItem[0];//@TODO: This is just to supply the return value, have to move things round
+                yawnItems = new YawnItem[0];//@TODO: This is just to supply the return value, have to move things round
         }
 
 

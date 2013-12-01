@@ -70,7 +70,7 @@ public class Counsellor implements Runnable {
                             if(yawnRows.all().isEmpty()){
                                 connect.execute("insert into Yawn(humanId, urlHash, value) values('" + friend + "','" + screamRow.getString("urlHash") + "','" + screamRow.getString("value") + "') USING TTL " + DBScripts.YAWN_TTL + ";");
                             } else {
-                                final YawnFeedItem yawnFeedItem = new Gson().fromJson(screamRow.getString("value"), YawnFeedItem.class);
+                                final YawnItem yawnFeedItem = new Gson().fromJson(screamRow.getString("value"), YawnItem.class);
                                 yawnFeedItem.shock();
                                 connect.execute("insert into Yawn(humanId, urlHash, value) values('" + friend + "','" + screamRow.getString("urlHash") + "','" + new Gson().toJson(yawnFeedItem)+ "');");
                             }
