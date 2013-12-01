@@ -29,4 +29,6 @@ public class DBScripts {
             "      urlHash varchar,\n" +
             "      value varchar,\n" +
             "      PRIMARY KEY (humanId, urlHash));";
+
+    public static final int YAWN_TTL = 600;
 }

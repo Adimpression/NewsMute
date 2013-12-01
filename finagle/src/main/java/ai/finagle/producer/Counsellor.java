@@ -1,5 +1,6 @@
 package ai.finagle.producer;
 
+import ai.finagle.db.DBScripts;
 import ai.finagle.model.SuperFriendValue;
 import ai.finagle.model.YawnFeedItem;
 import ai.finagle.model.YawnItem;
@@ -67,7 +68,7 @@ public class Counsellor implements Runnable {
 
                             final ResultSet yawnRows = connect.execute("select * from Yawn where humanId='" + friend + "' AND urlHash='" + screamRow.getString("urlHash") + "'");
                             if(yawnRows.all().isEmpty()){
-                                connect.execute("insert into Yawn(humanId, urlHash, value) values('" + friend + "','" + screamRow.getString("urlHash") + "','" + screamRow.getString("value") + "') USING TTL 600;");
+                                connect.execute("insert into Yawn(humanId, urlHash, value) values('" + friend + "','" + screamRow.getString("urlHash") + "','" + screamRow.getString("value") + "') USING TTL " + DBScripts.YAWN_TTL + ";");
                             } else {
                                 final YawnFeedItem yawnFeedItem = new Gson().fromJson(screamRow.getString("value"), YawnFeedItem.class);
                                 yawnFeedItem.shock();
