@@ -2,8 +2,6 @@ package ai.finagle.producer;
 
 import ai.finagle.db.DBScripts;
 import ai.finagle.model.StalkItem;
-import ai.finagle.model.SuperFriendValue;
-import ai.finagle.model.YawnFeedItem;
 import ai.finagle.model.YawnItem;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;

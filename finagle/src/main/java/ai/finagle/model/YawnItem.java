@@ -13,12 +13,12 @@ public class YawnItem {
     String shocks;
     final String source;
 
-    public YawnItem(final String link, final String title, final String description, final String shocks, final String source) {
+    public YawnItem(final String link, final String title, final String description, final String source, final String shocks) {
         this.link = link;
         this.title = title;
         this.description = description;
-        this.shocks = shocks;
         this.source = source;
+        this.shocks = shocks;
     }
 
     public void shock(){
