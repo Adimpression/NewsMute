@@ -105,8 +105,9 @@ public class Yawner implements Runnable {
         final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
 
         final String user = getParameter(parameters.get("user"));
+        System.out.println("user:" +user);
         final String hashUser = BCrypt.hashpw(user, SuperFriender.GLOBAL_SALT);
-        System.out.println("user:" + hashUser);
+        System.out.println("hashUser:" + hashUser);
         final String url = getParameter(parameters.get("url") );
         System.out.println("url:" + url);
         final String action = getParameter(parameters.get(ACTION));

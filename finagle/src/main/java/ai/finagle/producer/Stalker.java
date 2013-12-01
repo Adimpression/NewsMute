@@ -18,6 +18,7 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.http.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.net.InetSocketAddress;
 import java.net.URL;
@@ -117,60 +118,62 @@ public class Stalker implements Runnable {
         final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
 
         final List<String> user = parameters.get("user");
+        final String hashUser = BCrypt.hashpw(user.get(0), SuperFriender.GLOBAL_SALT);
+        System.out.println("hashUser:" + hashUser);
         final List<String> urlParameter = parameters.get("url");
         final List<String> action = parameters.get(Yawner.ACTION);
         StalkItem[] stalkItems = new StalkItem[]{};
 
         if (user != null) {
-                StalkerAction stalkerAction =StalkerAction.valueOf(action.get(0));
-                switch (stalkerAction) {
-                    case CREATE: {
-                        try {
-                            System.out.println(stalkerAction.toString());
-                            final String url = urlParameter.get(0);
-                            System.out.println("url:" + url);
-                            final Document document = Jsoup.parse(new URL(url).openStream(), "UTF-8", url);
-                            final String title = document.getElementsByTag("title").first().text();
-                            System.out.println("title:" + title);
-                            final String description = document.getElementsByTag("title").first().text();
-                            System.out.println("description:" + description);
+            StalkerAction stalkerAction = StalkerAction.valueOf(action.get(0));
+            switch (stalkerAction) {
+                case CREATE: {
+                    try {
+                        System.out.println(stalkerAction.toString());
+                        final String url = urlParameter.get(0);
+                        System.out.println("url:" + url);
+                        final Document document = Jsoup.parse(new URL(url).openStream(), "UTF-8", url);
+                        final String title = document.getElementsByTag("title").first().text();
+                        System.out.println("title:" + title);
+                        final String description = document.getElementsByTag("title").first().text();
+                        System.out.println("description:" + description);
 
-                            connect.execute("insert into Stalk(humanId, urlHash, value) values('" + user.get(0) + "','" + url + "','" + new Gson().toJson(new StalkItem(url, title, description)) + "');");//Yet to hash the urlHash value
-                        } catch (final Throwable e) {
-                            e.printStackTrace(System.err);
-                        }
+                        connect.execute("insert into Stalk(humanId, urlHash, value) values('" + hashUser + "','" + url + "','" + new Gson().toJson(new StalkItem(url, title, description)) + "');");//Yet to hash the urlHash value
+                    } catch (final Throwable e) {
+                        e.printStackTrace(System.err);
                     }
-                    break;
-                    case READ:{
-                        System.out.println("Values in table as follows");
-                        final ResultSet execute = connect.execute("select * from Stalk where humanId='" + user.get(0) + "'");
-                        final List<Row> all = execute.all();
-
-                        stalkItems = new StalkItem[all.size()];
-
-                        for (int i = 0; i < stalkItems.length; i++) {
-                            try {
-                                stalkItems[i] = new Gson().fromJson(all.get(i).getString("value"), StalkItem.class);
-                            } catch (JsonSyntaxException e) { //@TODO: Remove after table cleanup
-                                stalkItems[i] = new StalkItem(all.get(i).getString("value"), all.get(i).getString("value"), all.get(i).getString("value"));
-                            }
-                        }
-                    }
-                    break;
-                    case DELETE: {
-                        try {
-                            System.out.println(stalkerAction.toString());
-                            final String s = urlParameter.get(0);
-                            System.out.println("url:" + s);
-                            connect.execute("delete from Stalk where humanId='" + user.get(0) + "' and urlHash='" + s + "';");//Yet to hash the urlHash value
-                        } catch (Exception e) {
-                            e.printStackTrace(System.err);
-                        }
-                    }
-                    break;
-                    case ERROR:
-                        break;
                 }
+                break;
+                case READ: {
+                    System.out.println("Values in table as follows");
+                    final ResultSet execute = connect.execute("select * from Stalk where humanId='" + hashUser + "'");
+                    final List<Row> all = execute.all();
+
+                    stalkItems = new StalkItem[all.size()];
+
+                    for (int i = 0; i < stalkItems.length; i++) {
+                        try {
+                            stalkItems[i] = new Gson().fromJson(all.get(i).getString("value"), StalkItem.class);
+                        } catch (JsonSyntaxException e) { //@TODO: Remove after table cleanup
+                            stalkItems[i] = new StalkItem(all.get(i).getString("value"), all.get(i).getString("value"), all.get(i).getString("value"));
+                        }
+                    }
+                }
+                break;
+                case DELETE: {
+                    try {
+                        System.out.println(stalkerAction.toString());
+                        final String s = urlParameter.get(0);
+                        System.out.println("url:" + s);
+                        connect.execute("delete from Stalk where humanId='" + hashUser + "' and urlHash='" + s + "';");//Yet to hash the urlHash value
+                    } catch (Exception e) {
+                        e.printStackTrace(System.err);
+                    }
+                }
+                break;
+                case ERROR:
+                    break;
+            }
 
         }
 
