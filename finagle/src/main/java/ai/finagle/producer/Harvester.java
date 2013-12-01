@@ -48,32 +48,32 @@ public class Harvester implements Runnable {
 
                     for (final Row stalk : allStalks) {
 
-                        final StalkItem value = new Gson().fromJson(stalk.getString("value"), StalkItem.class);
+                        final StalkItem stalkItem = new Gson().fromJson(stalk.getString("value"), StalkItem.class);
 
                         try {
-                            final Document document = Jsoup.parse(new URL(value.link).openStream(), "UTF-8", value.link, Parser.xmlParser());
+                            final Document feedDocument = Jsoup.parse(new URL(stalkItem.link).openStream(), "UTF-8", stalkItem.link, Parser.xmlParser());
 
+                            final Elements itemElements = feedDocument.getElementsByTag("item");
+                            Element[]  feedItems = new Element[itemElements.size()];
+                            feedItems =  itemElements.toArray(feedItems);
 
-                            final Elements itemElements = document.getElementsByTag("item");
-                            Element[]  items = new Element[itemElements.size()];
-                            items =  itemElements.toArray(items);
+                            for (final Element feedItem : feedItems) {
 
-                            for (final Element item : items) {
+                                final String feedItemTitle = feedItem.getElementsByTag("title").first().text();
+                                System.out.println("title:" + feedItemTitle);
 
-                                final String title = item.getElementsByTag("title").first().text();
-                                System.out.println("title:" + title);
+                                final String feedItemLink = feedItem.getElementsByTag("link").first().text();
+                                System.out.println("link:" + feedItemLink);
 
-                                final String link = item.getElementsByTag("link").first().text();
-                                System.out.println("link:" + link);
+                                final String feedItemDescription = feedItem.getElementsByTag("description").first().text();
+                                System.out.println("description:" + feedItemDescription);
 
-                                final String description = item.getElementsByTag("description").first().text();
-                                System.out.println("description:" + description);
+                                final ResultSet stalkRows = connect.execute("select * from Yawn where humanId='" + stalk.getString(0)  + "' AND urlHash='" + feedItemLink+ "'");
 
-                                final ResultSet rows = connect.execute("select * from Yawn where humanId='" + stalk.getString(0)  + "' AND urlHash='" + link+ "'");
-
-                                if(rows.all().isEmpty()){
-                                    connect.execute("insert into Yawn(humanId, urlHash, value) values('" + stalk.getString(0) + "','" + link + "','" + new Gson().toJson(new YawnFeedItem(link, title, description, value.link, "0")) + "');");//Yet to hash the urlHash value
-                                }else {
+                                final boolean feedItemLinkMissing = stalkRows.all().isEmpty();
+                                if(feedItemLinkMissing){
+                                    connect.execute("insert into Yawn(humanId, urlHash, value) values('" + stalk.getString(0) + "','" + feedItemLink + "','" + new Gson().toJson(new YawnFeedItem(feedItemLink, feedItemTitle, feedItemDescription, stalkItem.link, "0")) + "');");//Yet to hash the urlHash value
+                                } else {
                                     //Ignoring insert
                                 }
 
