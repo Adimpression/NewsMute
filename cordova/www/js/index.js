@@ -48,8 +48,8 @@ function NewsMute() {
     }
 
 
-    var flag_super_friend = window.localStorage.getItem(flag_super_friend);
-    if(flag_super_friend == null){
+    var flag_super_friend_value = window.localStorage.getItem(flag_super_friend);
+    if(flag_super_friend_value == null){
         superFriend();
         window.localStorage.setItem(flag_super_friend, "true");
     } else {
