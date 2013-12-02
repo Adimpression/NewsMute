@@ -8,6 +8,14 @@
     <title>News Mute</title>
     <link type="text/css" rel="stylesheet" href="css/groundwork.css">
     <style type="text/css">
+        @font-face {
+            font-family: "ttlm";
+            src: url("./fonts/Titillium-Regular.otf") format("opentype");
+        }
+        .ttlm {
+            font-family: "ttlm";
+            font-size:20px;
+        }
     </style>
 </head>
 <!-- Let's keep the style of the body simple. Just the laying out. -->
@@ -17,7 +25,7 @@
     <div class="one" style="height: 0; opacity: 0.5;">
         <div class="one">
             <div class="dropdown" style="font-size: 30px;">
-                <button style="width: 100%;"><i class="icon-home"></i></button>
+                <button style="width: 100%;"><i class="icon-"></i></button>
                 <ul>
                     <li><a href="#" onclick="scream();"><i class="icon-link"></i></a></li>
                     <li><a href="#" onclick="stalk();"><i class="icon-rss"></i></a></li>
@@ -38,9 +46,9 @@
                 <div class="one quicksand"
                      style="display:block; background-color: #ffffff; overflow: scroll;  height: 100%; font-size: 17px; font-family: FontAwesome, serif;">
                     <div id="feedsList" style="list-style: none;" class="one">
-                        <div class="one hidden">
+                        <div class="one">
                             <div class="one itemTemplate" id="http%3A%2F%2Fwww.newsmute.com">
-                                <div class="one">
+                                <div class="one ttlm">
                                     <div class="one left">
                                         <a class="itemTitle" href="#"
                                            style="font-size: 40px; text-decoration: underline;color: #271aad;"
