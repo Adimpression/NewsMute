@@ -207,8 +207,6 @@ function stalk() {
                 } catch (e) {
                     alert(e);
                 }
-
-
             },
             error: function (e) {
                 alert(e.toString());
@@ -233,29 +231,27 @@ function share(link) {
 }
 function unshare(url) {
     if (isValidURL(url)) {
-        $.ajax({
-            type: "GET",
-            url: "http://192.237.246.113:16185/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=DELETE",
-            crossDomain: true,
-            beforeSend: function () {
-            },
-            complete: function () {
-            },
-            data: {},
-            dataType: 'text', //json
-            success: function (response) {
-                try {
-                    alert(response);
-                } catch (e) {
-                    alert(e);
+        if(confirm("Remove feed permanently?")){
+            $.ajax({
+                type: "GET",
+                url: "http://192.237.246.113:16185/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=DELETE",
+                crossDomain: true,
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                data: {},
+                dataType: 'text', //json
+                success: function (response) {
+                    alert('Removed feed!');
+                },
+                error: function (e) {
+                    alert(e.toString());
                 }
-            },
-            error: function (e) {
-                alert(e.toString());
-            }
-        });
+            });
+        }
     } else {//Then this is a spammy user, get rid of it?
-        alert('Noted as spam');
+        //alert('Noted as spam');
     }
 
 }
