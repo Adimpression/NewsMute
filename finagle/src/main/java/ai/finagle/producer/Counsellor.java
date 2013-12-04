@@ -2,7 +2,6 @@ package ai.finagle.producer;
 
 import ai.finagle.db.DBScripts;
 import ai.finagle.model.SuperFriendValue;
-import ai.finagle.model.YawnFeedItem;
 import ai.finagle.model.YawnItem;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
@@ -12,11 +11,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- *         at com.datastax.driver.core.Session.execute(Session.java:77)
- *         at ai.finagle.producer.Counsellor$1.run(Counsellor.java:63)
- *         at java.util.TimerThread.mainLoop(Timer.java:555)
- *         at java.util.TimerThread.run(Timer.java:505)
- *         Caused by: com.datastax.driver.core.exceptions.InvalidQueryException: PRIMARY KEY part urlhash cannot be restricted (preceding part shocks is either not restricted or by a non-EQ relation)
+ * at com.datastax.driver.core.Session.execute(Session.java:77)
+ * at ai.finagle.producer.Counsellor$1.run(Counsellor.java:63)
+ * at java.util.TimerThread.mainLoop(Timer.java:555)
+ * at java.util.TimerThread.run(Timer.java:505)
+ * Caused by: com.datastax.driver.core.exceptions.InvalidQueryException: PRIMARY KEY part urlhash cannot be restricted (preceding part shocks is either not restricted or by a non-EQ relation)
  * Created with IntelliJ IDEA Ultimate.
  * User: http://www.ilikeplaces.com
  * Date: 27/10/13
@@ -39,40 +38,36 @@ public class Counsellor implements Runnable {
 
                     final Session connect = cluster.connect("Test1");
 
-                    final ResultSet executeScreamFetch = connect.execute("select * from Scream;");
-                    final ResultSet executeYawnFetch = connect.execute("select * from Yawn;");
-                    final ResultSet executeSuperFriendFetch = connect.execute("select * from SuperFriend;");
-
-                    final List<Row> allScreams = executeScreamFetch.all();
-                    final List<Row> allYawns = executeYawnFetch.all();
-//                    final List<Row> allSuperFriends = executeSuperFriendFetch.all();
+                    final List<Row> allScreams = connect.execute("select * from Scream;").all();
+                    final List<Row> allYawns = connect.execute("select * from Yawn;").all();
 
                     System.out.println("Counselling " + allScreams.size() + " screams");
                     System.out.println("Counselling " + allYawns.size() + " yawns");
-//                    System.out.println("Counselling " + allSuperFriends.size() + " super friends");
 
                     int totalInsertions = 0;
 
                     for (final Row screamRow : allScreams) {
                         //@FIXME: Duplicate fetches. Can we fetch by partition? For, humanId on one partition will be the same
-                        final ResultSet executeSuperFriendsFetch = connect.execute("select * from SuperFriend where humanId='" + screamRow.getString(0) + "'");
-                        final List<Row> allSuperFriends = executeSuperFriendsFetch.all();
+                        final List<Row> allSuperFriends = connect.execute("select * from SuperFriend where humanId='" + screamRow.getString(0) + "'").all();
+
                         final SuperFriendValue superFriendValue;
                         if (allSuperFriends.size() != 0) {
                             superFriendValue = new Gson().fromJson(allSuperFriends.get(0).getString("value"), SuperFriendValue.class);
                         } else {
-                            superFriendValue = new SuperFriendValue (screamRow.getString(0) , new String[0]);
+                            superFriendValue = new SuperFriendValue(screamRow.getString(0), new String[0]);
                         }
 
                         for (final String friend : superFriendValue.superFriends) {//Ideally, all screams are not friends of this person, but we do so for now for testing
-
-                            final ResultSet yawnRows = connect.execute("select * from Yawn where humanId='" + friend + "' AND urlHash='" + screamRow.getString("urlHash") + "'");
-                            if(yawnRows.all().isEmpty()){
+                            final List<Row> yawnRows = connect.execute("select * from Yawn where humanId='" + friend + "' AND urlHash='" + screamRow.getString("urlHash") + "'").all();
+                            if (yawnRows.size() == 0) {
                                 connect.execute("insert into Yawn(humanId, urlHash, value) values('" + friend + "','" + screamRow.getString("urlHash") + "','" + screamRow.getString("value") + "') USING TTL " + DBScripts.YAWN_TTL + ";");
                             } else {
-                                final YawnItem yawnFeedItem = new Gson().fromJson(screamRow.getString("value"), YawnItem.class);
+                                final Row yawnRow = yawnRows.get(0);
+                                final YawnItem yawnFeedItem = new Gson().fromJson(yawnRow.getString("value"), YawnItem.class);
+                                System.out.println("Fetched:" + yawnFeedItem.toString());
                                 yawnFeedItem.shock();
-                                connect.execute("insert into Yawn(humanId, urlHash, value) values('" + friend + "','" + screamRow.getString("urlHash") + "','" + new Gson().toJson(yawnFeedItem)+ "');");
+                                System.out.println("Inserting:" + yawnFeedItem.toString());
+                                connect.execute("insert into Yawn(humanId, urlHash, value) values('" + friend + "','" + yawnRow.getString("urlHash") + "','" + new Gson().toJson(yawnFeedItem) + "');");
                             }
 
                             totalInsertions++;

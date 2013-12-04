@@ -28,4 +28,15 @@ public class YawnItem {
     public String shocks(){
         return shocks;
     }
+
+    @Override
+    public String toString() {
+        return "YawnItem{" +
+                "link='" + link + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", shocks='" + shocks + '\'' +
+                ", source='" + source + '\'' +
+                '}';
+    }
 }
