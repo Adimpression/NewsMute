@@ -183,12 +183,21 @@ function screamLink(url, successCallback, failureCallback){
 
 function scream() {
     var url = prompt("Enter link");
+    if(url == null || url == ""){
+        return;
+    }
+
     screamLink(url, function(e){}, function(e){});
 }
 
 function stalk() {
 
     var url = prompt("Enter feed");
+
+    if(url == null || url == ""){
+        return;
+    }
+
 
     if (isValidURL(url)) {
         $.ajax({
@@ -203,7 +212,7 @@ function stalk() {
             dataType: 'text', //json
             success: function (response) {
                 try {
-                    alert(response);
+                    alert("Subscribed");//@TODO: Check response
                 } catch (e) {
                     alert(e);
                 }
