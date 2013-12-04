@@ -20,13 +20,13 @@
 </head>
 <!-- Let's keep the style of the body simple. Just the laying out. -->
 <body style="width: 100%; height: 100%; overflow:hidden;" class="">
-<div class="container bordered"
+<div class="container"
      style="width: 100%; height: 100%;">
     <div class="one left" style="height: 0; background-color: transparent;">
         <div class="one" style="">
-            <div class="dropdown" style="font-size: 30px; background-color: transparent;">
-                <button style="width: 100%; background: transparent url('icon.png'); -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;;"></button>
-                <ul>
+            <div class="dropdown" style="font-size: 30px; background-color: transparent;border: none;">
+                <button style="width: 100%;color: transparent; border:none; background: transparent url('icon.png'); -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;;"></button>
+                <ul style="border:none; background-color: transparent;" >
                     <li><a href="#" onclick="scream();"><i class="icon-link" style="color: #ff1493;"></i></a></li>
                     <li><a href="#" onclick="stalk();"><i class="icon-rss" style="color: #ff1493;"></i></a></li>
                 </ul>
@@ -46,7 +46,7 @@
                 <div class="one quicksand"
                      style="display:block; background-color: #ffffff; overflow: scroll;  height: 100%; font-size: 17px; font-family: FontAwesome, serif;">
                     <div id="feedsList" style="list-style: none;" class="one">
-                        <div class="one">
+                        <div class="one hidden">
                             <div class="one itemTemplate" id="http%3A%2F%2Fwww.newsmute.com">
                                 <div class="one ttlm">
                                     <div class="one left">
