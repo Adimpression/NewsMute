@@ -9,12 +9,14 @@ package ai.finagle.db;
 public class DBScripts {
     public static final String CREATE_SCREAM = "create table Scream(\n" +
             "      humanId varchar,\n" +
+            "      mood varchar,\n" +
             "      urlHash varchar,\n" +
             "      value varchar,\n" +
             "      PRIMARY KEY (humanId, urlHash));";
 
     public static final String CREATE_STALK = "create table Stalk(\n" +
             "      humanId varchar,\n" +
+            "      mood varchar,\n" +
             "      urlHash varchar,\n" +
             "      value varchar,\n" +
             "      PRIMARY KEY (humanId, urlHash));";
@@ -26,6 +28,7 @@ public class DBScripts {
 
     public static final String CREATE_YAWN = "create table Yawn(\n" +
             "      humanId varchar,\n" +
+            "      mood varchar,\n" +
             "      urlHash varchar,\n" +
             "      value varchar,\n" +
             "      PRIMARY KEY (humanId, urlHash));";
