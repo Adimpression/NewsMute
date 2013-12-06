@@ -49,7 +49,6 @@ public class Counsellor implements Runnable {
                     for (final Row screamRow : allScreams) {
                         //@FIXME: Duplicate fetches. Can we fetch by partition? For, humanId on one partition will be the same
                         final List<Row> allSuperFriends = connect.execute("select * from SuperFriend where humanId='" + screamRow.getString(0) + "'").all();
-
                         final SuperFriendValue superFriendValue;
                         if (allSuperFriends.size() != 0) {
                             superFriendValue = new Gson().fromJson(allSuperFriends.get(0).getString("value"), SuperFriendValue.class);
