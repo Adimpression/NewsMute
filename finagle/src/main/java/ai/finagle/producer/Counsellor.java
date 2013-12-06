@@ -11,11 +11,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * at com.datastax.driver.core.Session.execute(Session.java:77)
- * at ai.finagle.producer.Counsellor$1.run(Counsellor.java:63)
- * at java.util.TimerThread.mainLoop(Timer.java:555)
- * at java.util.TimerThread.run(Timer.java:505)
- * Caused by: com.datastax.driver.core.exceptions.InvalidQueryException: PRIMARY KEY part urlhash cannot be restricted (preceding part shocks is either not restricted or by a non-EQ relation)
  * Created with IntelliJ IDEA Ultimate.
  * User: http://www.ilikeplaces.com
  * Date: 27/10/13
@@ -38,7 +33,14 @@ public class Counsellor implements Runnable {
 
                     final Session connect = cluster.connect("Test1");
 
+                    /**
+                     * This operation is not heavy, Cassandra handles paging(via cursors) transparently
+                     */
                     final List<Row> allScreams = connect.execute("select * from Scream;").all();
+
+                    /**
+                     * This operation is not heavy, Cassandra handles paging(via cursors) transparently
+                     */
                     final List<Row> allYawns = connect.execute("select * from Yawn;").all();
 
                     System.out.println("Counselling " + allScreams.size() + " screams");
