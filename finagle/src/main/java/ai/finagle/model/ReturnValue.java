@@ -2,7 +2,7 @@ package ai.finagle.model;
 
 /**
  * Created with IntelliJ IDEA Ultimate.
- * User: http://www.ilikeplaces.com
+ * User: http://NewsMute.com
  * Date: 27/10/13
  * Time: 12:40 PM
  */

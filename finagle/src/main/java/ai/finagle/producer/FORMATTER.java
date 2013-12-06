@@ -4,7 +4,7 @@ package ai.finagle.producer;
  * Frankly, we short-circuited a requirement and now this is just a stupid idea
  *
  * Created with IntelliJ IDEA Ultimate.
- * User: http://www.ilikeplaces.com
+ * User: http://NewsMute.com
  * Date: 24/11/13
  * Time: 3:27 PM
  */

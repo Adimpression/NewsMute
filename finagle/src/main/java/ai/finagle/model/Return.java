@@ -36,7 +36,7 @@ package ai.finagle.model;
  "returnError": ""
  };
  * Created with IntelliJ IDEA Ultimate.
- * User: http://www.ilikeplaces.com
+ * User: http://NewsMute.com
  * Date: 26/10/13
  * Time: 11:43 PM
  */

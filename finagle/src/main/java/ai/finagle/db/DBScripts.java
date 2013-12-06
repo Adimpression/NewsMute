@@ -2,7 +2,7 @@ package ai.finagle.db;
 
 /**
  * Created with IntelliJ IDEA Ultimate.
- * User: http://www.ilikeplaces.com
+ * User: http://NewsMute.com
  * Date: 30/11/13
  * Time: 5:38 PM
  */

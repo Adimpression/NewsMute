@@ -8,7 +8,7 @@ import ai.finagle.producer.*;
  * Thought it was a cool way to do things and keep it memorable.
  *
  * Created with IntelliJ IDEA Ultimate.
- * User: http://www.ilikeplaces.com
+ * User: http://NewsMute.com
  * Date: 27/10/13
  * Time: 12:16 PM
  */
