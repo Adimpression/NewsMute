@@ -67,7 +67,7 @@ public class Harvester implements Runnable {
                                 final String feedItemDescription = feedItem.getElementsByTag("description").first().text();
                                 System.out.println("description:" + feedItemDescription);
 
-                                final ResultSet stalkRows = connect.execute("select * from Yawn where humanId='" + stalk.getString(0)  + "' AND urlHash='" + feedItemLink+ "'");
+                                final ResultSet stalkRows = connect.execute("select * from Yawn where humanId='" + stalk.getString(0)  + "' AND mood='" + "0"+ "' AND urlHash='" + feedItemLink+ "'");
 
                                 final boolean feedItemLinkMissing = stalkRows.all().isEmpty();
                                 if(feedItemLinkMissing){

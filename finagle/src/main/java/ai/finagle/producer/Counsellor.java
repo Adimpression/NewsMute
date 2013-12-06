@@ -59,7 +59,7 @@ public class Counsellor implements Runnable {
                         }
 
                         for (final String friend : superFriendValue.superFriends) {//Ideally, all screams are not friends of this person, but we do so for now for testing
-                            final List<Row> yawnRows = connect.execute("select * from Yawn where humanId='" + friend + "' AND urlHash='" + screamRow.getString("urlHash") + "'").all();
+                            final List<Row> yawnRows = connect.execute("select * from Yawn where humanId='" + friend + "' AND mood='" + "0"+ "' AND urlHash='" + screamRow.getString("urlHash") + "'").all();
                             if (yawnRows.size() == 0) {
                                 connect.execute("insert into Yawn(humanId, mood, urlHash, value) values('" + friend + "','"  + "0" + "," + screamRow.getString("urlHash") + "','" + screamRow.getString("value") + "') USING TTL " + DBScripts.YAWN_TTL + ";");
                             } else {
