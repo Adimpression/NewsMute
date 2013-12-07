@@ -117,7 +117,7 @@ public class Yawner implements Runnable {
         switch (YawnerAction.to(action.toUpperCase())) {
             case READ:{
                 System.out.println("Values in table as follows");
-                final ResultSet execute = connect.execute("select * from Yawn where humanId='" + hashUser + "'");
+                final ResultSet execute = connect.execute("select * from Yawn where humanId='" + hashUser + "' and mood='0'");
                 final List<Row> all = execute.all();
 
                 yawnItems = new YawnItem[all.size()];

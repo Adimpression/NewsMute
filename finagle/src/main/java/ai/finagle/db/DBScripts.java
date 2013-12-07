@@ -7,31 +7,14 @@ package ai.finagle.db;
  * Time: 5:38 PM
  */
 public class DBScripts {
-    public static final String CREATE_SCREAM = "create table Scream(\n" +
-            "      humanId varchar,\n" +
-            "      mood varchar,\n" +
-            "      urlHash varchar,\n" +
-            "      value varchar,\n" +
-            "      PRIMARY KEY (humanId, urlHash));";
+    public static final String CREATE_SCREAM = "create table Scream(humanId varchar, mood varchar, urlHash varchar, value varchar, PRIMARY KEY (humanId, mood, urlHash));";
 
-    public static final String CREATE_STALK = "create table Stalk(\n" +
-            "      humanId varchar,\n" +
-            "      mood varchar,\n" +
-            "      urlHash varchar,\n" +
-            "      value varchar,\n" +
-            "      PRIMARY KEY (humanId, urlHash));";
+    public static final String CREATE_YAWN = "create table Yawn(humanId varchar, mood varchar, urlHash varchar, value varchar, PRIMARY KEY (humanId, mood, urlHash));";
 
-    public static final String CREATE_SUPERFRIEND = "create table SuperFriend(\n" +
-            "      humanId varchar,\n" +
-            "      value varchar,\n" +
-            "      PRIMARY KEY (humanId));";
+    public static final String CREATE_STALK = "create table Stalk(humanId varchar, mood varchar, urlHash varchar, value varchar, PRIMARY KEY (humanId, mood, urlHash));";
 
-    public static final String CREATE_YAWN = "create table Yawn(\n" +
-            "      humanId varchar,\n" +
-            "      mood varchar,\n" +
-            "      urlHash varchar,\n" +
-            "      value varchar,\n" +
-            "      PRIMARY KEY (humanId, urlHash));";
+    public static final String CREATE_SUPERFRIEND = "create table SuperFriend(humanId varchar, value varchar,  PRIMARY KEY (humanId));";
+
 
     public static final int YAWN_TTL = 600;
 }

@@ -59,16 +59,17 @@ public class Counsellor implements Runnable {
                         }
 
                         for (final String friend : superFriendValue.superFriends) {//Ideally, all screams are not friends of this person, but we do so for now for testing
-                            final List<Row> yawnRows = connect.execute("select * from Yawn where humanId='" + friend + "' AND mood='" + "0"+ "' AND urlHash='" + screamRow.getString("urlHash") + "'").all();
-                            if (yawnRows.size() == 0) {
-                                connect.execute("insert into Yawn(humanId, mood, urlHash, value) values('" + friend + "','"  + "0" + "," + screamRow.getString("urlHash") + "','" + screamRow.getString("value") + "') USING TTL " + DBScripts.YAWN_TTL + ";");
-                            } else {
-                                final Row yawnRow = yawnRows.get(0);
+                            final List<Row> yawnRowsNotRead = connect.execute("select * from Yawn where humanId='" + friend + "' AND mood='" + "0" + "' AND urlHash='" + screamRow.getString("urlHash") + "'").all();
+                            final List<Row> yawnRowsRead = connect.execute("select * from Yawn where humanId='" + friend + "' AND mood='" + "1" + "' AND urlHash='" + screamRow.getString("urlHash") + "'").all();
+                            if (yawnRowsNotRead.size() == 0 && yawnRowsRead.size() == 0) {
+                                connect.execute("insert into Yawn(humanId, mood, urlHash, value) values('" + friend + "','" + "0" + "," + screamRow.getString("urlHash") + "','" + screamRow.getString("value") + "') USING TTL " + DBScripts.YAWN_TTL + ";");
+                            } else if (yawnRowsNotRead.size() != 0) {
+                                final Row yawnRow = yawnRowsNotRead.get(0);
                                 final YawnItem yawnFeedItem = new Gson().fromJson(yawnRow.getString("value"), YawnItem.class);
                                 System.out.println("Fetched:" + yawnFeedItem.toString());
                                 yawnFeedItem.shock();
                                 System.out.println("Inserting:" + yawnFeedItem.toString());
-                                connect.execute("insert into Yawn(humanId, mood, urlHash, value) values('" + friend + "','" + "0" + "," +yawnRow.getString("urlHash") + "','" + new Gson().toJson(yawnFeedItem) + "');");
+                                connect.execute("insert into Yawn(humanId, mood, urlHash, value) values('" + friend + "','" + "0" + "," + yawnRow.getString("urlHash") + "','" + new Gson().toJson(yawnFeedItem) + "');");
                             }
 
                             totalInsertions++;
