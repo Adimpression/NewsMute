@@ -344,8 +344,13 @@ function superFriend() {
 
 
 function hide(url){
-    var id = encodeURIComponent(url);
-    $("#" + id).slideUp();
+    try {
+        markRead(url);
+        var id = encodeURIComponent(url);
+        $("#" + id).fadeOut();
+    } catch (e) {
+        //alert(e);//@TODO: There's an error here, because of the weird ids we use. Fix this (Hashing?)
+    }
 
 }
 
