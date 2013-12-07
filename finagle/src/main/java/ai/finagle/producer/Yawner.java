@@ -132,7 +132,7 @@ public class Yawner implements Runnable {
                 yawnItems = new YawnItem[0];//@TODO: This is just to supply the return value, have to move things round
                 try {
                     connect.execute("delete from Yawn where humanId='" + hashUser + "' and mood='" + "0"+ "' and urlHash='" + url + "';");//Yet to hash the urlHash value
-                    connect.execute("insert into Yawn(humanId, mood, urlHash, value) values('" + hashUser + "','"  + "1" + "'," + url+ "','" + ""+ "') USING TTL " + DBScripts.YAWN_TTL + ";");
+                    connect.execute("insert into Yawn(humanId, mood, urlHash, value) values('" + hashUser + "','"  + "1" + "','" + url+ "','" + ""+ "') USING TTL " + DBScripts.YAWN_TTL + ";");
                 } catch (Exception e) {
                     e.printStackTrace(System.err);
                 }

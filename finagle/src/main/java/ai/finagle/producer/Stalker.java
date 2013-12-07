@@ -138,7 +138,7 @@ public class Stalker implements Runnable {
                         final String description = document.getElementsByTag("title").first().text();
                         System.out.println("description:" + description);
 
-                        connect.execute("insert into Stalk(humanId, mood, urlHash, value) values('" + hashUser + "','"  + "0" + "'," + url + "','" + new Gson().toJson(new StalkItem(url, title, description)) + "');");//Yet to hash the urlHash value
+                        connect.execute("insert into Stalk(humanId, mood, urlHash, value) values('" + hashUser + "','"  + "0" + "','" + url + "','" + new Gson().toJson(new StalkItem(url, title, description)) + "');");//Yet to hash the urlHash value
                     } catch (final Throwable e) {
                         e.printStackTrace(System.err);
                     }
