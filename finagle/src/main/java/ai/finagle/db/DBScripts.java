@@ -17,4 +17,5 @@ public class DBScripts {
 
 
     public static final int YAWN_TTL = 600;
+    public static final int YAWN_READED_TTL = 86400;
 }

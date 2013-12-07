@@ -67,17 +67,19 @@ public class Harvester implements Runnable {
                                 final String feedItemDescription = feedItem.getElementsByTag("description").first().text();
                                 System.out.println("description:" + feedItemDescription);
 
-                                final ResultSet stalkRows = connect.execute("select * from Yawn where humanId='" + stalk.getString(0)  + "' AND mood='" + "0"+ "' AND urlHash='" + feedItemLink+ "'");
+                                final ResultSet yawnRowsNotRead = connect.execute("select * from Yawn where humanId='" + stalk.getString(0)  + "' AND mood='" + "0"+ "' AND urlHash='" + feedItemLink+ "'");
+                                final ResultSet yawnRowsDidRead = connect.execute("select * from Yawn where humanId='" + stalk.getString(0)  + "' AND mood='" + "1"+ "' AND urlHash='" + feedItemLink+ "'");
 
-                                final boolean feedItemLinkMissing = stalkRows.all().isEmpty();
+                                final boolean feedItemLinkMissing = yawnRowsNotRead.all().isEmpty() && yawnRowsDidRead.all().isEmpty();
+
                                 if(feedItemLinkMissing){
                                     connect.execute("insert into Yawn(humanId, mood, urlHash, value) values('" + stalk.getString(0) + "','" + "0" + "','"  + feedItemLink + "','" + new Gson().toJson(new YawnItem(feedItemLink, feedItemTitle, feedItemDescription, stalkItem.link, "0")) + "') USING TTL " + DBScripts.YAWN_TTL + ";");//Yet to hash the urlHash value
+                                    totalInsertions++;
                                 } else {
                                     //Ignoring insert
                                 }
 
 
-                                totalInsertions++;
                             }
                         } catch (final Throwable throwable) {
                             throwable.printStackTrace(System.err);
