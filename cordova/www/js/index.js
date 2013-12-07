@@ -26,6 +26,7 @@ function justVisiting() {
     if (lastVisited != null) {
         //alert('lv no null');
         screamLink(lastVisited,function(e){}, function(e){});
+        markRead(lastVisited);
         share(lastVisited);
         window.localStorage.removeItem("lastVisited");
     } else {
@@ -39,15 +40,15 @@ function NewsMute() {
     try {
         var initialAppLaunch = window.localStorage.getItem(flag_app_launched);
         if (initialAppLaunch == null) {
-            justVisiting();
             InitializeHuman();
             WakeUp();
+            justVisiting();
             $feedsList.slideDown();
             $feedNowSpeaking.slideUp();
         } else {
-            justVisiting();
             InitializeHuman();
             WakeUp();
+            justVisiting();
             $feedsList.slideDown();
             $feedNowSpeaking.slideUp();
         }
@@ -263,6 +264,24 @@ function unshare(url) {
         //alert('Noted as spam');
     }
 
+}
+
+function markRead(url) {
+            $.ajax({
+                type: "GET",
+                url: "http://192.237.246.113:40000/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=DELETE",
+                crossDomain: true,
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                data: {},
+                dataType: 'text', //json
+                success: function (response) {
+                },
+                error: function (e) {
+                }
+            });
 }
 
 function superFriend() {

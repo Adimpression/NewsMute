@@ -22,75 +22,136 @@
 <body style="width: 100%; height: 100%; overflow:hidden;" class="">
 <div class="container"
      style="width: 100%; height: 100%;">
-    <div class="one left" style="height: 0; background-color: transparent;">
-        <div class="one" style="">
-            <div class="dropdown" style="font-size: 30px; background-color: transparent;border: none;">
-                <button style="width: 100%;color: transparent; border:none; background: transparent url('icon.png'); -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;;"></button>
-                <ul style="border:none; background-color: transparent;" >
-                    <li><a href="#" onclick="scream();"><i class="icon-link" style="color: #ff1493;font-size: 50px;"></i></a></li>
-                    <li><a href="#" onclick="stalk();"><i class="icon-rss" style="color: #ff1493;font-size: 50px;"></i></a></li>
-                </ul>
+    <div class="FeedSetup one hidden">
+        <div class="one center">
+            <h6>This information is only to customize your device. They will be discarded as soon as this setup is finish.</h6>
+        </div>
+        <div class="one center">
+            <h4>In which country are you right now?</h4>
+        </div>
+        <div class="country one center">
+            <div class="one">
+                <button style="width: 100%;">Sri Lanka <i class="icon-flag"></i></button>
+            </div>
+            <div class="one">
+                <button style="width: 100%;">United States</button>
+            </div>
+            <div class="one">
+                <button style="width: 100%;">Singapore</button>
+            </div>
+            <div class="one">
+                <button style="width: 100%;">Sri Lanka</button>
+            </div>
+            <div class="one">
+                <button style="width: 100%;">United States</button>
+            </div>
+            <div class="one">
+                <button style="width: 100%;">Singapore</button>
+            </div>
+            <div class="one">
+                <button style="width: 100%;">Sri Lanka</button>
+            </div>
+            <div class="one">
+                <button style="width: 100%;">United States</button>
+            </div>
+            <div class="one">
+                <button style="width: 100%;">Singapore</button>
+            </div>
+            <div class="one">
+                <button style="width: 100%;">Sri Lanka</button>
+            </div>
+            <div class="one">
+                <button style="width: 100%;">United States</button>
+            </div>
+            <div class="one">
+                <button style="width: 100%;">Singapore</button>
             </div>
         </div>
+        <div class="one" style="height: 10px;">
+            &nbsp;
+        </div>
+        <div class="one center">
+            <h4>What is your gender?</h4>
+        </div>
+        <div class="gender one center">
+            <button style="width: 100%;background-color: blue; color: #ffffff;">Male</button>
+            <button style="width: 100%;background-color: #ff1493;color: #ffffff;">Female</button>
+            <button style="width: 100%;">Don't care</button>
+        </div>
     </div>
-    <div class="one feedDataSection" style="height: 100%;overflow: scroll;">
-        <div class="one"
-             style="padding: 5%;">
-            <div class="one" style="height: 100%;">
-                <div class="one active" id="feed"
-                     style="display:none;  font-size: 30px;line-height: 116%;overflow: scroll; height: 100%;">
+
+    <div class="FeedInterface one">
+        <div class="one left" style="height: 0; background-color: transparent;">
+            <div class="one" style="">
+                <div class="dropdown" style="font-size: 30px; background-color: transparent;border: none;">
+                    <button style="width: 100%;color: transparent; border:none; background: transparent url('icon.png'); -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;;"></button>
+                    <ul style="border:none; background-color: transparent;" >
+                        <li><a href="#" onclick="scream();"><i class="icon-link" style="color: #ff1493;font-size: 50px;"></i></a></li>
+                        <li><a href="#" onclick="stalk();"><i class="icon-rss" style="color: #ff1493;font-size: 50px;"></i></a></li>
+                    </ul>
                 </div>
-                <div class="one" id="feedNowSpeaking"
-                     style="display:none;font-size: 30px;line-height: 116%;overflow: scroll; height: 100%;">
-                </div>
-                <div class="one quicksand"
-                     style="display:block; background-color: #ffffff; overflow: scroll;  height: 100%; font-size: 17px; font-family: FontAwesome, serif;">
-                    <div id="feedsList" style="list-style: none;" class="one">
-                        <div class="one hidden">
-                            <div class="one itemTemplate" id="http%3A%2F%2Fwww.newsmute.com">
-                                <div class="one ttlm">
-                                    <div class="one left">
-                                        <a class="itemTitle" href="#"
-                                           style="font-size: 40px; text-decoration: underline;color: #271aad;"
-                                           onclick="window.localStorage.setItem('lastVisited', this.title); window.location.href = this.title;">
-                                            The Earth has Come to Its Beginning
-                                        </a>
-                                    </div>
-                                    <div class="one left itemDescription" style="font-size: 30px;">
-                                        Sins have all been washed away to see if we can revive and recover from all the
-                                        misery
-                                    </div>
-                                    <div class="one" style="height: 2%;">
-                                    </div>
-                                    <div class="one" style="opacity: 0.5;">
-                                        <div class="use30 left">
-                                            <button href="#" class="itemBookmark" style="text-decoration: underline;"
-                                                    onclick="share(this.title);" title="">
-                                                Bookmark
-                                            </button>
+            </div>
+        </div>
+        <div class="one feedDataSection" style="height: 100%;overflow: scroll;">
+            <div class="one"
+                 style="padding: 5%;">
+                <div class="one" style="height: 100%;">
+                    <div class="one active" id="feed"
+                         style="display:none;  font-size: 30px;line-height: 116%;overflow: scroll; height: 100%;">
+                    </div>
+                    <div class="one" id="feedNowSpeaking"
+                         style="display:none;font-size: 30px;line-height: 116%;overflow: scroll; height: 100%;">
+                    </div>
+                    <div class="one quicksand"
+                         style="display:block; background-color: #ffffff; overflow: scroll;  height: 100%; font-size: 17px; font-family: FontAwesome, serif;">
+                        <div id="feedsList" style="list-style: none;" class="one">
+                            <div class="one hidden">
+                                <div class="one itemTemplate" id="http%3A%2F%2Fwww.newsmute.com">
+                                    <div class="one ttlm">
+                                        <div class="one left">
+                                            <a class="itemTitle" href="#"
+                                               style="font-size: 40px; text-decoration: underline;color: #271aad;"
+                                               onclick="window.localStorage.setItem('lastVisited', this.title); window.location.href = this.title;">
+                                                The Earth has Come to Its Beginning
+                                            </a>
                                         </div>
-                                        <div class="use40 center">
+                                        <div class="one left itemDescription" style="font-size: 30px;">
+                                            Sins have all been washed away to see if we can revive and recover from all the
+                                            misery
+                                        </div>
+                                        <div class="one" style="height: 2%;">
+                                        </div>
+                                        <div class="one" style="opacity: 0.5;">
+                                            <div class="use30 left">
+                                                <button href="#" class="itemBookmark" style="text-decoration: underline;"
+                                                        onclick="share(this.title);" title="">
+                                                    Bookmark
+                                                </button>
+                                            </div>
+                                            <div class="use40 center">
                                             <span class="itemAdvanced" style="text-decoration: none;"
-                                                    onclick="unshare(this.title);" title="">
+                                                  onclick="unshare(this.title);" title="">
                                                 *
                                             </span>
+                                            </div>
+                                            <div class="use30 right">
+                                                <button  class="itemHide" href="#" title="http://www.google.com" onclick="$(this).parent().parent().parent().parent().slideUp();hide(this.title);">
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="text-decoration: underline;">Hide</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div class="use30 right">
-                                            <button  class="itemHide" href="#" title="http://www.google.com" onclick="$(this).parent().parent().parent().parent().slideUp();hide(this.title);">
-                                                &nbsp;&nbsp;&nbsp;&nbsp;<span style="text-decoration: underline;">Hide</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                            </button>
+                                        <div class="use100" style="height: 5%;">
                                         </div>
-                                    </div>
-                                    <div class="use100" style="height: 5%;">
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 <script type="text/javascript">
