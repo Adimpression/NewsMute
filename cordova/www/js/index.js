@@ -129,6 +129,31 @@ function WakeUp() {
 
                 var data = json.returnValue.data;
 
+                    data.sort(function (a, b) {//http://stackoverflow.com/questions/4222690/sorting-a-json-object-in-javascript
+                            var a1st = -1; // negative value means left item should appear first
+                            var b1st = 1; // positive value means right item should appear first
+                            var equal = 0; // zero means objects are equal
+
+                            try { // compare your object's property values and determine their order
+                                if (b.shocks < a.shocks) {
+                                    return b1st;
+                                }
+                                else if (a.shocks < b.shocks) {
+                                    return a1st;
+                                }
+                                else {
+                                    return equal;
+                                }
+                            } catch (e) {
+                                alert("Error comparing " + JSON.stringify(a) + " \nWith\n " + JSON.stringify(b));
+                            }
+                        }
+                    );
+
+                data.reverse();
+
+
+
                 for (var i = 0; i < data.length; i++) {
                     var item = data[i];
                     if (item.link != "null" && item.link != "") {//@TODO remove me, temp fix until server fixed
