@@ -87,15 +87,6 @@
         </dependency>
         <!--End of BCrypt Dependencies -->
 
-
-        <!-- Winstone Dependencies -->
-        <dependency>
-            <groupId>net.sourceforge.winstone</groupId>
-            <artifactId>winstone</artifactId>
-            <version>0.9.10</version>
-        </dependency>
-        <!-- End of Winstone Dependencies -->
-
     </dependencies>
 
 
