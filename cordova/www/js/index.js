@@ -180,7 +180,7 @@ function WakeUp() {
 
         },
         error: function (e) {
-            alert(e.toString());
+            alert(JSON.stringify(e));
         }
     });
 }
@@ -202,8 +202,7 @@ function screamLink(url, successCallback, failureCallback){
                 successCallback(response);
             },
             error: function (e) {
-                alert("Error sharing link:" + e.toString());
-                failureCallback(e);
+                failureCallback(JSON.stringify(e));
             }
         });
     } else {
@@ -248,7 +247,7 @@ function stalk() {
                 }
             },
             error: function (e) {
-                alert(e.toString());
+                alert(JSON.stringify(e));
             }
         });
     } else {
@@ -285,7 +284,7 @@ function unshare(url) {
                     alert('Removed feed!');
                 },
                 error: function (e) {
-                    alert(e.toString());
+                    alert(JSON.stringify(e));
                 }
             });
         }
@@ -309,6 +308,7 @@ function markRead(url) {
                 success: function (response) {
                 },
                 error: function (e) {
+                    alert(JSON.stringify(e));
                 }
             });
 }
@@ -342,7 +342,7 @@ function superFriend() {
                         success: function (response) {
                         },
                         error: function (e) {
-                            alert(e.toString());
+                            alert(JSON.stringify(e));
                         }
                     });
                     contactSet = "";
