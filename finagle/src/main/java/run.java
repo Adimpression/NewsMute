@@ -7,6 +7,7 @@ enum WHAT_TO_RUN {
     STALKER,
     HARVESTER,
     SUPER_FRIENDER,
+    WEB_APP
 }
 
 /**
@@ -64,6 +65,8 @@ public class run {
                     case SUPER_FRIENDER:
                         StartThreadSafely(new Thread(new SuperFriender()));
                         break;
+                    case WEB_APP:
+                        StartThreadSafely(new Thread(new Web()));
                     default:
                         final StringBuilder options = new StringBuilder("");
                         for (final WHAT_TO_RUN runOptions : WHAT_TO_RUN.values()) {

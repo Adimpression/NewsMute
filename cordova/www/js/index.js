@@ -115,7 +115,7 @@ var app = {
 function WakeUp() {
     $.ajax({
         type: "GET",
-        url: "http://192.237.246.113:40000/?nmact=READ&user=" + humanId,
+        url: "http://192.237.246.113:40200/?nmact=READ&user=" + humanId,
         crossDomain: true,
         beforeSend: function () {
         },
@@ -294,7 +294,7 @@ function unshare(url) {
 function markRead(url) {
             $.ajax({
                 type: "GET",
-                url: "http://192.237.246.113:40000/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=DELETE",
+                url: "http://192.237.246.113:40200/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=DELETE",
                 crossDomain: true,
                 beforeSend: function () {
                 },
