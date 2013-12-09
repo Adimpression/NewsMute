@@ -90,7 +90,7 @@ public class Web implements Runnable {
                 return executorServiceFuturePool.apply(new Function0<HttpResponse>() {
                     @Override
                     public HttpResponse apply() {
-                        return blockingYawner(request);
+                        return blockingScreamer(request);
                     }
                 });
 
@@ -116,7 +116,7 @@ public class Web implements Runnable {
                 return executorServiceFuturePool.apply(new Function0<HttpResponse>() {
                     @Override
                     public HttpResponse apply() {
-                        return blockingYawner(request);
+                        return blockingStalker(request);
                     }
                 });
 
@@ -142,7 +142,7 @@ public class Web implements Runnable {
                 return executorServiceFuturePool.apply(new Function0<HttpResponse>() {
                     @Override
                     public HttpResponse apply() {
-                        return blockingYawner(request);
+                        return blockingSuperFriender(request);
                     }
                 });
 
