@@ -15,6 +15,8 @@ public class DBScripts {
 
     public static final String CREATE_SUPERFRIEND = "create table SuperFriend(humanId varchar, value varchar,  PRIMARY KEY (humanId));";
 
+    public static final String CREATE_GUARDIAN= "create table Guardian(humanId varchar, value varchar,  PRIMARY KEY (humanId));";
+
 
     public static final int YAWN_TTL = 600;
     public static final int YAWN_READED_TTL = 86400;

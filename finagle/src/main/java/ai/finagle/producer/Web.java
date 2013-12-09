@@ -38,6 +38,8 @@ public class Web implements Runnable {
 
     private Service<HttpRequest, HttpResponse> superFrienderClient;
 
+    private Service<HttpRequest, HttpResponse> guardianClient;
+
     /**
      * @TODO: Command line config for IP, Port, Thread Pool Size
      */
@@ -48,6 +50,7 @@ public class Web implements Runnable {
         hookUpScreamer();
         hookUpStalker();
         hookUpSuperFriender();
+        hookUpGuardian();
 
     }
 
@@ -155,6 +158,33 @@ public class Web implements Runnable {
                 .bindTo(new InetSocketAddress("192.237.246.113", 20200)));
     }
 
+
+    private void hookUpGuardian() {
+        guardianClient = ClientBuilder
+                .safeBuild(ClientBuilder.get().codec(Http.get())
+                        .hosts("192.237.246.113:50000").hostConnectionLimit(1));
+
+        final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
+
+            final ExecutorServiceFuturePool executorServiceFuturePool = new ExecutorServiceFuturePool(Executors.newFixedThreadPool(100)); // Pool to process blockng requests so server thread doesn't
+
+            public Future<HttpResponse> apply(final HttpRequest request) {
+                return executorServiceFuturePool.apply(new Function0<HttpResponse>() {
+                    @Override
+                    public HttpResponse apply() {
+                        return blockingGuardian(request);
+                    }
+                });
+
+            }
+        };
+
+        ServerBuilder.safeBuild(service, ServerBuilder.get()
+                .codec(Http.get())
+                .name("HttpServer")
+                .bindTo(new InetSocketAddress("192.237.246.113", 50200)));
+    }
+
     private HttpResponse blockingYawner(final HttpRequest request) {
         return yawnerClient.apply(request).apply(new Duration(TimeUnit.SECONDS.toNanos(30)));
     }
@@ -169,6 +199,10 @@ public class Web implements Runnable {
 
     private HttpResponse blockingSuperFriender(final HttpRequest request) {
         return superFrienderClient.apply(request).apply(new Duration(TimeUnit.SECONDS.toNanos(30)));
+    }
+
+    private HttpResponse blockingGuardian(final HttpRequest request) {
+        return guardianClient.apply(request).apply(new Duration(TimeUnit.SECONDS.toNanos(30)));
     }
 
 
