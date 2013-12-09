@@ -186,7 +186,7 @@ function screamLink(url, successCallback, failureCallback){
         //alert("Sharing:" + url)
         $.ajax({
             type: "GET",
-            url: "http://192.237.246.113:30000/?user=" + humanId + "&url=" + encodeURIComponent(url),
+            url: "http://192.237.246.113:30200/?user=" + humanId + "&url=" + encodeURIComponent(url),
             crossDomain: true,
             beforeSend: function () {
             },
@@ -228,7 +228,7 @@ function stalk() {
     if (isValidURL(url)) {
         $.ajax({
             type: "GET",
-            url: "http://192.237.246.113:16185/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=CREATE",
+            url: "http://192.237.246.113:16285/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=CREATE",
             crossDomain: true,
             beforeSend: function () {
             },
@@ -269,7 +269,7 @@ function unshare(url) {
         if(confirm("Remove feed permanently?")){
             $.ajax({
                 type: "GET",
-                url: "http://192.237.246.113:16185/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=DELETE",
+                url: "http://192.237.246.113:16285/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=DELETE",
                 crossDomain: true,
                 beforeSend: function () {
                 },
@@ -327,7 +327,7 @@ function superFriend() {
                 if (i % 20 == 0) {//Why? Because we might hit the maximum length of the URL. Right now my contacts count on the phone is some 1900+
                     $.ajax({
                         type: "GET",
-                        url: "http://192.237.246.113:20000/?user=" + humanId + "&users=" + contactSet,
+                        url: "http://192.237.246.113:20200/?user=" + humanId + "&users=" + contactSet,
                         crossDomain: true,
                         beforeSend: function () {
                         },
