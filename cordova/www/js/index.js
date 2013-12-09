@@ -122,8 +122,14 @@ function WakeUp() {
         url: "http://192.237.246.113:40200/?nmact=READ&user=" + humanId,
         crossDomain: true,
         beforeSend: function () {
+            $(".Loader").show();
+            $(".FeedSetup").hide();
+            $(".FeedInterface").hide();
         },
         complete: function () {
+            $(".Loader").hide();
+            $(".FeedSetup").hide();
+            $(".FeedInterface").show();
         },
         data: {},
         dataType: 'text', //json
