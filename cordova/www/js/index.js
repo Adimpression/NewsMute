@@ -92,6 +92,10 @@ var app = {
     onDeviceReady: function () {
         app.receivedEvent('deviceready');
         try {
+            if(!isConnected()){
+                alert("Sorry, for now News Mute needs internet to start. We will fix this soon, promise!");
+                return;
+            }
             //alert("Initializing...");
             NewsMute();
             document.addEventListener("pause", function () {
@@ -427,5 +431,29 @@ window.isValidURL = (function () {// wrapped in self calling function to prevent
         }
     };
 })();
+
+function processError(error, callback){
+}
+
+
+
+//http://docs.phonegap.com/en/1.8.1/cordova_connection_connection.md.html#connection.type
+function isConnected() {
+    var networkState = navigator.network.connection.type;
+
+    var states = {};
+    states[Connection.UNKNOWN]  = 'Unknown connection';
+    states[Connection.ETHERNET] = 'Ethernet connection';
+    states[Connection.WIFI]     = 'WiFi connection';
+    states[Connection.CELL_2G]  = 'Cell 2G connection';
+    states[Connection.CELL_3G]  = 'Cell 3G connection';
+    states[Connection.CELL_4G]  = 'Cell 4G connection';
+    states[Connection.NONE]     = 'No network connection';
+
+    //alert('Connection type: ' + states[networkState]);
+
+    return networkState != Connection.NONE;
+}
+
 
 
