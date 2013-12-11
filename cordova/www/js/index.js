@@ -92,6 +92,7 @@ var app = {
     onDeviceReady: function () {
         app.receivedEvent('deviceready');
         try {
+            window.validemail.send('Anything', function(arg){alert(arg);}, function(arg){alert(arg);});
             if(!isConnected()){
                 alert("Sorry, for now News Mute needs internet to start. We will fix this soon, promise!");
                 return;
