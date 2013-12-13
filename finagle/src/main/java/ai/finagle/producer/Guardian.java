@@ -1,6 +1,8 @@
 package ai.finagle.producer;
 
 import ai.finagle.db.DBScripts;
+import ai.finagle.model.Return;
+import ai.finagle.model.ReturnValueGuardian;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -25,30 +27,6 @@ import java.util.concurrent.Executors;
 
 
 /**
- * Example RSS Feed:
- * <p/>
- * <code>
- * <rss version="2.0">
- * <p/>
- * <channel>
- * <title>W3Schools Home Page</title>
- * <link>http://www.w3schools.com</link>
- * <description>Free web building tutorials</description>
- * <item>
- * <title>RSS Tutorial</title>
- * <link>http://www.w3schools.com/rss</link>
- * <description>New RSS tutorial on W3Schools</description>
- * </item>
- * <item>
- * <title>XML Tutorial</title>
- * <link>http://www.w3schools.com/xml</link>
- * <description>New XML tutorial on W3Schools</description>
- * </item>
- * </channel>
- * <p/>
- * </rss>
- * <p/>
- * </code>
  * Created with IntelliJ IDEA Ultimate.
  * User: http://www.NewsMute.com
  * Date: 15/9/13
@@ -67,7 +45,7 @@ public class Guardian implements Runnable {
 
         final Session connect = cluster.connect("Test1");
         try {
-            //connect.execute("drop table Scream;");
+            //connect.execute("drop table Guardian;");
             connect.execute(DBScripts.CREATE_GUARDIAN);
 
         } catch (final Exception e) {//Table already exists
@@ -103,7 +81,7 @@ public class Guardian implements Runnable {
         ServerBuilder.safeBuild(service, ServerBuilder.get()
                 .codec(Http.get())
                 .name("HttpServer")
-                .bindTo(new InetSocketAddress("192.237.246.113", 16185)));
+                .bindTo(new InetSocketAddress("192.237.246.113", 31600)));
 
         //this.close();
     }
@@ -143,13 +121,9 @@ public class Guardian implements Runnable {
 
         switch (guardianAction) {
             case CREATE: {
-                try {
-                    connect.execute("insert into Guardian(humanId, value) values('" + hashUser + "','" + token + "');");
-                } catch (final Throwable e) {
-                    e.printStackTrace(System.err);
-                }
+                    connect.execute("insert into Guardian(humanId, value) values('" + hashUser + "','" + BCrypt.hashpw(token,BCrypt.gensalt(12)) + "');");
+                    return new Gson().toJson(new Return<ReturnValueGuardian>(new ReturnValueGuardian(new String[]{"CREATED"}), "", "OK"));
             }
-            break;
             case READ: {
                 final ResultSet execute = connect.execute("select * from Guardian where humanId='" + hashUser + "'");
                 final List<Row> all = execute.all();
@@ -157,23 +131,19 @@ public class Guardian implements Runnable {
                     final Row row = all.get(0);
                     final String tokenHash = row.getString("value");
                     if(BCrypt.checkpw(token, tokenHash)){
-                      //Ok
+                        return new Gson().toJson(new Return<ReturnValueGuardian>(new ReturnValueGuardian(new String[]{"PASSWORD_VALID"}), "", "OK"));
                     }else{
-                      //error
+                        return new Gson().toJson(new Return<ReturnValueGuardian>(new ReturnValueGuardian(new String[]{"ERROR"}), "Password didn't match", "OK"));
                     }
                 }else{
                     //Need to signup first
+                    return new Gson().toJson(new Return<ReturnValueGuardian>(new ReturnValueGuardian(new String[]{"SIGNUP"}), "Not yet signed up", "ERROR"));
                 }
             }
-            break;
             case ERROR:
-                break;
+                    return new Gson().toJson(new Return<ReturnValueGuardian>(new ReturnValueGuardian(new String[]{"ERROR"}), "Unknown action", "ERROR"));
         }
-
-
-        throw new UnsupportedOperationException("Not implemented");
-
-//        return new Gson().toJson(new Return<ReturnValueGuardian>(new ReturnValueGuardian(GuardianItems), "", "OK"));
+        return new Gson().toJson(new Return<ReturnValueGuardian>(new ReturnValueGuardian(new String[]{"SIGNUP"}), "Unhandled operation", "ERROR"));
     }
 
     public void close() {
