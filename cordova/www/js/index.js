@@ -10,6 +10,7 @@ var flag_app_launched = "flag_app_launched";
 function InitializeHuman() {
     try {
         humanId = window.localStorage.getItem("humanId");
+        humanId = null;
         if (humanId == null || humanId == "") {
             window.validemail.send('Anything', function(arg){
                     try {
@@ -26,13 +27,37 @@ function InitializeHuman() {
                         }
 
                         alert('Your email for News Mute is ' + humanId);
+
+                        var password;
+
+                        while((password = prompt("Enter password")) != "" && password != null){
+                        }
+
+                        //Now we have the email, we try to login, if we fail
+                        //If password failure
+
+                        signIn(getHash(password), function(arg){
+                            alert(arg);
+                            var status = arg.data[0].status;
+                            alert("Status" + status);
+
+                            if(status == "OK"){
+                                alert("Login successful");
+                            } else {
+                                alert("Login failed");
+                            }
+
+                        }, function(arg){
+                            alert(arg);
+                        });
+
                     } catch (e) {
                         alert(e);
                     }
                 },
                 function(arg){alert(arg);});
 
-            window.localStorage.setItem("humanId", getDeviceHashForEmail(humanId));
+            window.localStorage.setItem("humanId", getHash(humanId));
         } else {
             //alert(humanId);
         }
@@ -40,6 +65,49 @@ function InitializeHuman() {
         //alert(e);
     }
 }
+
+function signUp(passwordHash, successCallback, failureCallback){
+    $.ajax({
+        type: "GET",
+        url: "http://192.237.246.113:50200/?user=" + humanId + "&token=" + passwordHash+ "&nmact=" + "CREATE",
+        crossDomain: true,
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        data: {},
+        dataType: 'text', //json
+        success: function (response) {
+            successCallback(response);
+        },
+        error: function (e) {
+            failureCallback(e);
+        }
+    });
+}
+
+
+
+function signIn(passwordHash, successCallback, failureCallback){
+    $.ajax({
+        type: "GET",
+        url: "http://192.237.246.113:50200/?user=" + humanId + "&token=" + passwordHash + "&nmact=" + "CREATE",
+        crossDomain: true,
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        data: {},
+        dataType: 'text', //json
+        success: function (response) {
+            successCallback(response);
+        },
+        error: function (e) {
+            failureCallback(e);
+        }
+    });
+}
+
 
 function justVisiting() {
     var lastVisited = window.localStorage.getItem("lastVisited");
@@ -58,20 +126,11 @@ function justVisiting() {
 
 function NewsMute() {
     try {
-        var initialAppLaunch = window.localStorage.getItem(flag_app_launched);
-        if (initialAppLaunch == null) {
-            InitializeHuman();
-            WakeUp();
-            justVisiting();
-            $feedsList.slideDown();
-            $feedNowSpeaking.slideUp();
-        } else {
-            InitializeHuman();
-            WakeUp();
-            justVisiting();
-            $feedsList.slideDown();
-            $feedNowSpeaking.slideUp();
-        }
+        InitializeHuman();
+        WakeUp();
+        justVisiting();
+        $feedsList.slideDown();
+        $feedNowSpeaking.slideUp();
 
         window.localStorage.setItem(flag_app_launched, "true");
 
@@ -88,8 +147,8 @@ function NewsMute() {
     }
 }
 
-function getDeviceHashForEmail(email){
-    return CryptoJS.SHA512(email);
+function getHash(value){
+    return CryptoJS.SHA512(value);
 }
 
 var app = {
@@ -348,9 +407,9 @@ function superFriend() {
             for (var i = 0; i < contacts.length; i++) {
                 for (var j = 0; contacts[i].emails != null && j < contacts[i].emails.length; j++) {
                     if (contacts != "") {
-                        contactSet = contactSet + "%7C" + getDeviceHashForEmail(contacts[i].emails[j].value); //%7C is the pipe | sign
+                        contactSet = contactSet + "%7C" + getHash(contacts[i].emails[j].value); //%7C is the pipe | sign
                     } else {
-                        contactSet = getDeviceHashForEmail(contacts[i].emails[j].value);
+                        contactSet = getHash(contacts[i].emails[j].value);
                     }
                 }
 
