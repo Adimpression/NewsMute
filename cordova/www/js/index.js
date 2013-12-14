@@ -30,7 +30,7 @@ function InitializeHuman() {
 
                         var password;
 
-                        while((password = prompt("Enter password")) != "" && password != null){
+                        while((password = prompt("Enter password")) == "" || password == null){
                         }
 
                         //Now we have the email, we try to login, if we fail
