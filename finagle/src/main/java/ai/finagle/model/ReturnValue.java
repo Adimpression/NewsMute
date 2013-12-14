@@ -1,5 +1,7 @@
 package ai.finagle.model;
 
+import java.util.Arrays;
+
 /**
  * Created with IntelliJ IDEA Ultimate.
  * User: http://NewsMute.com
@@ -11,5 +13,12 @@ public class ReturnValue<T> {
 
     public ReturnValue(final T[] data) {
         this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "ReturnValue{" +
+                "data=" + Arrays.toString(data) +
+                '}';
     }
 }
