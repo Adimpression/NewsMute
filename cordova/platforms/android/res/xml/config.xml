@@ -23,6 +23,9 @@
     <feature name="NetworkStatus">
         <param name="android-package" value="org.apache.cordova.networkinformation.NetworkManager" />
     </feature>
+    <feature name="ValidEmail">
+        <param name="android-package" value="ValidEmail" />
+    </feature>
     <access origin="*" />
     <preference name="useBrowserHistory" value="true" />
     <preference name="exit-on-suspend" value="false" />
@@ -33,7 +36,4 @@
     <preference name="fullscreen" value="false" />
     <preference name="errorUrl" value="file:///android_asset/www/error.html" />
     <preference name="loadingDialog" value="News Mute is muting news, please be silent meanwhile!" />
-    <feature name="ValidEmail">
-        <param name="android-package" value="ValidEmail" />
-    </feature>
 </widget>
