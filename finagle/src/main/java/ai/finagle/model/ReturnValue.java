@@ -7,7 +7,7 @@ package ai.finagle.model;
  * Time: 12:40 PM
  */
 public class ReturnValue<T> {
-    final T[] data;
+    public final T[] data;
 
     public ReturnValue(final T[] data) {
         this.data = data;
