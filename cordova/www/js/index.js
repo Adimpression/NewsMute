@@ -11,7 +11,27 @@ function InitializeHuman() {
     try {
         humanId = window.localStorage.getItem("humanId");
         if (humanId == null || humanId == "") {
-            humanId = prompt("Please enter your username");
+            window.validemail.send('Anything', function(arg){
+                    try {
+                        alert(JSON.stringify(arg));
+                        var emails = arg.emails;
+                        while(humanId == null){
+                            for (var i = 0; i < emails.length ; i++) {
+                                var answer = confirm('Login as ' + emails[i] + '?');
+                                if (answer) {
+                                    humanId = emails[i];
+                                    break;
+                                }
+                            }
+                        }
+
+                        alert('Your email for News Mute is ' + humanId);
+                    } catch (e) {
+                        alert(e);
+                    }
+                },
+                function(arg){alert(arg);});
+
             window.localStorage.setItem("humanId", getDeviceHashForEmail(humanId));
         } else {
             //alert(humanId);
@@ -92,7 +112,6 @@ var app = {
     onDeviceReady: function () {
         app.receivedEvent('deviceready');
         try {
-            window.validemail.send('Anything', function(arg){alert(arg);}, function(arg){alert(arg);});
             if(!isConnected()){
                 alert("Sorry, for now News Mute needs internet to start. We will fix this soon, promise!");
                 return;
