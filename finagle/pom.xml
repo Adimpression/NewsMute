@@ -87,6 +87,14 @@
         </dependency>
         <!--End of BCrypt Dependencies -->
 
+        <!--Hazelcast Dependencies -->
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast</artifactId>
+            <version>3.1.2</version>
+        </dependency>
+        <!--End of Hazelcast Dependencies -->
+
     </dependencies>
 
 

@@ -1,6 +1,8 @@
 package ai.finagle.producer;
 
 import com.datastax.driver.core.*;
+import com.hazelcast.config.Config;
+import com.hazelcast.core.Hazelcast;
 import com.twitter.finagle.Service;
 import com.twitter.finagle.builder.ClientBuilder;
 import com.twitter.finagle.builder.ServerBuilder;
@@ -13,12 +15,38 @@ import org.jboss.netty.handler.codec.http.*;
 import scala.actors.threadpool.TimeUnit;
 
 import java.net.InetSocketAddress;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executors;
 
 
 /**
- * Answers the question: What have my super friends found interesting
- * <p/>
+ *
+ * <ul>
+ *     <li>
+ *         As for password/session management, we have the following things to think about:
+ *         <ol>
+ *             <li>
+ *                  We always consider the user has a trojan enabled bare-bone browser(tebbb), let's say a hacker
+ *             </li>
+ *             <li>
+ *                 User A, with password PA, confirms a to a database match, during which we add a cookie to the users tebbb
+ *             </li>
+ *             <li>
+ *                 Now, this cookie value, is the only item preventing a User B, from mimicking A using a tebbb
+ *             </li>
+ *             <li>
+ *                 Let's say this cookie value, is the hashOf(usernamehash + passwordhash). Now we can check the validity in this way:
+ *                 See if the cookie is actually present on our {@link Map}, then we consider this user valid, for the usernamehash claimed in the request
+ *             </li>
+ *         </ol>
+ *     </li>
+ *     <li>
+ *         Netty cookie management: http://netty.io/4.0/api/io/netty/handler/codec/http/ServerCookieEncoder.html
+ *     </li>
+ * </ul>
+ *
+ *
  * Created with IntelliJ IDEA Ultimate.
  * User: http://www.NewsMute.com
  * Date: 15/9/13
@@ -39,6 +67,9 @@ public class Web implements Runnable {
     private Service<HttpRequest, HttpResponse> superFrienderClient;
 
     private Service<HttpRequest, HttpResponse> guardianClient;
+
+    //final Map<String, String> sessions = Hazelcast.newHazelcastInstance(new Config()).getMap("sessions");
+    final Map<String, String> sessions = new HashMap<String, String>();
 
     /**
      * @TODO: Command line config for IP, Port, Thread Pool Size
@@ -202,7 +233,13 @@ public class Web implements Runnable {
     }
 
     private HttpResponse blockingGuardian(final HttpRequest request) {
-        return guardianClient.apply(request).apply(new Duration(TimeUnit.SECONDS.toNanos(30)));
+        final HttpResponse httpResponse = guardianClient.apply(request).apply(new Duration(TimeUnit.SECONDS.toNanos(30)));
+
+        CookieEncoder encoder = new CookieEncoder(true);
+        encoder.addCookie("JSESSIONID", "1234");
+        httpResponse.setHeader("Set-Cookie", encoder.encode());
+
+        return httpResponse;
     }
 
 
