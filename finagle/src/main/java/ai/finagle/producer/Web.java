@@ -165,7 +165,7 @@ public class Web implements Runnable {
     private void hookUpGuardian() {
         guardianClient = ClientBuilder
                 .safeBuild(ClientBuilder.get().codec(Http.get())
-                        .hosts("192.237.246.113:50000").hostConnectionLimit(1));
+                        .hosts("192.237.246.113:31600").hostConnectionLimit(1));
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
 
