@@ -6,9 +6,9 @@ package ai.finagle.model;
  * Date: 26/10/13
  * Time: 11:45 PM
  */
-public class ReturnValueGuardian extends ReturnValue<String> {
+public class ReturnValueGuardian extends ReturnValue<GuardianItem> {
 
-    public ReturnValueGuardian(final String[] data) {
+    public ReturnValueGuardian(final GuardianItem[] data) {
         super(data);
     }
 }

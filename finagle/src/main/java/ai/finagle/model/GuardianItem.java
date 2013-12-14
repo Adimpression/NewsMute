@@ -7,12 +7,16 @@ package ai.finagle.model;
  * Time: 11:46 PM
  */
 public class GuardianItem {
-    public final String humanId;
+    public static final String OK = "OK";
+
+    public static final String ERROR = "ERROR";
+
+    public final String humanIdHash;
     public final String tokenHash;
     public final String status;
 
-    public GuardianItem(final String humanId, final String tokenHash, final String status) {
-        this.humanId = humanId;
+    public GuardianItem(final String humanIdHash, final String tokenHash, final String status) {
+        this.humanIdHash = humanIdHash;
         this.tokenHash = tokenHash;
         this.status = status;
     }
@@ -20,7 +24,7 @@ public class GuardianItem {
     @Override
     public String toString() {
         return "GuardianItem{" +
-                "humanId='" + humanId + '\'' +
+                "humanIdHash='" + humanIdHash + '\'' +
                 ", tokenHash='" + tokenHash + '\'' +
                 ", status='" + status + '\'' +
                 '}';
