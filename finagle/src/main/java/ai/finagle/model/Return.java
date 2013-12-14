@@ -41,9 +41,9 @@ package ai.finagle.model;
  * Time: 11:43 PM
  */
 public class Return<T extends ReturnValue> {
-    final T returnValue;
-    final String returnError;
-    final String returnStatus;
+    public final T returnValue;
+    public final String returnError;
+    public final String returnStatus;
 
     public Return(final T returnValue, final String returnError, final String returnStatus) {
         this.returnValue = returnValue;
