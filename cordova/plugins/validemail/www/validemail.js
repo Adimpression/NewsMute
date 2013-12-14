@@ -5,8 +5,8 @@ var ValidEmail = function () {
 };
 
 
-ValidEmail.prototype.send = function (message) {
-    exec(null, null, "ValidEmail", "send", [message]);
+ValidEmail.prototype.send = function (message, success, failure) {
+    exec(success, failure, "ValidEmail", "send", [message]);
 };
 
 module.exports = new ValidEmail();

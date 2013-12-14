@@ -1,5 +1,3 @@
-package ai.cordova.plugin.validemail;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.util.Patterns;

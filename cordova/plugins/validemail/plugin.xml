@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="validemail" version="0.1.0">
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="validemail" version="0.2.0">
     <name>Valid Email</name>
     <author>Adimpression</author>
     <description>A simple utility to get the device email of the user</description>
@@ -11,14 +11,14 @@
         <clobbers target="validemail" />
     </js-module>
     <platform name="android">
-        <config-file target="config.xml" parent="/*">
+        <config-file target="res/xml/config.xml" parent="/*">
             <feature name="ValidEmail">
-                <param name="android-package" value="ai.cordova.plugin.validemail" />
+                <param name="android-package" value="ValidEmail" />
             </feature>
         </config-file>
         <config-file target="AndroidManifest.xml" parent="/*">
             <uses-permission android:name="android.permission.GET_ACCOUNTS" />
         </config-file>
-        <source-file src="src/ai/cordova/plugin/validemail/ValidEmail.java" target-dir="src/ai/cordova/plugin/validemail" />
+        <source-file src="src/android/ValidEmail.java" target-dir="src" />
     </platform>
 </plugin>
