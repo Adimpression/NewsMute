@@ -46,15 +46,6 @@
             <version>6.6.2</version>
         </dependency>
 
-        <!--Avro Dependencies-->
-        <dependency>
-            <groupId>org.apache.avro</groupId>
-            <artifactId>avro</artifactId>
-            <version>1.7.3</version>
-        </dependency>
-        <!--End of Avro Dependencies-->
-
-
         <!--Cassandra Dependencies-->
         <dependency>
             <groupId>com.datastax.cassandra</groupId>
