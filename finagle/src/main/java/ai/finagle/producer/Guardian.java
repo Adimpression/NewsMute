@@ -55,6 +55,13 @@ import java.util.concurrent.Executors;
  * </ul>
  *
  * http://netty.io/4.0/api/io/netty/handler/codec/http/Cookie.html
+ *
+ *
+ * Just logging a few things noticed on the server, to be fixed:
+ *
+ * If the session isn't present:
+ *
+ * No such session (humanIdHash is null), UNAUTHORIZED
  * <p/>
  * Created with IntelliJ IDEA Ultimate.
  * User: http://www.NewsMute.com
@@ -94,17 +101,19 @@ public class Guardian implements Runnable {
                     @Override
                     public HttpResponse apply() {
 
-                        final HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_0, HttpResponseStatus.UNAUTHORIZED);
+                        final HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_0, HttpResponseStatus.OK);
 
-                        final String value = request.getHeader("Cookie");
-
-                        final Set<Cookie> cookies = new CookieDecoder().decode(value);
 
                         Cookie sessionCookie = null;
-                        for (final Cookie cookie : cookies) {
-                            if (cookie.getName().equals("session")) {
-                                sessionCookie = cookie;
-                                break;
+
+                        final String value = request.getHeader("Cookie");
+                        if(value != null){
+                            final Set<Cookie> cookies = new CookieDecoder().decode(value);
+                            for (final Cookie cookie : cookies) {
+                                if (cookie.getName().equals("session")) {
+                                    sessionCookie = cookie;
+                                    break;
+                                }
                             }
                         }
 
@@ -218,7 +227,7 @@ public class Guardian implements Runnable {
                     }
                 } else {
                     //Need to signup first
-                    return new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.ERROR)}), "Not yet signed up", "ERROR");
+                    return new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.NO_ACCOUNT)}), "Not yet signed up", "OK");
                 }
             }
             case ERROR:
