@@ -26,44 +26,46 @@ function InitializeHuman() {
                             }
                         }
 
-                        alert('Your email for News Mute is ' + humanId);
-
                         var password;
 
                         while((password = prompt("Enter password")) == "" || password == null){
                         }
 
-                        alert('Password:' + password);
-
                         //Now we have the email, we try to login, if we fail
                         //If password failure
 
                         signIn(getHash(password), function(response){
-                            alert(response);
-                            alert(JSON.stringify(response));
-                            var data = response.data[0];
-                            var status = data.status;
-                            alert("Status" + status);
-                            if(response.returnStatus == "OK"){
-                                if(status == "OK"){
-                                    alert("Login successful");
-                                } else if(status == "ERROR"){
-                                    alert("Login failed");//
-                                } else if(status == "NO_ACCOUNT"){
-                                    alert("No account, signing you up");
-                                    signUp(getHash(password), function(argS){
-                                        alert(argS);
-                                        alert(JSON.stringify(argS));
-                                    }, function(argS){
-                                        alert(argS);
-                                        alert(JSON.stringify(argS));
-                                    })
+                            try {
+                                var json = JSON.parse(response);
+                                alert(JSON.stringify(json));
+                                var dataArray = json.returnValue.data;
+                                var data = dataArray[0];
+                                var status = data.status;
+                                alert("Status" + status);
+                                if (json.returnStatus == "OK") {
+                                    if (status == "OK") {
+                                        alert("Login successful");
+                                    } else if (status == "ERROR") {
+                                        alert("Login failed");//
+                                        window.location.href = window.location.href;
+                                    } else if (status == "NO_ACCOUNT") {
+                                        alert("No account, signing you up");
+                                        signUp(getHash(password), function (argS) {
+                                            alert(argS);
+                                            alert(JSON.stringify(argS));
+                                        }, function (argS) {
+                                            alert(argS);
+                                            alert(JSON.stringify(argS));
+                                        })
 
-                                } else{
-                                    alert('News Mute had an error:' + status);
+                                    } else {
+                                        alert('News Mute had an error:' + status);
+                                    }
+                                } else {
+                                    alert("returnStatus:" + data.returnStatus);
                                 }
-                            } else {
-                                alert("returnStatus:" + data.returnStatus);
+                            } catch (e) {
+                                alert(e);
                             }
 
                         }, function(arg){
