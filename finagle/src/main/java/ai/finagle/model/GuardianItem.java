@@ -8,8 +8,8 @@ package ai.finagle.model;
  */
 public class GuardianItem {
     public static final String OK = "OK";
-
     public static final String ERROR = "ERROR";
+    public static final String NO_ACCOUNT = "NO_ACCOUNT";
 
     public final String humanIdHash;
     public final String tokenHash;
