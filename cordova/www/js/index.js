@@ -14,7 +14,7 @@ function InitializeHuman() {
         if (humanId == null || humanId == "") {
             window.validemail.send('Anything', function(arg){
                     try {
-                        alert(JSON.stringify(arg));
+                        //alert(JSON.stringify(arg));
                         var emails = arg.emails;
                         while(humanId == null){
                             for (var i = 0; i < emails.length ; i++) {
@@ -33,22 +33,42 @@ function InitializeHuman() {
                         while((password = prompt("Enter password")) == "" || password == null){
                         }
 
+                        alert('Password:' + password);
+
                         //Now we have the email, we try to login, if we fail
                         //If password failure
 
-                        signIn(getHash(password), function(arg){
-                            alert(arg);
-                            var status = arg.data[0].status;
+                        signIn(getHash(password), function(response){
+                            alert(response);
+                            alert(JSON.stringify(response));
+                            var data = response.data[0];
+                            var status = data.status;
                             alert("Status" + status);
+                            if(response.returnStatus == "OK"){
+                                if(status == "OK"){
+                                    alert("Login successful");
+                                } else if(status == "ERROR"){
+                                    alert("Login failed");//
+                                } else if(status == "NO_ACCOUNT"){
+                                    alert("No account, signing you up");
+                                    signUp(getHash(password), function(argS){
+                                        alert(argS);
+                                        alert(JSON.stringify(argS));
+                                    }, function(argS){
+                                        alert(argS);
+                                        alert(JSON.stringify(argS));
+                                    })
 
-                            if(status == "OK"){
-                                alert("Login successful");
+                                } else{
+                                    alert('News Mute had an error:' + status);
+                                }
                             } else {
-                                alert("Login failed");
+                                alert("returnStatus:" + data.returnStatus);
                             }
 
                         }, function(arg){
                             alert(arg);
+                            alert(JSON.stringify(arg));
                         });
 
                     } catch (e) {
@@ -91,7 +111,7 @@ function signUp(passwordHash, successCallback, failureCallback){
 function signIn(passwordHash, successCallback, failureCallback){
     $.ajax({
         type: "GET",
-        url: "http://192.237.246.113:50200/?user=" + humanId + "&token=" + passwordHash + "&nmact=" + "CREATE",
+        url: "http://192.237.246.113:50200/?user=" + humanId + "&token=" + passwordHash + "&nmact=" + "READ",
         crossDomain: true,
         beforeSend: function () {
         },
@@ -127,21 +147,21 @@ function justVisiting() {
 function NewsMute() {
     try {
         InitializeHuman();
-        WakeUp();
-        justVisiting();
-        $feedsList.slideDown();
-        $feedNowSpeaking.slideUp();
-
-        window.localStorage.setItem(flag_app_launched, "true");
-
-        var flag_super_friend_value = window.localStorage.getItem(flag_super_friend);
-        if (flag_super_friend_value == null) {
-            superFriend();
-            window.localStorage.setItem(flag_super_friend, "true");
-        } else {
-            //Check for time and update after several days?
-            //Remember that we can run a hash check
-        }
+//        WakeUp();
+//        justVisiting();
+//        $feedsList.slideDown();
+//        $feedNowSpeaking.slideUp();
+//
+//        window.localStorage.setItem(flag_app_launched, "true");
+//
+//        var flag_super_friend_value = window.localStorage.getItem(flag_super_friend);
+//        if (flag_super_friend_value == null) {
+//            superFriend();
+//            window.localStorage.setItem(flag_super_friend, "true");
+//        } else {
+//            //Check for time and update after several days?
+//            //Remember that we can run a hash check
+//        }
     } catch (e) {
         alert(e);
     }

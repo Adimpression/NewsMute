@@ -117,6 +117,9 @@ public class Guardian implements Runnable {
                             }
                         }
 
+
+                        final Return<ReturnValueGuardian> result;
+
                         if (sessionCookie != null) {//User already has a session
 
                             final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
@@ -132,16 +135,19 @@ public class Guardian implements Runnable {
                             if (humanIdHash != null) {
                                 if (humanIdHash.equals(hashUser)) {
                                     httpResponse.setStatus(HttpResponseStatus.OK);
+                                   result = new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.OK)}), "Session ok", "OK");
                                 } else {//Crazy stuff, either the session was hijacked our we did a client programming mess
                                     System.out.println("Session present, but humanId hashes don't match!");
+                                    result = new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.ERROR)}), "Session matched but users don't match", "OK");
                                 }
                             } else {//Wrong session, bad bad bad
                                 System.out.println("No such session!");
+                                result = new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.ERROR)}), "No such session", "OK");
                             }
 
                         } else {//We need to create a session
 
-                            final Return<ReturnValueGuardian> result = blocking(request);
+                            result = blocking(request);
 
                             final GuardianItem guardianItem = result.returnValue.data[0];
                             if (result.returnStatus.equals("OK") && guardianItem.status.equals(GuardianItem.OK)) {
@@ -158,20 +164,21 @@ public class Guardian implements Runnable {
                                 encoder.addCookie(defaultCookie);
 
                                 httpResponse.setHeader("Set-Cookie", encoder.encode());
-                            }else{
-                                byte[] resultBytes;
-                                try {
-                                    resultBytes = new Gson().toJson(result).getBytes("UTF-8");
-                                } catch (UnsupportedEncodingException e) {
-                                    resultBytes = new byte[0];
-                                }
-
-                                final ChannelBuffer buffer = ChannelBuffers.buffer(resultBytes.length);
-                                buffer.writeBytes(resultBytes);
-                                httpResponse.setContent(buffer);
-                                httpResponse.setHeader("Content-Type", "text/html; charset=utf-8");
                             }
+
                         }
+
+                        final byte[] resultBytes;
+                        try {
+                            resultBytes = new Gson().toJson(result).getBytes("UTF-8");
+                        } catch (UnsupportedEncodingException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        final ChannelBuffer buffer = ChannelBuffers.buffer(resultBytes.length);
+                        buffer.writeBytes(resultBytes);
+                        httpResponse.setContent(buffer);
+                        httpResponse.setHeader("Content-Type", "text/html; charset=utf-8");
 
                         final List<Map.Entry<String, String>> headers = request.getHeaders();
                         for (Map.Entry<String, String> header : headers) {
@@ -212,7 +219,7 @@ public class Guardian implements Runnable {
         switch (guardianAction) {
             case CREATE: {
                 connect.execute("insert into Guardian(humanId, value) values('" + hashUser + "','" + BCrypt.hashpw(token, BCrypt.gensalt(12)) + "');");
-                new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.OK)}), "Password correct", "OK");
+                new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.OK)}), "Create", "OK");
             }
             case READ: {
                 final ResultSet execute = connect.execute("select * from Guardian where humanId='" + hashUser + "'");
