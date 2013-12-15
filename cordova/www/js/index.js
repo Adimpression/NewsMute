@@ -49,8 +49,31 @@ function InitializeHuman() {
                                         window.location.href = window.location.href;
                                     } else if (status == "NO_ACCOUNT") {
                                         alert("No account, signing you up");
-                                        signUp(getHash(password), function (argS) {
-                                            alert(JSON.stringify(argS));
+                                        signUp(getHash(password), function (response) {
+
+                                            try {
+                                                var json = JSON.parse(response);
+                                                alert(JSON.stringify(json));
+                                                var dataArray = json.returnValue.data;
+                                                var data = dataArray[0];
+                                                var status = data.status;
+                                                if (json.returnStatus == "OK") {
+                                                    if (status == "OK") {
+                                                        alert("Signup successful");
+                                                    } else if (status == "ERROR") {
+                                                        alert("Signup failed");//
+                                                        window.location.href = window.location.href;
+                                                    } else {
+                                                        alert('News Mute had an error:' + status);
+                                                    }
+                                                } else {
+                                                    alert("returnStatus:" + data.returnStatus);
+                                                }
+                                            } catch (e) {
+                                                alert(e);
+                                            }
+
+
                                         }, function (argS) {
                                             alert(JSON.stringify(argS));
                                         })
