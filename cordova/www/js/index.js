@@ -41,7 +41,6 @@ function InitializeHuman() {
                                 var dataArray = json.returnValue.data;
                                 var data = dataArray[0];
                                 var status = data.status;
-                                alert("Status" + status);
                                 if (json.returnStatus == "OK") {
                                     if (status == "OK") {
                                         alert("Login successful");
@@ -51,10 +50,8 @@ function InitializeHuman() {
                                     } else if (status == "NO_ACCOUNT") {
                                         alert("No account, signing you up");
                                         signUp(getHash(password), function (argS) {
-                                            alert(argS);
                                             alert(JSON.stringify(argS));
                                         }, function (argS) {
-                                            alert(argS);
                                             alert(JSON.stringify(argS));
                                         })
 
