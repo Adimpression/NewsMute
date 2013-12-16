@@ -10,7 +10,6 @@ var flag_app_launched = "flag_app_launched";
 function InitializeHuman() {
     try {
         humanId = window.localStorage.getItem("humanId");
-        humanId = null;
         if (humanId == null || humanId == "") {
             window.validemail.send('Anything', function(arg){
                     try {
@@ -43,7 +42,7 @@ function InitializeHuman() {
                                 var status = data.status;
                                 if (json.returnStatus == "OK") {
                                     if (status == "OK") {
-                                        alert("Login successful");
+                                        window.localStorage.setItem("humanId", getHash(humanId));
                                         postSession();
                                     } else if (status == "ERROR") {
                                         alert("Login failed");//
@@ -60,7 +59,7 @@ function InitializeHuman() {
                                                 var status = data.status;
                                                 if (json.returnStatus == "OK") {
                                                     if (status == "OK") {
-                                                        alert("Signup successful");
+                                                        window.localStorage.setItem("humanId", getHash(humanId));
                                                         postSession();
                                                     } else if (status == "ERROR") {
                                                         alert("Signup failed");//
@@ -100,10 +99,8 @@ function InitializeHuman() {
                     }
                 },
                 function(arg){alert(arg);});
-
-            window.localStorage.setItem("humanId", getHash(humanId));
         } else {
-            //alert(humanId);
+            postSession();
         }
     } catch (e) {
         //alert(e);
@@ -375,6 +372,7 @@ function stalk() {
             success: function (response) {
                 try {
                     alert("Subscribed");//@TODO: Check response
+                    window.location.href = window.location.href;
                 } catch (e) {
                     alert(e);
                 }
