@@ -44,6 +44,7 @@ function InitializeHuman() {
                                 if (json.returnStatus == "OK") {
                                     if (status == "OK") {
                                         alert("Login successful");
+                                        postSession();
                                     } else if (status == "ERROR") {
                                         alert("Login failed");//
                                         window.location.href = window.location.href;
@@ -60,6 +61,7 @@ function InitializeHuman() {
                                                 if (json.returnStatus == "OK") {
                                                     if (status == "OK") {
                                                         alert("Signup successful");
+                                                        postSession();
                                                     } else if (status == "ERROR") {
                                                         alert("Signup failed");//
                                                         window.location.href = window.location.href;
@@ -166,24 +168,28 @@ function justVisiting() {
 
 }
 
+function postSession(){
+
+        WakeUp();
+        justVisiting();
+        $feedsList.slideDown();
+        $feedNowSpeaking.slideUp();
+
+        window.localStorage.setItem(flag_app_launched, "true");
+
+        var flag_super_friend_value = window.localStorage.getItem(flag_super_friend);
+        if (flag_super_friend_value == null) {
+            superFriend();
+            window.localStorage.setItem(flag_super_friend, "true");
+        } else {
+            //Check for time and update after several days?
+            //Remember that we can run a hash check
+        }
+}
+
 function NewsMute() {
     try {
         InitializeHuman();
-//        WakeUp();
-//        justVisiting();
-//        $feedsList.slideDown();
-//        $feedNowSpeaking.slideUp();
-//
-//        window.localStorage.setItem(flag_app_launched, "true");
-//
-//        var flag_super_friend_value = window.localStorage.getItem(flag_super_friend);
-//        if (flag_super_friend_value == null) {
-//            superFriend();
-//            window.localStorage.setItem(flag_super_friend, "true");
-//        } else {
-//            //Check for time and update after several days?
-//            //Remember that we can run a hash check
-//        }
     } catch (e) {
         alert(e);
     }
