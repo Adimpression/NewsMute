@@ -98,7 +98,7 @@ public class Harvester implements Runnable {
             }
         };
 
-        timer.scheduleAtFixedRate(task, 0, 10000);
+        timer.scheduleAtFixedRate(task, 0, 3600000);//Every hour
     }
 
     public String open(String node) {
