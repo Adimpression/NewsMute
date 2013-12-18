@@ -28,7 +28,7 @@ public class Harvester implements Runnable {
 
     @Override
     public void run() {
-        this.open("10.208.27.21");
+        this.open("192.168.3.2");
 
         final Timer timer = new Timer();
         final TimerTask task = new TimerTask() {

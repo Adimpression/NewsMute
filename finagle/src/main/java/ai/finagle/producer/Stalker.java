@@ -66,7 +66,7 @@ public class Stalker implements Runnable {
      */
     @Override
     public void run() {
-        this.open("10.208.27.21");
+        this.open("192.168.3.2");
 
         final Session connect = cluster.connect("Test1");
         try {
@@ -106,7 +106,7 @@ public class Stalker implements Runnable {
         ServerBuilder.safeBuild(service, ServerBuilder.get()
                 .codec(Http.get())
                 .name("HttpServer")
-                .bindTo(new InetSocketAddress("192.237.246.113", 16185)));
+                .bindTo(new InetSocketAddress("23.253.36.42", 16185)));
 
         //this.close();
     }

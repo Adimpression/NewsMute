@@ -60,7 +60,7 @@ public class Web implements Runnable {
     private void hookUpYawner() {
         yawnerClient = ClientBuilder
                 .safeBuild(ClientBuilder.get().codec(Http.get())
-                        .hosts("192.237.246.113:40000").hostConnectionLimit(1));
+                        .hosts("23.253.36.42:40000").hostConnectionLimit(1));
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
 
@@ -80,13 +80,13 @@ public class Web implements Runnable {
         ServerBuilder.safeBuild(service, ServerBuilder.get()
                 .codec(Http.get())
                 .name("HttpServer")
-                .bindTo(new InetSocketAddress("192.237.246.113", 40200)));
+                .bindTo(new InetSocketAddress("23.253.36.42", 40200)));
     }
 
     private void hookUpScreamer() {
         screamerClient = ClientBuilder
                 .safeBuild(ClientBuilder.get().codec(Http.get())
-                        .hosts("192.237.246.113:30000").hostConnectionLimit(1));
+                        .hosts("23.253.36.42:30000").hostConnectionLimit(1));
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
 
@@ -106,13 +106,13 @@ public class Web implements Runnable {
         ServerBuilder.safeBuild(service, ServerBuilder.get()
                 .codec(Http.get())
                 .name("HttpServer")
-                .bindTo(new InetSocketAddress("192.237.246.113", 30200)));
+                .bindTo(new InetSocketAddress("23.253.36.42", 30200)));
     }
 
     private void hookUpStalker() {
         stalkerClient = ClientBuilder
                 .safeBuild(ClientBuilder.get().codec(Http.get())
-                        .hosts("192.237.246.113:16185").hostConnectionLimit(1));
+                        .hosts("23.253.36.42:16185").hostConnectionLimit(1));
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
 
@@ -132,13 +132,13 @@ public class Web implements Runnable {
         ServerBuilder.safeBuild(service, ServerBuilder.get()
                 .codec(Http.get())
                 .name("HttpServer")
-                .bindTo(new InetSocketAddress("192.237.246.113", 16285)));
+                .bindTo(new InetSocketAddress("23.253.36.42", 16285)));
     }
 
     private void hookUpSuperFriender() {
         superFrienderClient = ClientBuilder
                 .safeBuild(ClientBuilder.get().codec(Http.get())
-                        .hosts("192.237.246.113:20000").hostConnectionLimit(1));
+                        .hosts("23.253.36.42:20000").hostConnectionLimit(1));
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
 
@@ -158,14 +158,14 @@ public class Web implements Runnable {
         ServerBuilder.safeBuild(service, ServerBuilder.get()
                 .codec(Http.get())
                 .name("HttpServer")
-                .bindTo(new InetSocketAddress("192.237.246.113", 20200)));
+                .bindTo(new InetSocketAddress("23.253.36.42", 20200)));
     }
 
 
     private void hookUpGuardian() {
         guardianClient = ClientBuilder
                 .safeBuild(ClientBuilder.get().codec(Http.get())
-                        .hosts("192.237.246.113:31600").hostConnectionLimit(1));
+                        .hosts("23.253.36.42:31600").hostConnectionLimit(1));
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
 
@@ -185,7 +185,7 @@ public class Web implements Runnable {
         ServerBuilder.safeBuild(service, ServerBuilder.get()
                 .codec(Http.get())
                 .name("HttpServer")
-                .bindTo(new InetSocketAddress("192.237.246.113", 50200)));
+                .bindTo(new InetSocketAddress("23.253.36.42", 50200)));
     }
 
     private HttpResponse blockingYawner(final HttpRequest request) {
