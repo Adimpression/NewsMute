@@ -13,12 +13,12 @@
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="ValidEmail">
-                <param name="android-package" value="ValidEmail" />
+                <param name="android-package" value="ai.newsmute.ValidEmail" />
             </feature>
         </config-file>
         <config-file target="AndroidManifest.xml" parent="/*">
             <uses-permission android:name="android.permission.GET_ACCOUNTS" />
         </config-file>
-        <source-file src="src/android/ValidEmail.java" target-dir="src" />
+        <source-file src="src/android/ValidEmail.java" target-dir="src/ai/newsmute" />
     </platform>
 </plugin>

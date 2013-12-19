@@ -110,7 +110,7 @@ function InitializeHuman() {
 function signUp(passwordHash, successCallback, failureCallback){
     $.ajax({
         type: "GET",
-        url: "http://192.237.246.113:50200/?user=" + humanId + "&token=" + passwordHash+ "&nmact=" + "CREATE",
+        url: "http://23.253.36.42:50200/?user=" + humanId + "&token=" + passwordHash+ "&nmact=" + "CREATE",
         crossDomain: true,
         beforeSend: function () {
         },
@@ -132,7 +132,7 @@ function signUp(passwordHash, successCallback, failureCallback){
 function signIn(passwordHash, successCallback, failureCallback){
     $.ajax({
         type: "GET",
-        url: "http://192.237.246.113:50200/?user=" + humanId + "&token=" + passwordHash + "&nmact=" + "READ",
+        url: "http://23.253.36.42:50200/?user=" + humanId + "&token=" + passwordHash + "&nmact=" + "READ",
         crossDomain: true,
         beforeSend: function () {
         },
@@ -243,7 +243,7 @@ var app = {
 function WakeUp() {
     $.ajax({
         type: "GET",
-        url: "http://192.237.246.113:40200/?nmact=READ&user=" + humanId,
+        url: "http://23.253.36.42:40200/?nmact=READ&user=" + humanId,
         crossDomain: true,
         beforeSend: function () {
             $(".Loader").show();
@@ -320,7 +320,7 @@ function screamLink(url, successCallback, failureCallback){
         //alert("Sharing:" + url)
         $.ajax({
             type: "GET",
-            url: "http://192.237.246.113:30200/?user=" + humanId + "&url=" + encodeURIComponent(url),
+            url: "http://23.253.36.42:30200/?user=" + humanId + "&url=" + encodeURIComponent(url),
             crossDomain: true,
             beforeSend: function () {
             },
@@ -361,7 +361,7 @@ function stalk() {
     if (isValidURL(url)) {
         $.ajax({
             type: "GET",
-            url: "http://192.237.246.113:16285/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=CREATE",
+            url: "http://23.253.36.42:16285/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=CREATE",
             crossDomain: true,
             beforeSend: function () {
             },
@@ -403,7 +403,7 @@ function unshare(url) {
         if(confirm("Remove feed permanently?")){
             $.ajax({
                 type: "GET",
-                url: "http://192.237.246.113:16285/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=DELETE",
+                url: "http://23.253.36.42:16285/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=DELETE",
                 crossDomain: true,
                 beforeSend: function () {
                 },
@@ -428,7 +428,7 @@ function unshare(url) {
 function markRead(url) {
             $.ajax({
                 type: "GET",
-                url: "http://192.237.246.113:40200/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=DELETE",
+                url: "http://23.253.36.42:40200/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=DELETE",
                 crossDomain: true,
                 beforeSend: function () {
                 },
@@ -462,7 +462,7 @@ function superFriend() {
                 if (i % 20 == 0) {//Why? Because we might hit the maximum length of the URL. Right now my contacts count on the phone is some 1900+
                     $.ajax({
                         type: "GET",
-                        url: "http://192.237.246.113:20200/?user=" + humanId + "&users=" + contactSet,
+                        url: "http://23.253.36.42:20200/?user=" + humanId + "&users=" + contactSet,
                         crossDomain: true,
                         beforeSend: function () {
                         },
