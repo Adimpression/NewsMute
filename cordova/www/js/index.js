@@ -15,12 +15,16 @@ function InitializeHuman() {
                     try {
                         //alert(JSON.stringify(arg));
                         var emails = arg.emails;
-                        while(humanId == null){
-                            for (var i = 0; i < emails.length ; i++) {
-                                var answer = confirm('Login as ' + emails[i] + '?');
-                                if (answer) {
-                                    humanId = emails[i];
-                                    break;
+                        if(emails.length == 1){
+                            humanId = emails[0];
+                        } else {
+                            while(humanId == null){
+                                for (var i = 0; i < emails.length ; i++) {
+                                    var answer = confirm('Login as ' + emails[i] + '?');
+                                    if (answer) {
+                                        humanId = emails[i];
+                                        break;
+                                    }
                                 }
                             }
                         }
