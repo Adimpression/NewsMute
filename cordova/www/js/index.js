@@ -16,13 +16,13 @@ function InitializeHuman() {
                         //alert(JSON.stringify(arg));
                         var emails = arg.emails;
                         if(emails.length == 1){
-                            humanId = emails[0];
+                            humanId = getHash(emails[0]);
                         } else {
                             while(humanId == null){
                                 for (var i = 0; i < emails.length ; i++) {
                                     var answer = confirm('Login as ' + emails[i] + '?');
                                     if (answer) {
-                                        humanId = emails[i];
+                                        humanId = getHash(emails[i]);
                                         break;
                                     }
                                 }
@@ -46,7 +46,7 @@ function InitializeHuman() {
                                 var status = data.status;
                                 if (json.returnStatus == "OK") {
                                     if (status == "OK") {
-                                        window.localStorage.setItem("humanId", getHash(humanId));
+                                        window.localStorage.setItem("humanId", humanId);
                                         postSession();
                                     } else if (status == "ERROR") {
                                         alert("Login failed");//
@@ -63,7 +63,7 @@ function InitializeHuman() {
                                                 var status = data.status;
                                                 if (json.returnStatus == "OK") {
                                                     if (status == "OK") {
-                                                        window.localStorage.setItem("humanId", getHash(humanId));
+                                                        window.localStorage.setItem("humanId", humanId);
                                                         postSession();
                                                     } else if (status == "ERROR") {
                                                         alert("Signup failed");//
