@@ -165,7 +165,7 @@ public class Stalker implements Runnable {
                         System.out.println(stalkerAction.toString());
                         final String s = urlParameter.get(0);
                         System.out.println("url:" + s);
-                        connect.execute("delete from Stalk where humanId='" + hashUser + "' and urlHash='" + s + "';");//Yet to hash the urlHash value
+                        connect.execute("delete from Stalk where humanId='" + hashUser + "' and mood='0' and urlHash='" + s + "';");//Yet to hash the urlHash value
                     } catch (Exception e) {
                         e.printStackTrace(System.err);
                     }

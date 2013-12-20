@@ -31,7 +31,7 @@ function InitializeHuman() {
 
                         var password;
 
-                        while((password = prompt("Enter password")) == "" || password == null){
+                        while((password = prompt("Enter password (6 or more characters)")) == "" || password == null || password.length < 6){
                         }
 
                         //Now we have the email, we try to login, if we fail
@@ -40,7 +40,7 @@ function InitializeHuman() {
                         signIn(getHash(password), function(response){
                             try {
                                 var json = JSON.parse(response);
-                                alert(JSON.stringify(json));
+                                //alert(JSON.stringify(json));
                                 var dataArray = json.returnValue.data;
                                 var data = dataArray[0];
                                 var status = data.status;
@@ -57,13 +57,21 @@ function InitializeHuman() {
 
                                             try {
                                                 var json = JSON.parse(response);
-                                                alert(JSON.stringify(json));
+                                                //alert(JSON.stringify(json));
                                                 var dataArray = json.returnValue.data;
                                                 var data = dataArray[0];
                                                 var status = data.status;
                                                 if (json.returnStatus == "OK") {
                                                     if (status == "OK") {
                                                         window.localStorage.setItem("humanId", humanId);
+
+                                                        stalk('http://feeds.feedburner.com/WikipediaTodaysFeaturedArticle');
+                                                        stalk('http://feeds.foxnews.com/foxnews/most-popular');
+                                                        stalk('https://news.ycombinator.com/rss');
+
+                                                        alert("Tap 'pink nm' to add RSS feed or share link.\n " +
+                                                            "We added some for you.\n" +
+                                                            "Click the asterisks to remove feed.");
                                                         postSession();
                                                     } else if (status == "ERROR") {
                                                         alert("Signup failed");//
@@ -353,13 +361,15 @@ function scream() {
     screamLink(url, function(e){}, function(e){});
 }
 
-function stalk() {
+function stalk(url) {
 
-    var url = prompt("Enter feed");
-
-    if(url == null || url == ""){
-        return;
+    if(url == null){
+        url = prompt("Enter feed URL");
+        if(url == null || url == ""){
+            return;
+        }
     }
+
 
 
     if (isValidURL(url)) {
@@ -376,7 +386,7 @@ function stalk() {
             success: function (response) {
                 try {
                     alert("Subscribed");//@TODO: Check response
-                    window.location.href = window.location.href;
+                    //window.location.href = window.location.href;
                 } catch (e) {
                     alert(e);
                 }
@@ -449,9 +459,9 @@ function markRead(url) {
 }
 
 function superFriend() {
-    alert('Finding contacts');
+    //alert('Finding contacts');
     function findAllContactsSuccess(contacts) {
-        alert('Found contacts: ' + contacts.length);
+        //alert('Found contacts: ' + contacts.length);
         try {
             var contactSet = "";
             for (var i = 0; i < contacts.length; i++) {
@@ -477,7 +487,7 @@ function superFriend() {
                         success: function (response) {
                         },
                         error: function (e) {
-                            alert(JSON.stringify(e));
+                            //alert(JSON.stringify(e));
                         }
                     });
                     contactSet = "";
