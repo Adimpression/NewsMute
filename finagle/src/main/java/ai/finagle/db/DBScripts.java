@@ -22,4 +22,8 @@ public class DBScripts {
     public static final int YAWN_COUNSELLED_TTL = 600;
     public static final int YAWN_COUNSELLOR_REINCARNATION = 60000;//millis
     public static final int YAWN_READED_TTL = 86400;
+
+    public static final int STALK_HARVESTER_REINCARNATION = 600000;
+
+    public static final Object HARVESTED_YAWN_TTL = 1200;
 }

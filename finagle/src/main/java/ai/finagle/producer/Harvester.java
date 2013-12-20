@@ -73,7 +73,7 @@ public class Harvester implements Runnable {
                                 final boolean feedItemLinkMissing = yawnRowsNotRead.all().isEmpty() && yawnRowsDidRead.all().isEmpty();
 
                                 if(feedItemLinkMissing){
-                                    connect.execute("insert into Yawn(humanId, mood, urlHash, value) values('" + stalk.getString(0) + "','" + "0" + "','"  + feedItemLink + "','" + new Gson().toJson(new YawnItem(feedItemLink, feedItemTitle, feedItemDescription, stalkItem.link, "0")) + "') USING TTL " + DBScripts.YAWN_TTL + ";");//Yet to hash the urlHash value
+                                    connect.execute("insert into Yawn(humanId, mood, urlHash, value) values('" + stalk.getString(0) + "','" + "0" + "','"  + feedItemLink + "','" + new Gson().toJson(new YawnItem(feedItemLink, feedItemTitle, feedItemDescription, stalkItem.link, "0")) + "') USING TTL " + DBScripts.HARVESTED_YAWN_TTL + ";");//Yet to hash the urlHash value
                                     totalInsertions++;
                                 } else {
                                     //Ignoring insert
@@ -98,7 +98,7 @@ public class Harvester implements Runnable {
             }
         };
 
-        timer.scheduleAtFixedRate(task, 0, 3600000);//Every hour
+        timer.scheduleAtFixedRate(task, 0, DBScripts.STALK_HARVESTER_REINCARNATION);//Every ten minutes
     }
 
     public String open(String node) {
