@@ -69,29 +69,25 @@ public class Counsellor implements Runnable {
                                 final List<Row> yawnRowsRead = connect.execute("select * from Yawn where humanId='" + friend + "' AND mood='" + "1" + "' AND urlHash='" + urlHash + "'").all();
 
                                 if (yawnRowsNotRead.size() == 0 && yawnRowsRead.size() == 0) {
-                                    connect.execute("insert into Yawn(humanId, mood, urlHash, value) values('" + friend + "','" + "0" + "','" + urlHash + "','" + value + "') USING TTL " + DBScripts.YAWN_TTL + ";");
+                                    connect.execute("insert into Yawn(humanId, mood, urlHash, value) values('" + friend + "','" + "0" + "','" + urlHash + "','" + value + "') USING TTL " + DBScripts.YAWN_COUNSELLED_TTL+ ";");
                                 } else if (yawnRowsNotRead.size() != 0) {
                                     final Row yawnRow = yawnRowsNotRead.get(0);
                                     final YawnItem yawnFeedItem = new Gson().fromJson(yawnRow.getString("value"), YawnItem.class);
                                     System.out.println("Fetched:" + yawnFeedItem.toString());
                                     yawnFeedItem.shock();
                                     System.out.println("Inserting:" + yawnFeedItem.toString());
-                                    connect.execute("insert into Yawn(humanId, mood, urlHash, value) values('" + friend + "','" + "0" + "','" + yawnRow.getString("urlHash") + "','" + new Gson().toJson(yawnFeedItem) + "');");
+                                    connect.execute("insert into Yawn(humanId, mood, urlHash, value) values('" + friend + "','" + "0" + "','" + yawnRow.getString("urlHash") + "','" + new Gson().toJson(yawnFeedItem) + "') USING TTL " + DBScripts.YAWN_COUNSELLED_TTL + ";");
                                 }
-                                System.out.println(String.format("delete from Scream where humanId='%s' and mood='0' and urlHash='%s';",
-                                        superFriendValue.humanId, urlHash));
                                 connect.execute(String.format("delete from Scream where humanId='%s' and mood='0' and urlHash='%s';",
                                         superFriendValue.humanId, urlHash));//Yet to hash the urlHash value
 
-                                System.out.println(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','1','%s','%s') USING TTL %d;",
-                                        superFriendValue.humanId, urlHash, value, DBScripts.YAWN_TTL));
                                 connect.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','1','%s','%s') USING TTL %d;",
                                         superFriendValue.humanId, urlHash, value, DBScripts.YAWN_TTL));
 
 
                                 totalInsertions++;
                             } else {
-                                System.out.println("Ignoring already counselled item");
+                                //System.out.println("Ignoring already counselled item");
                             }
                         }
                     }
@@ -104,7 +100,7 @@ public class Counsellor implements Runnable {
             }
         };
 
-        timer.scheduleAtFixedRate(task, 0, 10000);
+        timer.scheduleAtFixedRate(task, 0, DBScripts.YAWN_COUNSELLOR_REINCARNATION);
     }
 
     public String open(String node) {
