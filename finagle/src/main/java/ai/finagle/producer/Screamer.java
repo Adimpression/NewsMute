@@ -106,24 +106,30 @@ public class Screamer implements Runnable {
                         System.out.println("url:" + s);
                         final String unhashedUser = user.get(0);
                         System.out.println("user:" +unhashedUser);
-                        final String hashedUser = BCrypt.hashpw(unhashedUser, new String(SuperFriender.GLOBAL_SALT));
+                        final String hashedUser = BCrypt.hashpw(unhashedUser, SuperFriender.GLOBAL_SALT);
                         System.out.println("hashed user:" + hashedUser);
-                        try {
-                            final Document document = Jsoup.parse(new URL(s).openStream(), "UTF-8", s);
 
-                            final String title = document.getElementsByTag("title").first().text();
-                            System.out.println("title:" + title);
-                            String description = title;
-                            for (final Element meta : document.getElementsByTag("meta")) {
-                                if (meta.attr("name").equals("description")) {
-                                    description = meta.attr("content");
-                                    break;
+                        final List<Row> screamRowsCounselled = connect.execute("select * from Yawn where humanId='" + hashedUser + "' AND mood='" + "1" + "' AND urlHash='" + s + "'").all();
+                        if(screamRowsCounselled.isEmpty()){
+                            try {
+                                final Document document = Jsoup.parse(new URL(s).openStream(), "UTF-8", s);
+
+                                final String title = document.getElementsByTag("title").first().text();
+                                System.out.println("title:" + title);
+                                String description = title;
+                                for (final Element meta : document.getElementsByTag("meta")) {
+                                    if (meta.attr("name").equals("description")) {
+                                        description = meta.attr("content");
+                                        break;
+                                    }
                                 }
+                                System.out.println("description:" + description);
+                                connect.execute("insert into Scream(humanId, mood, urlHash, value) values('" + hashedUser + "','"  + "0" + "','" + s + "','" + new Gson().toJson(new YawnItem(s, title, description, hashedUser, "0")) + "') USING TTL 600;");//Yet to hash the urlHash value
+                            } catch (final Throwable e) {//@TODO: Get rid of this, plan for missing title and description inside try
+                                connect.execute("insert into Scream(humanId, mood, urlHash, value) values('" + hashedUser + "','"  + "0" + "','" + s + "','" + new Gson().toJson(new YawnItem(s, s, s, hashedUser, "0")) + "') USING TTL 600;");//Yet to hash the urlHash value
                             }
-                            System.out.println("description:" + description);
-                            connect.execute("insert into Scream(humanId, mood, urlHash, value) values('" + hashedUser + "','"  + "0" + "','" + s + "','" + new Gson().toJson(new YawnItem(s, title, description, hashedUser, "0")) + "') USING TTL 600;");//Yet to hash the urlHash value
-                        } catch (final Throwable e) {//@TODO: Get rid of this, plan for missing title and description inside try
-                            connect.execute("insert into Scream(humanId, mood, urlHash, value) values('" + hashedUser + "','"  + "0" + "','" + s + "','" + new Gson().toJson(new YawnItem(s, s, s, hashedUser, "0")) + "') USING TTL 600;");//Yet to hash the urlHash value
+                        } else{
+                            System.out.println("Ignoring already screamed item for humanId:" + hashedUser + " for url:" + s);
                         }
                     } catch (final Throwable e) {
                         e.printStackTrace(System.err);
