@@ -59,30 +59,30 @@ public class Counsellor implements Runnable {
                         }
 
                         for (final String friend : superFriendValue.superFriends) {//Ideally, all screams are not friends of this person, but we do so for now for testing
-                            if(Integer.parseInt(screamRow.getString("mood")) == 0){
+                            if(screamRow.getString("mood").charAt(0) == '0'){
 
 
                                 final String urlHash = screamRow.getString("urlHash");
                                 final String value = screamRow.getString("value");
 
-                                final List<Row> yawnRowsNotRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='0' AND urlHash='%s'", friend, urlHash)).all();
-                                final List<Row> yawnRowsRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='1' AND urlHash='%s'", friend, urlHash)).all();
+                                final List<Row> yawnRowsNotRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", friend, '0', urlHash)).all();
+                                final List<Row> yawnRowsRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", friend, '1', urlHash)).all();
 
                                 if (yawnRowsNotRead.size() == 0 && yawnRowsRead.size() == 0) {
-                                    connect.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','0','%s','%s') USING TTL %d;", friend, urlHash, value, DBScripts.YAWN_COUNSELLED_TTL));
+                                    connect.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", friend, '0', urlHash, value, DBScripts.YAWN_COUNSELLED_TTL));
                                 } else if (yawnRowsNotRead.size() != 0) {
                                     final Row yawnRow = yawnRowsNotRead.get(0);
                                     final YawnItem yawnFeedItem = new Gson().fromJson(yawnRow.getString("value"), YawnItem.class);
                                     System.out.println("Fetched:" + yawnFeedItem.toString());
                                     yawnFeedItem.shock();
                                     System.out.println("Inserting:" + yawnFeedItem.toString());
-                                    connect.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','0','%s','%s') USING TTL %d;", friend, yawnRow.getString("urlHash"), new Gson().toJson(yawnFeedItem), DBScripts.YAWN_COUNSELLED_TTL));
+                                    connect.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", friend, '0', yawnRow.getString("urlHash"), new Gson().toJson(yawnFeedItem), DBScripts.YAWN_COUNSELLED_TTL));
                                 }
-                                connect.execute(String.format("delete from Scream where humanId='%s' and mood='0' and urlHash='%s';",
-                                        superFriendValue.humanId, urlHash));//Yet to hash the urlHash value
+                                connect.execute(String.format("delete from Scream where humanId='%s' and mood='%c' and urlHash='%s';",
+                                        superFriendValue.humanId, '0', urlHash));//Yet to hash the urlHash value
 
-                                connect.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','1','%s','%s') USING TTL %d;",
-                                        superFriendValue.humanId, urlHash, value, DBScripts.YAWN_TTL));
+                                connect.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;",
+                                        superFriendValue.humanId,'1', urlHash, value, DBScripts.YAWN_TTL));
 
 
                                 totalInsertions++;
