@@ -109,7 +109,7 @@ public class Screamer implements Runnable {
                         final String hashedUser = BCrypt.hashpw(unhashedUser, SuperFriender.GLOBAL_SALT);
                         System.out.println("hashed user:" + hashedUser);
 
-                        final List<Row> screamRowsCounselled = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='1' AND urlHash='%s'", hashedUser, s)).all();
+                        final List<Row> screamRowsCounselled = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashedUser, '1', s)).all();
                         if(screamRowsCounselled.isEmpty()){
                             try {
                                 final Document document = Jsoup.parse(new URL(s).openStream(), "UTF-8", s);
@@ -124,9 +124,9 @@ public class Screamer implements Runnable {
                                     }
                                 }
                                 System.out.println("description:" + description);
-                                connect.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','0','%s','%s') USING TTL 600;", hashedUser, s, new Gson().toJson(new YawnItem(s, title, description, hashedUser, "0"))));//Yet to hash the urlHash value
+                                connect.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL 600;", hashedUser, '0', s, new Gson().toJson(new YawnItem(s, title, description, hashedUser, "0"))));//Yet to hash the urlHash value
                             } catch (final Throwable e) {//@TODO: Get rid of this, plan for missing title and description inside try
-                                connect.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','0','%s','%s') USING TTL 600;", hashedUser, s, new Gson().toJson(new YawnItem(s, s, s, hashedUser, "0"))));//Yet to hash the urlHash value
+                                connect.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL 600;", hashedUser, '0', s, new Gson().toJson(new YawnItem(s, s, s, hashedUser, "0"))));//Yet to hash the urlHash value
                             }
                         } else{
                             System.out.println("Ignoring already screamed item for humanId:" + hashedUser + " for url:" + s);
