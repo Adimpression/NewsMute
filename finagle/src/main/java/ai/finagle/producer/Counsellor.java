@@ -67,7 +67,7 @@ public class Counsellor implements Runnable {
                                 final String value = screamRow.getString("value");
 
                                 final List<Row> yawnRowsNotRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", friend, MOOD.LIFE.ALIVE.state, urlHash)).all();
-                                final List<Row> yawnRowsRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", friend, '1', urlHash)).all();
+                                final List<Row> yawnRowsRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", friend, MOOD.LIFE.DEAD.state, urlHash)).all();
 
                                 if (yawnRowsNotRead.size() == 0 && yawnRowsRead.size() == 0) {
                                     connect.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", friend, MOOD.LIFE.ALIVE.state, urlHash, value, DBScripts.YAWN_COUNSELLED_TTL));
@@ -83,7 +83,7 @@ public class Counsellor implements Runnable {
                                         superFriendValue.humanId, MOOD.LIFE.ALIVE.state, urlHash));//Yet to hash the urlHash value
 
                                 connect.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;",
-                                        superFriendValue.humanId,'1', urlHash, value, DBScripts.YAWN_TTL));
+                                        superFriendValue.humanId, MOOD.LIFE.DEAD.state, urlHash, value, DBScripts.YAWN_TTL));
 
 
                                 totalInsertions++;

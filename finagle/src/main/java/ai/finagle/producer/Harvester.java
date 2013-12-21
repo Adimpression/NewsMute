@@ -69,7 +69,7 @@ public class Harvester implements Runnable {
                                 System.out.println("description:" + feedItemDescription);
 
                                 final ResultSet yawnRowsNotRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", stalk.getString(0), MOOD.LIFE.ALIVE.state, feedItemLink));
-                                final ResultSet yawnRowsDidRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", stalk.getString(0), '1', feedItemLink));
+                                final ResultSet yawnRowsDidRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", stalk.getString(0), MOOD.LIFE.DEAD.state, feedItemLink));
 
                                 final boolean feedItemLinkMissing = yawnRowsNotRead.all().isEmpty() && yawnRowsDidRead.all().isEmpty();
 

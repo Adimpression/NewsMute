@@ -133,7 +133,7 @@ public class Yawner implements Runnable {
                 yawnItems = new YawnItem[0];//@TODO: This is just to supply the return value, have to move things round
                 try {
                     connect.execute(String.format("delete from Yawn where humanId='%s' and mood='%c' and urlHash='%s';", hashUser, MOOD.LIFE.ALIVE.state, url));//Yet to hash the urlHash value
-                    connect.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','') USING TTL %d;", hashUser, '1', url, DBScripts.YAWN_READED_TTL));
+                    connect.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','') USING TTL %d;", hashUser, MOOD.LIFE.DEAD.state, url, DBScripts.YAWN_READED_TTL));
                 } catch (Exception e) {
                     e.printStackTrace(System.err);
                 }

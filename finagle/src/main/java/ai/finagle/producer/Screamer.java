@@ -110,7 +110,7 @@ public class Screamer implements Runnable {
                         final String hashedUser = BCrypt.hashpw(unhashedUser, SuperFriender.GLOBAL_SALT);
                         System.out.println("hashed user:" + hashedUser);
 
-                        final List<Row> screamRowsCounselled = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashedUser, '1', s)).all();
+                        final List<Row> screamRowsCounselled = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashedUser, MOOD.LIFE.DEAD.state, s)).all();
                         if(screamRowsCounselled.isEmpty()){
                             try {
                                 final Document document = Jsoup.parse(new URL(s).openStream(), "UTF-8", s);
