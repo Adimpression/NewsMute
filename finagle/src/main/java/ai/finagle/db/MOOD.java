@@ -21,10 +21,10 @@ public class MOOD {
         DEAD('1'),
         ALIVE('0');
 
-        public final char value;
+        public final char state;
 
-        LIFE(final char value) {
-            this.value = value;
+        LIFE(final char state) {
+            this.state = state;
         }
 
     }

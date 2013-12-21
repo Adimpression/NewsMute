@@ -1,6 +1,7 @@
 package ai.finagle.producer;
 
 import ai.finagle.db.DBScripts;
+import ai.finagle.db.MOOD;
 import ai.finagle.model.StalkItem;
 import ai.finagle.model.YawnItem;
 import com.datastax.driver.core.*;
@@ -67,13 +68,13 @@ public class Harvester implements Runnable {
                                 final String feedItemDescription = feedItem.getElementsByTag("description").first().text();
                                 System.out.println("description:" + feedItemDescription);
 
-                                final ResultSet yawnRowsNotRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", stalk.getString(0), '0', feedItemLink));
+                                final ResultSet yawnRowsNotRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", stalk.getString(0), MOOD.LIFE.ALIVE.state, feedItemLink));
                                 final ResultSet yawnRowsDidRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", stalk.getString(0), '1', feedItemLink));
 
                                 final boolean feedItemLinkMissing = yawnRowsNotRead.all().isEmpty() && yawnRowsDidRead.all().isEmpty();
 
                                 if(feedItemLinkMissing){
-                                    connect.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %s;", stalk.getString(0), '0', feedItemLink, new Gson().toJson(new YawnItem(feedItemLink, feedItemTitle, feedItemDescription, stalkItem.link, "0")), DBScripts.HARVESTED_YAWN_TTL));//Yet to hash the urlHash value
+                                    connect.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %s;", stalk.getString(0), MOOD.LIFE.ALIVE.state, feedItemLink, new Gson().toJson(new YawnItem(feedItemLink, feedItemTitle, feedItemDescription, stalkItem.link, "0")), DBScripts.HARVESTED_YAWN_TTL));//Yet to hash the urlHash value
                                     totalInsertions++;
                                 } else {
                                     //Ignoring insert

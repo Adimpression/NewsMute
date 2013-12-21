@@ -1,6 +1,7 @@
 package ai.finagle.producer;
 
 import ai.finagle.db.DBScripts;
+import ai.finagle.db.MOOD;
 import ai.finagle.model.Return;
 import ai.finagle.model.ReturnValueStalk;
 import ai.finagle.model.StalkItem;
@@ -138,7 +139,7 @@ public class Stalker implements Runnable {
                         final String description = document.getElementsByTag("title").first().text();
                         System.out.println("description:" + description);
 
-                        connect.execute(String.format("insert into Stalk(humanId, mood, urlHash, value) values('%s','%c','%s','%s');", hashUser, '0', url, new Gson().toJson(new StalkItem(url, title, description))));//Yet to hash the urlHash value
+                        connect.execute(String.format("insert into Stalk(humanId, mood, urlHash, value) values('%s','%c','%s','%s');", hashUser, MOOD.LIFE.ALIVE.state, url, new Gson().toJson(new StalkItem(url, title, description))));//Yet to hash the urlHash value
                     } catch (final Throwable e) {
                         e.printStackTrace(System.err);
                     }
@@ -165,7 +166,7 @@ public class Stalker implements Runnable {
                         System.out.println(stalkerAction.toString());
                         final String s = urlParameter.get(0);
                         System.out.println("url:" + s);
-                        connect.execute(String.format("delete from Stalk where humanId='%s' and mood='%c' and urlHash='%s';", hashUser, '0', s));//Yet to hash the urlHash value
+                        connect.execute(String.format("delete from Stalk where humanId='%s' and mood='%c' and urlHash='%s';", hashUser, MOOD.LIFE.ALIVE.state, s));//Yet to hash the urlHash value
                     } catch (Exception e) {
                         e.printStackTrace(System.err);
                     }

@@ -1,6 +1,7 @@
 package ai.finagle.producer;
 
 import ai.finagle.db.DBScripts;
+import ai.finagle.db.MOOD;
 import ai.finagle.model.Return;
 import ai.finagle.model.ReturnValueScream;
 import ai.finagle.model.YawnItem;
@@ -124,9 +125,9 @@ public class Screamer implements Runnable {
                                     }
                                 }
                                 System.out.println("description:" + description);
-                                connect.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL 600;", hashedUser, '0', s, new Gson().toJson(new YawnItem(s, title, description, hashedUser, "0"))));//Yet to hash the urlHash value
+                                connect.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL 600;", hashedUser, MOOD.LIFE.ALIVE.state, s, new Gson().toJson(new YawnItem(s, title, description, hashedUser, "0"))));//Yet to hash the urlHash value
                             } catch (final Throwable e) {//@TODO: Get rid of this, plan for missing title and description inside try
-                                connect.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL 600;", hashedUser, '0', s, new Gson().toJson(new YawnItem(s, s, s, hashedUser, "0"))));//Yet to hash the urlHash value
+                                connect.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL 600;", hashedUser, MOOD.LIFE.ALIVE.state, s, new Gson().toJson(new YawnItem(s, s, s, hashedUser, "0"))));//Yet to hash the urlHash value
                             }
                         } else{
                             System.out.println("Ignoring already screamed item for humanId:" + hashedUser + " for url:" + s);

@@ -1,6 +1,7 @@
 package ai.finagle.producer;
 
 import ai.finagle.db.DBScripts;
+import ai.finagle.db.MOOD;
 import ai.finagle.model.*;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
@@ -117,7 +118,7 @@ public class Yawner implements Runnable {
         switch (YawnerAction.to(action.toUpperCase())) {
             case READ:{
                 System.out.println("Values in table as follows");
-                final ResultSet execute = connect.execute(String.format("select * from Yawn where humanId='%s' and mood='%c'", hashUser, '0'));
+                final ResultSet execute = connect.execute(String.format("select * from Yawn where humanId='%s' and mood='%c'", hashUser, MOOD.LIFE.ALIVE.state));
                 final List<Row> all = execute.all();
 
                 yawnItems = new YawnItem[all.size()];
@@ -131,7 +132,7 @@ public class Yawner implements Runnable {
             case DELETE: {
                 yawnItems = new YawnItem[0];//@TODO: This is just to supply the return value, have to move things round
                 try {
-                    connect.execute(String.format("delete from Yawn where humanId='%s' and mood='%c' and urlHash='%s';", hashUser, '0', url));//Yet to hash the urlHash value
+                    connect.execute(String.format("delete from Yawn where humanId='%s' and mood='%c' and urlHash='%s';", hashUser, MOOD.LIFE.ALIVE.state, url));//Yet to hash the urlHash value
                     connect.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','') USING TTL %d;", hashUser, '1', url, DBScripts.YAWN_READED_TTL));
                 } catch (Exception e) {
                     e.printStackTrace(System.err);
