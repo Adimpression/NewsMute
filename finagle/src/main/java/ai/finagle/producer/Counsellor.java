@@ -60,8 +60,7 @@ public class Counsellor implements Runnable {
                         }
 
                         for (final String friend : superFriendValue.superFriends) {//Ideally, all screams are not friends of this person, but we do so for now for testing
-                            if(screamRow.getString("mood").charAt(0) == MOOD.LIFE.ALIVE.state){
-
+                            if(MOOD.DESTINY(screamRow.getString("mood")).life == MOOD.LIFE.ALIVE){
 
                                 final String urlHash = screamRow.getString("urlHash");
                                 final String value = screamRow.getString("value");
