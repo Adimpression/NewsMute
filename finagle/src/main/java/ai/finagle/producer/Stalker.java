@@ -138,7 +138,7 @@ public class Stalker implements Runnable {
                         final String description = document.getElementsByTag("title").first().text();
                         System.out.println("description:" + description);
 
-                        connect.execute("insert into Stalk(humanId, mood, urlHash, value) values('" + hashUser + "','"  + "0" + "','" + url + "','" + new Gson().toJson(new StalkItem(url, title, description)) + "');");//Yet to hash the urlHash value
+                        connect.execute(String.format("insert into Stalk(humanId, mood, urlHash, value) values('%s','0','%s','%s');", hashUser, url, new Gson().toJson(new StalkItem(url, title, description))));//Yet to hash the urlHash value
                     } catch (final Throwable e) {
                         e.printStackTrace(System.err);
                     }
@@ -146,7 +146,7 @@ public class Stalker implements Runnable {
                 break;
                 case READ: {
                     System.out.println("Values in table as follows");
-                    final ResultSet execute = connect.execute("select * from Stalk where humanId='" + hashUser + "'");
+                    final ResultSet execute = connect.execute(String.format("select * from Stalk where humanId='%s'", hashUser));
                     final List<Row> all = execute.all();
 
                     stalkItems = new StalkItem[all.size()];
@@ -165,7 +165,7 @@ public class Stalker implements Runnable {
                         System.out.println(stalkerAction.toString());
                         final String s = urlParameter.get(0);
                         System.out.println("url:" + s);
-                        connect.execute("delete from Stalk where humanId='" + hashUser + "' and mood='0' and urlHash='" + s + "';");//Yet to hash the urlHash value
+                        connect.execute(String.format("delete from Stalk where humanId='%s' and mood='0' and urlHash='%s';", hashUser, s));//Yet to hash the urlHash value
                     } catch (Exception e) {
                         e.printStackTrace(System.err);
                     }

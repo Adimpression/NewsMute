@@ -218,11 +218,11 @@ public class Guardian implements Runnable {
 
         switch (guardianAction) {
             case CREATE: {
-                connect.execute("insert into Guardian(humanId, value) values('" + hashUser + "','" + BCrypt.hashpw(token, BCrypt.gensalt(12)) + "');");
+                connect.execute(String.format("insert into Guardian(humanId, value) values('%s','%s');", hashUser, BCrypt.hashpw(token, BCrypt.gensalt(12))));
                 new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.OK)}), "Create", "OK");
             }
             case READ: {
-                final ResultSet execute = connect.execute("select * from Guardian where humanId='" + hashUser + "'");
+                final ResultSet execute = connect.execute(String.format("select * from Guardian where humanId='%s'", hashUser));
                 final List<Row> all = execute.all();
                 if (!all.isEmpty()) {
                     final Row row = all.get(0);

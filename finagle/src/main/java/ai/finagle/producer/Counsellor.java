@@ -50,7 +50,7 @@ public class Counsellor implements Runnable {
 
                     for (final Row screamRow : allScreams) {
                         //@FIXME: Duplicate fetches. Can we fetch by partition? For, humanId on one partition will be the same
-                        final List<Row> allSuperFriends = connect.execute("select * from SuperFriend where humanId='" + screamRow.getString(0) + "'").all();
+                        final List<Row> allSuperFriends = connect.execute(String.format("select * from SuperFriend where humanId='%s'", screamRow.getString(0))).all();
                         final SuperFriendValue superFriendValue;
                         if (allSuperFriends.size() != 0) {
                             superFriendValue = new Gson().fromJson(allSuperFriends.get(0).getString("value"), SuperFriendValue.class);
@@ -65,18 +65,18 @@ public class Counsellor implements Runnable {
                                 final String urlHash = screamRow.getString("urlHash");
                                 final String value = screamRow.getString("value");
 
-                                final List<Row> yawnRowsNotRead = connect.execute("select * from Yawn where humanId='" + friend + "' AND mood='" + "0" + "' AND urlHash='" + urlHash + "'").all();
-                                final List<Row> yawnRowsRead = connect.execute("select * from Yawn where humanId='" + friend + "' AND mood='" + "1" + "' AND urlHash='" + urlHash + "'").all();
+                                final List<Row> yawnRowsNotRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='0' AND urlHash='%s'", friend, urlHash)).all();
+                                final List<Row> yawnRowsRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='1' AND urlHash='%s'", friend, urlHash)).all();
 
                                 if (yawnRowsNotRead.size() == 0 && yawnRowsRead.size() == 0) {
-                                    connect.execute("insert into Yawn(humanId, mood, urlHash, value) values('" + friend + "','" + "0" + "','" + urlHash + "','" + value + "') USING TTL " + DBScripts.YAWN_COUNSELLED_TTL+ ";");
+                                    connect.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','0','%s','%s') USING TTL %d;", friend, urlHash, value, DBScripts.YAWN_COUNSELLED_TTL));
                                 } else if (yawnRowsNotRead.size() != 0) {
                                     final Row yawnRow = yawnRowsNotRead.get(0);
                                     final YawnItem yawnFeedItem = new Gson().fromJson(yawnRow.getString("value"), YawnItem.class);
                                     System.out.println("Fetched:" + yawnFeedItem.toString());
                                     yawnFeedItem.shock();
                                     System.out.println("Inserting:" + yawnFeedItem.toString());
-                                    connect.execute("insert into Yawn(humanId, mood, urlHash, value) values('" + friend + "','" + "0" + "','" + yawnRow.getString("urlHash") + "','" + new Gson().toJson(yawnFeedItem) + "') USING TTL " + DBScripts.YAWN_COUNSELLED_TTL + ";");
+                                    connect.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','0','%s','%s') USING TTL %d;", friend, yawnRow.getString("urlHash"), new Gson().toJson(yawnFeedItem), DBScripts.YAWN_COUNSELLED_TTL));
                                 }
                                 connect.execute(String.format("delete from Scream where humanId='%s' and mood='0' and urlHash='%s';",
                                         superFriendValue.humanId, urlHash));//Yet to hash the urlHash value

@@ -67,13 +67,13 @@ public class Harvester implements Runnable {
                                 final String feedItemDescription = feedItem.getElementsByTag("description").first().text();
                                 System.out.println("description:" + feedItemDescription);
 
-                                final ResultSet yawnRowsNotRead = connect.execute("select * from Yawn where humanId='" + stalk.getString(0)  + "' AND mood='" + "0"+ "' AND urlHash='" + feedItemLink+ "'");
-                                final ResultSet yawnRowsDidRead = connect.execute("select * from Yawn where humanId='" + stalk.getString(0)  + "' AND mood='" + "1"+ "' AND urlHash='" + feedItemLink+ "'");
+                                final ResultSet yawnRowsNotRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='0' AND urlHash='%s'", stalk.getString(0), feedItemLink));
+                                final ResultSet yawnRowsDidRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='1' AND urlHash='%s'", stalk.getString(0), feedItemLink));
 
                                 final boolean feedItemLinkMissing = yawnRowsNotRead.all().isEmpty() && yawnRowsDidRead.all().isEmpty();
 
                                 if(feedItemLinkMissing){
-                                    connect.execute("insert into Yawn(humanId, mood, urlHash, value) values('" + stalk.getString(0) + "','" + "0" + "','"  + feedItemLink + "','" + new Gson().toJson(new YawnItem(feedItemLink, feedItemTitle, feedItemDescription, stalkItem.link, "0")) + "') USING TTL " + DBScripts.HARVESTED_YAWN_TTL + ";");//Yet to hash the urlHash value
+                                    connect.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','0','%s','%s') USING TTL %s;", stalk.getString(0), feedItemLink, new Gson().toJson(new YawnItem(feedItemLink, feedItemTitle, feedItemDescription, stalkItem.link, "0")), DBScripts.HARVESTED_YAWN_TTL));//Yet to hash the urlHash value
                                     totalInsertions++;
                                 } else {
                                     //Ignoring insert

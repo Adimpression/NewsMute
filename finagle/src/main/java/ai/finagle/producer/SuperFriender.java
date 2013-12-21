@@ -105,7 +105,7 @@ public class SuperFriender implements Runnable {
             System.out.println("hashed user:" + hasheduser);
             if (usersParameterValues != null) {//Adding friends
                     System.out.println("users:" + usersParameterValues.get(0));
-                final ResultSet execute = connect.execute("select * from SuperFriend where humanId='" + hasheduser + "'");
+                final ResultSet execute = connect.execute(String.format("select * from SuperFriend where humanId='%s'", hasheduser));
                 final List<Row> all = execute.all();
                 final SuperFriendValue superFriendValue;
                 if (all.size() != 0) {
@@ -129,11 +129,11 @@ public class SuperFriender implements Runnable {
 
                 final String[] finalContacts = new String[contacts.size()];
 
-                connect.execute("insert into SuperFriend(humanId, value) values('" + hasheduser + "','" + new Gson().toJson(new SuperFriendValue(hasheduser, contacts.toArray(finalContacts))) + "');");//Yet to hash the urlHash value
+                connect.execute(String.format("insert into SuperFriend(humanId, value) values('%s','%s');", hasheduser, new Gson().toJson(new SuperFriendValue(hasheduser, contacts.toArray(finalContacts)))));//Yet to hash the urlHash value
                 returnVal = new Gson().toJson(new Return<ReturnValueSuperFriend>(new ReturnValueSuperFriend(new SuperFriendValue[]{}), "", "OK"));
 
             } else {//querying friends
-                final ResultSet execute = connect.execute("select * from SuperFriend where humanId='" + hasheduser + "'");
+                final ResultSet execute = connect.execute(String.format("select * from SuperFriend where humanId='%s'", hasheduser));
                 final List<Row> all = execute.all();
                 final SuperFriendValue superFriendValue;
                 if (all.size() != 0) {
