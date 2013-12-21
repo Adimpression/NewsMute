@@ -166,7 +166,7 @@ function justVisiting() {
     var lastVisited = window.localStorage.getItem("lastVisited");
     if (lastVisited != null) {
         //alert('lv no null');
-        screamLink(lastVisited,function(e){}, function(e){});
+        _internal_screamLink(lastVisited,function(e){}, function(e){});
         markRead(lastVisited);
         share(lastVisited);
         window.localStorage.removeItem("lastVisited");
@@ -308,7 +308,7 @@ function WakeUp() {
                         clone.find('.itemTitle').text(item.title);
                         //clone.find('.itemTitle').attr('href', item.link);
                         clone.find('.itemTitle').attr("title", item.link);
-                        clone.find('.itemDescription').html(item.description);
+                        clone.find('.itemDescription').html(item.description.replace(/<(?:.|\n)*?>/gm, ''));
                         clone.find('.itemBookmark').attr("title", item.link);
                         clone.find('.itemHide').attr("title", item.link);
                         clone.find('.itemAdvanced').attr("title", item.source);
@@ -350,6 +350,26 @@ function screamLink(url, successCallback, failureCallback){
     } else {
         alert('Sorry :-( This link is not recognized by News Mute')
     }
+}
+
+function _internal_screamLink(url, successCallback, failureCallback){
+        $.ajax({
+            type: "GET",
+            url: "http://23.253.36.42:30200/?user=" + humanId + "&url=" + encodeURIComponent(url),
+            crossDomain: true,
+            beforeSend: function () {
+            },
+            complete: function () {
+            },
+            data: {},
+            dataType: 'text', //json
+            success: function (response) {
+                successCallback(response);
+            },
+            error: function (e) {
+                failureCallback(JSON.stringify(e));
+            }
+        });
 }
 
 function scream() {
