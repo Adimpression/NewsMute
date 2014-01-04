@@ -138,10 +138,33 @@ public class Guardian implements Runnable {
                                    result = new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.OK)}), "Session ok", "OK");
                                 } else {//Crazy stuff, either the session was hijacked our we did a client programming mess
                                     System.out.println("Session present, but humanId hashes don't match!");
+                                    //We just reset the cookie
+                                    {
+                                        CookieEncoder encoder = new CookieEncoder(true);
+                                        final DefaultCookie defaultCookie = new DefaultCookie("session", "BAD! COOKIE DELETION ON BROWSER HAS FAILED");
+                                        defaultCookie.setHttpOnly(true);
+                                        defaultCookie.setMaxAge(0);//A day
+                                        //defaultCookie.setDomain();
+
+                                        encoder.addCookie(defaultCookie);
+
+                                        httpResponse.setHeader("Set-Cookie", encoder.encode());
+                                    }
                                     result = new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.ERROR)}), "Session matched but users don't match", "OK");
                                 }
                             } else {//Wrong session, bad bad bad
                                 System.out.println("No such session!");
+                                {
+                                    CookieEncoder encoder = new CookieEncoder(true);
+                                    final DefaultCookie defaultCookie = new DefaultCookie("session", "BAD! COOKIE DELETION ON BROWSER HAS FAILED");
+                                    defaultCookie.setHttpOnly(true);
+                                    defaultCookie.setMaxAge(0);//A day
+                                    //defaultCookie.setDomain();
+
+                                    encoder.addCookie(defaultCookie);
+
+                                    httpResponse.setHeader("Set-Cookie", encoder.encode());
+                                }
                                 result = new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.ERROR)}), "No such session", "OK");
                             }
 
