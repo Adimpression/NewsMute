@@ -318,7 +318,8 @@ function WakeUp() {
                         clone.find('.itemTitle').text(item.title);
                         //clone.find('.itemTitle').attr('href', item.link);
                         clone.find('.itemTitle').attr("title", item.link);
-                        clone.find('.itemDescription').html(item.description.replace(/<(?:.|\n)*?>/gm, ''));
+                        //clone.find('.itemDescription').html(item.description.replace(/<(?:.|\n)*?>/gm, ''));
+                        clone.find('.itemDescription').html(item.description.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ''));
                         clone.find('.itemBookmark').attr("title", item.link);
                         clone.find('.itemHide').attr("title", item.link);
                         clone.find('.itemAdvanced').attr("title", item.source);
