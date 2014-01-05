@@ -602,9 +602,11 @@ function hide(url){
     try {
         markRead(url);
         var id = getHash(url);
-        $("#" + id).fadeOut();
+        $("#" + id).animate({opacity:0.1}, {duration: 300, complete: function(){
+            $("#" + id).slideUp(300);
+        }});
     } catch (e) {
-        //alert(e);//@TODO: There's an error here, because of the weird ids we use. Fix this (Hashing?)
+        alert(e);
     }
 
 }
