@@ -316,17 +316,17 @@ function WakeUp() {
                         var item = data[i];
                         if (item.link != "null" && item.link != "") {//@TODO remove me, temp fix until server fixed
                             var clone = $itemTemplate.clone();
-                            clone.attr("id", getHash(item.link));
+                            var id = getHash(item.link);
+                            clone.attr("id", id);
                             clone.find('.itemTitle').text(item.title);
                             //clone.find('.itemTitle').attr('href', item.link);
                             clone.find('.itemTitle').attr("title", item.link);
                             clone.find('.itemTitle').attr("style", "font-size: 40px; text-decoration: underline;color: #271aad;");
                             clone.find('.itemTitle').click(
                                 function(){
-                                    $('.itemTemplate').fadeOut();
-                                    $('#' + getHash(item.link)).fadeIn();
+                                    $('.itemTemplate:not(#'+ id + ')').animate({opacity:0.2});
                                     window.localStorage.setItem('lastVisited', this.title);
-                                    setTimeout("openLink(window.localStorage.getItem('lastVisited'))", 5000);
+                                    setTimeout("openLink(window.localStorage.getItem('lastVisited'))", 1000);
                                 }
                             );
                             //clone.find('.itemDescription').html(item.description.replace(/<(?:.|\n)*?>/gm, ''));
@@ -351,7 +351,10 @@ function WakeUp() {
 }
 
 function openLink(link){
-    navigator.app.loadUrl(link, {wait:0, loadingDialog:"Loading external web page", loadUrlTimeoutValue: 1000, openExternal:false });
+    $FeedInterface.hide(0, function(){
+        //navigator.app.loadUrl(link, {wait:0, loadingDialog:"Loading external web page", loadUrlTimeoutValue: 1000, openExternal:false });
+        window.location.href = link;
+    });
 }
 
 function screamLink(url, successCallback, failureCallback){
@@ -701,5 +704,11 @@ function sectionFadeOut() {
         $Loader.fadeOut();
         $FeedSetup.fadeOut();
         $FeedInterface.fadeOut();
+}
+
+function sectionHide() {
+        $Loader.hide();
+        $FeedSetup.hide();
+        $FeedInterface.hide();
 }
 

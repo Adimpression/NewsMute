@@ -13,7 +13,6 @@
     <preference name="show-splash-screen-spinner" value="true" />
     <preference name="auto-hide-splash-screen" value="true" />
     <preference name="fullscreen" value="false" />
-    <preference name="errorUrl" value="file:///android_asset/www/error.html" />
     <preference name="loadingDialog" value="News Mute is muting news, please be silent meanwhile!" />
 
 </widget>
