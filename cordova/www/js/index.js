@@ -1,6 +1,11 @@
 const $feedNowSpeaking = $('#feedNowSpeaking');
 const $feedsList = $('#feedsList');
 const $itemTemplate = $('.itemTemplate');
+const $Loader = $(".Loader");
+const $FeedSetup = $(".FeedSetup");
+const $FeedInterface = $(".FeedInterface");
+
+
 
 const flag_super_friend = "flag_super_friend";
 const flag_app_launched = "flag_app_launched";
@@ -268,14 +273,10 @@ function WakeUp() {
             "/?nmact=READ&user=" + humanId,
         crossDomain: true,
         beforeSend: function () {
-            $(".Loader").show();
-            $(".FeedSetup").hide();
-            $(".FeedInterface").hide();
+            section($Loader);
         },
         complete: function () {
-            $(".Loader").hide();
-            $(".FeedSetup").hide();
-            $(".FeedInterface").show();
+            section($FeedInterface);
         },
         data: {},
         dataType: 'text', //json
@@ -311,20 +312,31 @@ function WakeUp() {
 
 
                 for (var i = 0; i < data.length; i++) {
-                    var item = data[i];
-                    if (item.link != "null" && item.link != "") {//@TODO remove me, temp fix until server fixed
-                        var clone = $itemTemplate.clone();
-                        clone.attr("id", encodeURIComponent(item.link));
-                        clone.find('.itemTitle').text(item.title);
-                        //clone.find('.itemTitle').attr('href', item.link);
-                        clone.find('.itemTitle').attr("title", item.link);
-                        //clone.find('.itemDescription').html(item.description.replace(/<(?:.|\n)*?>/gm, ''));
-                        clone.find('.itemDescription').html(item.description.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ''));
-                        clone.find('.itemBookmark').attr("title", item.link);
-                        clone.find('.itemHide').attr("title", item.link);
-                        clone.find('.itemAdvanced').attr("title", item.source);
-                        $feedsList.append(clone);
-                    }
+                    (function(i){
+                        var item = data[i];
+                        if (item.link != "null" && item.link != "") {//@TODO remove me, temp fix until server fixed
+                            var clone = $itemTemplate.clone();
+                            clone.attr("id", getHash(item.link));
+                            clone.find('.itemTitle').text(item.title);
+                            //clone.find('.itemTitle').attr('href', item.link);
+                            clone.find('.itemTitle').attr("title", item.link);
+                            clone.find('.itemTitle').attr("style", "font-size: 40px; text-decoration: underline;color: #271aad;");
+                            clone.find('.itemTitle').click(
+                                function(){
+                                    $('.itemTemplate').fadeOut();
+                                    $('#' + getHash(item.link)).fadeIn();
+                                    window.localStorage.setItem('lastVisited', this.title);
+                                    setTimeout("openLink(window.localStorage.getItem('lastVisited'))", 5000);
+                                }
+                            );
+                            //clone.find('.itemDescription').html(item.description.replace(/<(?:.|\n)*?>/gm, ''));
+                            clone.find('.itemDescription').html(item.description.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ''));
+                            clone.find('.itemBookmark').attr("title", item.link);
+                            clone.find('.itemHide').attr("title", item.link);
+                            clone.find('.itemAdvanced').attr("title", item.source);
+                            $feedsList.append(clone);
+                        }
+                    })(i);
                 }
             } catch (e) {
                 alert('Data render error' + e);
@@ -336,6 +348,10 @@ function WakeUp() {
             alert(JSON.stringify(e));
         }
     });
+}
+
+function openLink(link){
+    navigator.app.loadUrl(link, {wait:0, loadingDialog:"Loading external web page", loadUrlTimeoutValue: 1000, openExternal:false });
 }
 
 function screamLink(url, successCallback, failureCallback){
@@ -582,7 +598,7 @@ function superFriend() {
 function hide(url){
     try {
         markRead(url);
-        var id = encodeURIComponent(url);
+        var id = getHash(url);
         $("#" + id).fadeOut();
     } catch (e) {
         //alert(e);//@TODO: There's an error here, because of the weird ids we use. Fix this (Hashing?)
@@ -663,4 +679,27 @@ function isConnected() {
 }
 
 
+
+function initialSetup(){
+    _internal_screamLink('http://elle.tumblr.com/rss');
+}
+
+function section(sectionToShow) {
+    if (sectionToShow != $Loader){
+        $Loader.hide();
+    }
+    if (sectionToShow != $FeedSetup){
+        $FeedSetup.hide();
+    }
+    if (sectionToShow != $FeedInterface){
+        $FeedInterface.hide();
+    }
+    sectionToShow.show();
+}
+
+function sectionFadeOut() {
+        $Loader.fadeOut();
+        $FeedSetup.fadeOut();
+        $FeedInterface.fadeOut();
+}
 
