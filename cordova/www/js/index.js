@@ -335,6 +335,14 @@ function WakeUp() {
                             clone.find('.itemHide').attr("title", item.link);
                             clone.find('.itemAdvanced').attr("title", item.source);
                             $feedsList.append(clone);
+                            if(i < 5){
+                                clone.animate({opacity:0.0});
+                                clone.animate({opacity:1.0}, {duration: i * 200, complete: function(){
+                                    for( i = 0 ; i < 3 ; i++ ) {
+                                        clone.fadeTo('slow', 0.5).fadeTo('slow', 1.0);
+                                    }
+                                }});
+                            }
                         }
                     })(i);
                 }
