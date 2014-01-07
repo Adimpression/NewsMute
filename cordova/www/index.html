@@ -64,8 +64,16 @@
         <div class="use100" style="height: 40%;">
             &nbsp;
         </div>
-        <div class="use20 use40p use40a center" style="height: 20%;">
-            <img src="icon.png" class="use100 center blink_me" style="margin-left: auto;margin-right: auto"/>
+        <div class="use100" style="height: 20%;">
+            <div class="use20">
+                &nbsp;
+            </div>
+            <div class="60">
+                <img src="icon.png" class="use100 center blink_me" style="width: 100%:"/>
+            </div>
+            <div class="use20">
+                &nbsp;
+            </div>
         </div>
         <div class="use100" style="height: 40%;">
             &nbsp;
@@ -112,6 +120,7 @@
                     <ul style="border:none; background-color: transparent;" >
                         <li><a href="#" onclick="scream();"><i class="icon-link" style="color: #ff1493;font-size: 50px;"></i></a></li>
                         <li><a href="#" onclick="stalk(null);"><i class="icon-rss" style="color: #ff1493;font-size: 50px;"></i></a></li>
+                        <li><a href="#" onclick="initialSetup();"><i class="icon-cogs" style="color: #ff1493;font-size: 50px;"></i></a></li>
                     </ul>
                 </div>
             </div>
@@ -146,21 +155,21 @@
                                         </div>
                                         <div class="one" style="opacity: 0.5;">
                                             <div class="use30 left">
-                                                <button href="#" class="itemBookmark" style="text-decoration: underline;"
+                                                <div href="#" class="itemBookmark" style=""
                                                         onclick="share(this.title);" title="">
-                                                    Bookmark
-                                                </button>
+                                                    <a href="#"><i class="icon-thumbs-up-alt" style="color: #ff1493;font-size: 50px;"></i></a>
+                                                </div>
                                             </div>
                                             <div class="use40 center">
-                                            <span class="itemAdvanced" style="text-decoration: none;"
+                                            <div class="itemAdvanced" style="text-decoration: none;"
                                                   onclick="unshare(this.title);" title="">
-                                                *
-                                            </span>
+                                                    <a href="#"><i class="icon-unlink" style="color: #ff1493;font-size: 50px;"></i></a>
+                                            </div>
                                             </div>
                                             <div class="use30 right">
-                                                <button  class="itemHide" href="#" title="http://www.google.com" onclick="hide(this.title);">
-                                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="text-decoration: underline;">Hide</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                </button>
+                                                <div href="#" class="itemHide" title="http://www.google.com" style="" onclick="hide(this.title);">
+                                                    <a href="#"><i class="icon-thumbs-down-alt" style="color: #ff1493;font-size: 50px;"></i></a>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="use100" style="height: 5%;">

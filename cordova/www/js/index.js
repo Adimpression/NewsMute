@@ -705,6 +705,7 @@ function initialSetup(){
         section($FeedSetup);
 
         var countries = [
+            {'title': 'Don\'t care                   ', 'feeds': []},
             {'title': 'Afghanistan                   ', 'feeds': []},
             {'title': 'Albania                       ', 'feeds': []},
             {'title': 'Algeria                       ', 'feeds': []},
@@ -904,6 +905,7 @@ function initialSetup(){
 
 
         var industries = [
+            {'title': 'Don\'t care                      ', 'feeds': []},
             {'title': 'Agriculture                      ', 'feeds': []},
             {'title': 'Beverage & Tobacco               ', 'feeds': []},
             {'title': 'Accounting                       ', 'feeds': []},
