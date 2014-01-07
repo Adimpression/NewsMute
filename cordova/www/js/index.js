@@ -199,8 +199,8 @@ function justVisiting() {
 
 function postSession(){
 
-        initialSetup();
-        //WakeUp();
+        //initialSetup();
+        WakeUp();
         justVisiting();
         $feedsList.slideDown();
         $feedNowSpeaking.slideUp();
@@ -337,14 +337,17 @@ function WakeUp() {
                                 }
                             );
                             //clone.find('.itemDescription').html(item.description.replace(/<(?:.|\n)*?>/gm, ''));
-                            clone.find('.itemDescription').html(item.description.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ''));
+                            clone.find('.itemDescription').html(item.description.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '').replace(/<iframe\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/iframe>/gi, ''));
+                            //clone.find('.itemDescription').html(item.description.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ''));
+                            //Without the script replacement, Chris Brogan blog renders elements wrong
+                            //Without the iframe replacement, Pinterest gives the following error "Application Error - There was a network error. (file://instagram.com/p/iosdfadsf/embed). This comes as a Android alert.
                             clone.find('.itemBookmark').attr("title", item.link);
                             clone.find('.itemHide').attr("title", item.link);
                             clone.find('.itemAdvanced').attr("title", item.source);
                             $feedsList.append(clone);
                             if(i < 5){
                                 clone.animate({opacity:0.0});
-                                clone.animate({opacity:1.0}, {duration: i * 200, complete: function(){
+                                clone.animate({opacity:1.0}, {duration: i * 300, complete: function(){
                                     for( i = 0 ; i < 1 ; i++ ) {
                                         clone.fadeTo('slow', 0.5).fadeTo('slow', 1.0);
                                     }
@@ -984,7 +987,7 @@ function initialSetup(){
                     if (i < 20) {
                         clone.animate({opacity: 0.0});
                         clone.animate({opacity: 1.0}, {duration: i * 200, complete: function () {
-                            for (i = 0; i < 3; i++) {
+                            for (i = 0; i < 1; i++) {
                                 clone.fadeTo('slow', 0.5).fadeTo('slow', 1.0);
                             }
                         }});
