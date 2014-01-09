@@ -341,9 +341,32 @@ function WakeUp() {
                             //clone.find('.itemDescription').html(item.description.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ''));
                             //Without the script replacement, Chris Brogan blog renders elements wrong
                             //Without the iframe replacement, Pinterest gives the following error "Application Error - There was a network error. (file://instagram.com/p/iosdfadsf/embed). This comes as a Android alert.
-                            clone.find('.itemBookmark').attr("title", item.link);
-                            clone.find('.itemHide').attr("title", item.link);
-                            clone.find('.itemAdvanced').attr("title", item.source);
+
+                            {//itemBookmark
+                                clone.find('.itemBookmark').attr("title", item.link);
+                                clone.find('.itemBookmark').click(
+                                    function(){
+                                        $(this).fadeTo('fast', 0.5).fadeIn('fast',
+                                            function(){
+                                                share($(this).attr('title'));
+                                            });
+                                    });
+                            }
+
+                            {//itemAdvanced
+                                clone.find('.itemAdvanced').attr("title", item.source);
+                            }
+
+                            {//itemHide
+                                clone.find('.itemHide').attr("title", item.link);
+                                clone.find('.itemHide').click(
+                                    function(){
+                                        $(this).fadeOut('fast', function(){
+                                            hide($(this).attr('title'));
+                                        });
+                                    });
+                            }
+
                             $feedsList.append(clone);
                             if(i < 5){
                                 clone.animate({opacity:0.0});
