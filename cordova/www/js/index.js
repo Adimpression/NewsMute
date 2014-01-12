@@ -1011,10 +1011,11 @@ function initialSetup(){
                             alert(item.title);
                             item.feeds.forEach(function (value) {
                                 alert(value);
-                                $FeedSetupCountries.fadeOut("fast");
-                                $FeedSetupGenders.fadeIn("slow");
                                 _internal_screamLink(value);
-                            })
+                            });
+
+                            $FeedSetupCountries.fadeOut("fast");
+                            $FeedSetupGenders.fadeIn("slow");
 
                         }
                     );
@@ -1040,10 +1041,10 @@ function initialSetup(){
             })(i, countries.length);
         }
 
-        for (var ig = 0; i < genders.length; i++) {
-            (function (i, j) {
+        for (var ig = 0; ig < genders.length; ig++) {
+            (function (ig, j) {
                 try {
-                    var item = genders[i];
+                    var item = genders[ig];
                     var clone = $genderItemTemplate.clone();
                     clone.find('.title').text(item.title);
                     clone.click(
@@ -1051,23 +1052,23 @@ function initialSetup(){
                             alert(item.title);
                             item.feeds.forEach(function (value) {
                                 alert(value);
-                                $FeedSetupGenders.fadeOut("fast");
-                                $FeedSetupIndustries.fadeIn("slow");
                                 _internal_screamLink(value);
-                            })
+                            });
+                            $FeedSetupGenders.fadeOut("fast");
+                            $FeedSetupIndustries.fadeIn("slow");
                         }
                     );
                     $genderList.append(clone);
-                    if (i < 20) {
+                    if (ig < 20) {
                         clone.animate({opacity: 0.0});
-                        clone.animate({opacity: 1.0}, {duration: i * 200, complete: function () {
-                            for (i = 0; i < 1; i++) {
+                        clone.animate({opacity: 1.0}, {duration: ig * 200, complete: function () {
+                            for (ig = 0; ig < 1; ig++) {
                                 clone.fadeTo('slow', 0.5).fadeTo('slow', 1.0);
                             }
                         }});
                     }
 
-                    if(i + 1 == j){
+                    if(ig + 1 == j){
                     }
 
                 } catch (e) {
@@ -1075,10 +1076,10 @@ function initialSetup(){
                 }
             })(ig, genders.length);
         }
-        for (var ii = 0; i < industries.length; i++) {
-            (function (i, j) {
+        for (var ii = 0; ii < industries.length; ii++) {
+            (function (ii, j) {
                 try {
-                    var item = industries[i];
+                    var item = industries[ii];
                     var clone = $industryItemTemplate.clone();
                     clone.find('.title').text(item.title);
                     clone.click(
@@ -1086,30 +1087,32 @@ function initialSetup(){
                             alert(item.title);
                             item.feeds.forEach(function (value) {
                                 alert(value);
-                                $FeedSetupCountries.fadeOut("fast");
-                                $FeedSetupGenders.fadeIn("slow");
                                 _internal_screamLink(value);
 
+                            });
 
-                                alert("Tap 'pink nm' to add RSS feed or share link.\n " +
-                                    "We added some for you.\n" +
-                                    "Click the asterisks to remove feed.");
-                                postSession();
-                            })
+                            $FeedSetupCountries.fadeOut("fast");
+                            $FeedSetupGenders.fadeIn("slow");
+
+
+                            alert("Tap 'pink nm' to add RSS feed or share link.\n " +
+                                "We added some for you.\n" +
+                                "Click the asterisks to remove feed.");
+                            postSession();
 
                         }
                     );
                     $industryList.append(clone);
-                    if (i < 20) {
+                    if (ii < 20) {
                         clone.animate({opacity: 0.0});
-                        clone.animate({opacity: 1.0}, {duration: i * 200, complete: function () {
-                            for (i = 0; i < 1; i++) {
+                        clone.animate({opacity: 1.0}, {duration: ii * 200, complete: function () {
+                            for (ii = 0; ii < 1; ii++) {
                                 clone.fadeTo('slow', 0.5).fadeTo('slow', 1.0);
                             }
                         }});
                     }
 
-                    if(i + 1 == j){
+                    if(ii + 1 == j){
                     }
 
                 } catch (e) {
