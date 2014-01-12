@@ -7,10 +7,21 @@ const $industryItemTemplate = $('.industryItemTemplate');
 const $genderList = $('.genderList');
 const $countryList = $('.countryList');
 const $industryList = $('.industryList');
+const $FeedSetupGenders = $('.FeedSetupGenders');
+const $FeedSetupCountries = $('.FeedSetupCountries');
+const $FeedSetupIndustries = $('.FeedSetupIndustries');
 const $Loader = $(".Loader");
 const $FeedSetup = $(".FeedSetup");
 const $FeedInterface = $(".FeedInterface");
 
+const clsItemTitle = '.itemTitle';
+const clsItemDescription = '.itemDescription';
+const clsItemBookmark = '.itemBookmark';
+const clsItemAdvanced = '.itemAdvanced';
+const clsItemHide = '.itemHide';
+
+
+const strId = "id";
 
 
 const flag_super_friend = "flag_super_friend";
@@ -23,6 +34,276 @@ const endpointSuperFriend = "http://23.253.36.42:20200";
 const endpointGuardian = "http://23.253.36.42:50200";
 
 var humanId;
+
+
+const Country_Global_ABC = 'http://feeds.abcnews.com/abcnews/internationalheadlines';
+const Industry_Technology_Y_Combinator = 'https://news.ycombinator.com/rss';
+
+const countries = [
+    {'title': 'Don\'t care                   ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Afghanistan                   ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Albania                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Algeria                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Andorra                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Angola                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Antigua & Deps                ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Argentina                     ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Armenia                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Australia                     ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Austria                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Azerbaijan                    ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Bahamas                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Bahrain                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Bangladesh                    ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Barbados                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Belarus                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Belgium                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Belize                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Benin                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Bhutan                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Bolivia                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Bosnia Herzegovina            ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Botswana                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Brazil                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Brunei                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Bulgaria                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Burkina                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Burundi                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Cambodia                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Cameroon                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Canada                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Cape Verde                    ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Central African Rep           ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Chad                          ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Chile                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'China                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Colombia                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Comoros                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Congo                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Congo {Democratic Rep}        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Costa Rica                    ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Croatia                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Cuba                          ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Cyprus                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Czech Republic                ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Denmark                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Djibouti                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Dominica                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Dominican Republic            ', 'feeds': [Country_Global_ABC]},
+    {'title': 'East Timor                    ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Ecuador                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Egypt                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'El Salvador                   ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Equatorial Guinea             ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Eritrea                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Estonia                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Ethiopia                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Fiji                          ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Finland                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'France                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Gabon                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Gambia                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Georgia                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Germany                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Ghana                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Greece                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Grenada                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Guatemala                     ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Guinea                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Guinea-Bissau                 ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Guyana                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Haiti                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Honduras                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Hungary                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Iceland                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'India                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Indonesia                     ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Iran                          ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Iraq                          ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Ireland {Republic}            ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Israel                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Italy                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Ivory Coast                   ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Jamaica                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Japan                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Jordan                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Kazakhstan                    ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Kenya                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Kiribati                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Korea North                   ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Korea South                   ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Kosovo                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Kuwait                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Kyrgyzstan                    ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Laos                          ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Latvia                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Lebanon                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Lesotho                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Liberia                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Libya                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Liechtenstein                 ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Lithuania                     ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Luxembourg                    ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Macedonia                     ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Madagascar                    ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Malawi                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Malaysia                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Maldives                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Mali                          ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Malta                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Marshall Islands              ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Mauritania                    ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Mauritius                     ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Mexico                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Micronesia                    ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Moldova                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Monaco                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Mongolia                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Montenegro                    ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Morocco                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Mozambique                    ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Myanmar, {Burma}              ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Namibia                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Nauru                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Nepal                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Netherlands                   ', 'feeds': [Country_Global_ABC]},
+    {'title': 'New Zealand                   ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Nicaragua                     ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Niger                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Nigeria                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Norway                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Oman                          ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Pakistan                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Palau                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Panama                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Papua New Guinea              ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Paraguay                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Peru                          ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Philippines                   ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Poland                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Portugal                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Qatar                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Romania                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Russian Federation            ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Rwanda                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'St Kitts & Nevis              ', 'feeds': [Country_Global_ABC]},
+    {'title': 'St Lucia                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Saint Vincent & the Grenadines', 'feeds': [Country_Global_ABC]},
+    {'title': 'Samoa                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'San Marino                    ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Sao Tome & Principe           ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Saudi Arabia                  ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Senegal                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Serbia                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Seychelles                    ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Sierra Leone                  ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Singapore                     ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Slovakia                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Slovenia                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Solomon Islands               ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Somalia                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'South Africa                  ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Spain                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Sri Lanka                     ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Sudan                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Suriname                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Swaziland                     ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Sweden                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Switzerland                   ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Syria                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Taiwan                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Tajikistan                    ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Tanzania                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Thailand                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Togo                          ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Tonga                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Trinidad & Tobago             ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Tunisia                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Turkey                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Turkmenistan                  ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Tuvalu                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Uganda                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Ukraine                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'United Arab Emirates          ', 'feeds': [Country_Global_ABC]},
+    {'title': 'United Kingdom                ', 'feeds': [Country_Global_ABC]},
+    {'title': 'United States                 ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Uruguay                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Uzbekistan                    ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Vanuatu                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Vatican City                  ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Venezuela                     ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Vietnam                       ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Yemen                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Zambia                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Zimbabwe                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Rest of the world             ', 'feeds': [Country_Global_ABC]}
+];
+
+
+const industries = [
+    {'title': 'Don\'t care                      ', 'feeds': []},
+    {'title': 'Agriculture                      ', 'feeds': []},
+    {'title': 'Beverage & Tobacco               ', 'feeds': []},
+    {'title': 'Accounting                       ', 'feeds': []},
+    {'title': 'Advertising                      ', 'feeds': []},
+    {'title': 'Aerospace                        ', 'feeds': []},
+    {'title': 'Aircraft                         ', 'feeds': []},
+    {'title': 'Airline                          ', 'feeds': []},
+    {'title': 'Apparel & Accessories            ', 'feeds': []},
+    {'title': 'Automotive                       ', 'feeds': []},
+    {'title': 'Banking                          ', 'feeds': []},
+    {'title': 'Broadcasting                     ', 'feeds': []},
+    {'title': 'Brokerage                        ', 'feeds': []},
+    {'title': 'Biotechnology                    ', 'feeds': []},
+    {'title': 'Pension Funds                    ', 'feeds': []},
+    {'title': 'Call Centers                     ', 'feeds': []},
+    {'title': 'Cargo Handling                   ', 'feeds': []},
+    {'title': 'Chemical                         ', 'feeds': []},
+    {'title': 'Computer                         ', 'feeds': []},
+    {'title': 'Consulting                       ', 'feeds': []},
+    {'title': 'Consumer Products                ', 'feeds': []},
+    {'title': 'Cosmetics                        ', 'feeds': []},
+    {'title': 'Defense                          ', 'feeds': []},
+    {'title': 'Department Stores                ', 'feeds': []},
+    {'title': 'Software                         ', 'feeds': []},
+    {'title': 'Education                        ', 'feeds': []},
+    {'title': 'Sports                           ', 'feeds': []},
+    {'title': 'Electronics                      ', 'feeds': []},
+    {'title': 'Energy                           ', 'feeds': []},
+    {'title': 'Entertainment & Leisure          ', 'feeds': []},
+    {'title': 'Television                       ', 'feeds': []},
+    {'title': 'Executive Search                 ', 'feeds': []},
+    {'title': 'Financial Services               ', 'feeds': []},
+    {'title': 'Food                             ', 'feeds': []},
+    {'title': 'Grocery                          ', 'feeds': []},
+    {'title': 'Health Care                      ', 'feeds': []},
+    {'title': 'Internet Publishing              ', 'feeds': []},
+    {'title': 'Investment Banking               ', 'feeds': []},
+    {'title': 'Legal                            ', 'feeds': []},
+    {'title': 'Manufacturing                    ', 'feeds': []},
+    {'title': 'Motion Picture & Video           ', 'feeds': []},
+    {'title': 'Music                            ', 'feeds': []},
+    {'title': 'Newspaper Publishers             ', 'feeds': []},
+    {'title': 'Online Auctions                  ', 'feeds': []},
+    {'title': 'Pharmaceuticals                  ', 'feeds': []},
+    {'title': 'Private Equity                   ', 'feeds': []},
+    {'title': 'Publishing                       ', 'feeds': []},
+    {'title': 'Real Estate                      ', 'feeds': []},
+    {'title': 'Retail & Wholesale               ', 'feeds': []},
+    {'title': 'Securities & Commodity Exchanges ', 'feeds': []},
+    {'title': 'Service                          ', 'feeds': []},
+    {'title': 'Soap & Detergent                 ', 'feeds': []},
+    {'title': 'Technology                       ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Telecommunications               ', 'feeds': []},
+    {'title': 'Transportation                   ', 'feeds': []},
+    {'title': 'Venture Capital                  ', 'feeds': []}
+];
+
+const genders = [
+    {'title': 'Don\'t care', 'feeds': []},
+    {'title': 'Male       ', 'feeds': []},
+    {'title': 'Female     ', 'feeds': []}
+];
 
 
 function InitializeHuman() {
@@ -82,15 +363,7 @@ function InitializeHuman() {
                                                 if (json.returnStatus == "OK") {
                                                     if (status == "OK") {
                                                         window.localStorage.setItem("humanId", humanId);
-
-                                                        stalk('http://feeds.feedburner.com/WikipediaTodaysFeaturedArticle');
-                                                        stalk('http://feeds.foxnews.com/foxnews/most-popular');
-                                                        stalk('https://news.ycombinator.com/rss');
-
-                                                        alert("Tap 'pink nm' to add RSS feed or share link.\n " +
-                                                            "We added some for you.\n" +
-                                                            "Click the asterisks to remove feed.");
-                                                        postSession();
+                                                        initialSetup();
                                                     } else if (status == "ERROR") {
                                                         alert("Signup failed");//
                                                         window.location.href = window.location.href;
@@ -202,6 +475,7 @@ function postSession(){
         //initialSetup();
         WakeUp();
         justVisiting();
+        section($FeedInterface)
         $feedsList.slideDown();
         $feedNowSpeaking.slideUp();
 
@@ -324,12 +598,12 @@ function WakeUp() {
                         if (item.link != "null" && item.link != "") {//@TODO remove me, temp fix until server fixed
                             var clone = $itemTemplate.clone();
                             var id = getHash(item.link);
-                            clone.attr("id", id);
-                            clone.find('.itemTitle').text(item.title);
+                            clone.attr(strId, id);
+                            clone.find(clsItemTitle).text(item.title);
                             //clone.find('.itemTitle').attr('href', item.link);
-                            clone.find('.itemTitle').attr("title", item.link);
-                            clone.find('.itemTitle').attr("style", "font-size: 40px; text-decoration: underline;color: #271aad;");
-                            clone.find('.itemTitle').click(
+                            clone.find(clsItemTitle).attr("title", item.link);
+                            clone.find(clsItemTitle).attr("style", "font-size: 40px; text-decoration: underline;color: #271aad;");
+                            clone.find(clsItemTitle).click(
                                 function(){
                                     $('.itemTemplate:not(#'+ id + ')').animate({opacity:0.2});
                                     window.localStorage.setItem('lastVisited', this.title);
@@ -337,14 +611,14 @@ function WakeUp() {
                                 }
                             );
                             //clone.find('.itemDescription').html(item.description.replace(/<(?:.|\n)*?>/gm, ''));
-                            clone.find('.itemDescription').html(item.description.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '').replace(/<iframe\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/iframe>/gi, ''));
+                            clone.find(clsItemDescription).html(item.description.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '').replace(/<iframe\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/iframe>/gi, ''));
                             //clone.find('.itemDescription').html(item.description.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ''));
                             //Without the script replacement, Chris Brogan blog renders elements wrong
                             //Without the iframe replacement, Pinterest gives the following error "Application Error - There was a network error. (file://instagram.com/p/iosdfadsf/embed). This comes as a Android alert.
 
                             {//itemBookmark
-                                clone.find('.itemBookmark').attr("title", item.link);
-                                clone.find('.itemBookmark').click(
+                                clone.find(clsItemBookmark).attr("title", item.link);
+                                clone.find(clsItemBookmark).click(
                                     function(){
                                         $(this).fadeTo('fast', 0.5).fadeIn('fast',
                                             function(){
@@ -354,12 +628,12 @@ function WakeUp() {
                             }
 
                             {//itemAdvanced
-                                clone.find('.itemAdvanced').attr("title", item.source);
+                                clone.find(clsItemAdvanced).attr("title", item.source);
                             }
 
                             {//itemHide
-                                clone.find('.itemHide').attr("title", item.link);
-                                clone.find('.itemHide').click(
+                                clone.find(clsItemHide).attr("title", item.link);
+                                clone.find(clsItemHide).click(
                                     function(){
                                         $(this).fadeOut('fast', function(){
                                             hide($(this).attr('title'));
@@ -643,7 +917,7 @@ function hide(url){
     try {
         markRead(url);
         var id = getHash(url);
-        $("#" + id).animate({opacity:0.1}, {duration: 300, complete: function(){
+        $("#" + id).animate({opacity:0.1}, {duration: 100, complete: function(){
             $("#" + id).slideUp(300);
         }});
     } catch (e) {
@@ -721,279 +995,13 @@ function isConnected() {
 }
 
 
-
 function initialSetup(){
 
     try {
-        section($FeedSetup);
-
-        var countries = [
-            {'title': 'Don\'t care                   ', 'feeds': []},
-            {'title': 'Afghanistan                   ', 'feeds': []},
-            {'title': 'Albania                       ', 'feeds': []},
-            {'title': 'Algeria                       ', 'feeds': []},
-            {'title': 'Andorra                       ', 'feeds': []},
-            {'title': 'Angola                        ', 'feeds': []},
-            {'title': 'Antigua & Deps                ', 'feeds': []},
-            {'title': 'Argentina                     ', 'feeds': []},
-            {'title': 'Armenia                       ', 'feeds': []},
-            {'title': 'Australia                     ', 'feeds': []},
-            {'title': 'Austria                       ', 'feeds': []},
-            {'title': 'Azerbaijan                    ', 'feeds': []},
-            {'title': 'Bahamas                       ', 'feeds': []},
-            {'title': 'Bahrain                       ', 'feeds': []},
-            {'title': 'Bangladesh                    ', 'feeds': []},
-            {'title': 'Barbados                      ', 'feeds': []},
-            {'title': 'Belarus                       ', 'feeds': []},
-            {'title': 'Belgium                       ', 'feeds': []},
-            {'title': 'Belize                        ', 'feeds': []},
-            {'title': 'Benin                         ', 'feeds': []},
-            {'title': 'Bhutan                        ', 'feeds': []},
-            {'title': 'Bolivia                       ', 'feeds': []},
-            {'title': 'Bosnia Herzegovina            ', 'feeds': []},
-            {'title': 'Botswana                      ', 'feeds': []},
-            {'title': 'Brazil                        ', 'feeds': []},
-            {'title': 'Brunei                        ', 'feeds': []},
-            {'title': 'Bulgaria                      ', 'feeds': []},
-            {'title': 'Burkina                       ', 'feeds': []},
-            {'title': 'Burundi                       ', 'feeds': []},
-            {'title': 'Cambodia                      ', 'feeds': []},
-            {'title': 'Cameroon                      ', 'feeds': []},
-            {'title': 'Canada                        ', 'feeds': []},
-            {'title': 'Cape Verde                    ', 'feeds': []},
-            {'title': 'Central African Rep           ', 'feeds': []},
-            {'title': 'Chad                          ', 'feeds': []},
-            {'title': 'Chile                         ', 'feeds': []},
-            {'title': 'China                         ', 'feeds': []},
-            {'title': 'Colombia                      ', 'feeds': []},
-            {'title': 'Comoros                       ', 'feeds': []},
-            {'title': 'Congo                         ', 'feeds': []},
-            {'title': 'Congo {Democratic Rep}        ', 'feeds': []},
-            {'title': 'Costa Rica                    ', 'feeds': []},
-            {'title': 'Croatia                       ', 'feeds': []},
-            {'title': 'Cuba                          ', 'feeds': []},
-            {'title': 'Cyprus                        ', 'feeds': []},
-            {'title': 'Czech Republic                ', 'feeds': []},
-            {'title': 'Denmark                       ', 'feeds': []},
-            {'title': 'Djibouti                      ', 'feeds': []},
-            {'title': 'Dominica                      ', 'feeds': []},
-            {'title': 'Dominican Republic            ', 'feeds': []},
-            {'title': 'East Timor                    ', 'feeds': []},
-            {'title': 'Ecuador                       ', 'feeds': []},
-            {'title': 'Egypt                         ', 'feeds': []},
-            {'title': 'El Salvador                   ', 'feeds': []},
-            {'title': 'Equatorial Guinea             ', 'feeds': []},
-            {'title': 'Eritrea                       ', 'feeds': []},
-            {'title': 'Estonia                       ', 'feeds': []},
-            {'title': 'Ethiopia                      ', 'feeds': []},
-            {'title': 'Fiji                          ', 'feeds': []},
-            {'title': 'Finland                       ', 'feeds': []},
-            {'title': 'France                        ', 'feeds': []},
-            {'title': 'Gabon                         ', 'feeds': []},
-            {'title': 'Gambia                        ', 'feeds': []},
-            {'title': 'Georgia                       ', 'feeds': []},
-            {'title': 'Germany                       ', 'feeds': []},
-            {'title': 'Ghana                         ', 'feeds': []},
-            {'title': 'Greece                        ', 'feeds': []},
-            {'title': 'Grenada                       ', 'feeds': []},
-            {'title': 'Guatemala                     ', 'feeds': []},
-            {'title': 'Guinea                        ', 'feeds': []},
-            {'title': 'Guinea-Bissau                 ', 'feeds': []},
-            {'title': 'Guyana                        ', 'feeds': []},
-            {'title': 'Haiti                         ', 'feeds': []},
-            {'title': 'Honduras                      ', 'feeds': []},
-            {'title': 'Hungary                       ', 'feeds': []},
-            {'title': 'Iceland                       ', 'feeds': []},
-            {'title': 'India                         ', 'feeds': []},
-            {'title': 'Indonesia                     ', 'feeds': []},
-            {'title': 'Iran                          ', 'feeds': []},
-            {'title': 'Iraq                          ', 'feeds': []},
-            {'title': 'Ireland {Republic}            ', 'feeds': []},
-            {'title': 'Israel                        ', 'feeds': []},
-            {'title': 'Italy                         ', 'feeds': []},
-            {'title': 'Ivory Coast                   ', 'feeds': []},
-            {'title': 'Jamaica                       ', 'feeds': []},
-            {'title': 'Japan                         ', 'feeds': []},
-            {'title': 'Jordan                        ', 'feeds': []},
-            {'title': 'Kazakhstan                    ', 'feeds': []},
-            {'title': 'Kenya                         ', 'feeds': []},
-            {'title': 'Kiribati                      ', 'feeds': []},
-            {'title': 'Korea North                   ', 'feeds': []},
-            {'title': 'Korea South                   ', 'feeds': []},
-            {'title': 'Kosovo                        ', 'feeds': []},
-            {'title': 'Kuwait                        ', 'feeds': []},
-            {'title': 'Kyrgyzstan                    ', 'feeds': []},
-            {'title': 'Laos                          ', 'feeds': []},
-            {'title': 'Latvia                        ', 'feeds': []},
-            {'title': 'Lebanon                       ', 'feeds': []},
-            {'title': 'Lesotho                       ', 'feeds': []},
-            {'title': 'Liberia                       ', 'feeds': []},
-            {'title': 'Libya                         ', 'feeds': []},
-            {'title': 'Liechtenstein                 ', 'feeds': []},
-            {'title': 'Lithuania                     ', 'feeds': []},
-            {'title': 'Luxembourg                    ', 'feeds': []},
-            {'title': 'Macedonia                     ', 'feeds': []},
-            {'title': 'Madagascar                    ', 'feeds': []},
-            {'title': 'Malawi                        ', 'feeds': []},
-            {'title': 'Malaysia                      ', 'feeds': []},
-            {'title': 'Maldives                      ', 'feeds': []},
-            {'title': 'Mali                          ', 'feeds': []},
-            {'title': 'Malta                         ', 'feeds': []},
-            {'title': 'Marshall Islands              ', 'feeds': []},
-            {'title': 'Mauritania                    ', 'feeds': []},
-            {'title': 'Mauritius                     ', 'feeds': []},
-            {'title': 'Mexico                        ', 'feeds': []},
-            {'title': 'Micronesia                    ', 'feeds': []},
-            {'title': 'Moldova                       ', 'feeds': []},
-            {'title': 'Monaco                        ', 'feeds': []},
-            {'title': 'Mongolia                      ', 'feeds': []},
-            {'title': 'Montenegro                    ', 'feeds': []},
-            {'title': 'Morocco                       ', 'feeds': []},
-            {'title': 'Mozambique                    ', 'feeds': []},
-            {'title': 'Myanmar, {Burma}              ', 'feeds': []},
-            {'title': 'Namibia                       ', 'feeds': []},
-            {'title': 'Nauru                         ', 'feeds': []},
-            {'title': 'Nepal                         ', 'feeds': []},
-            {'title': 'Netherlands                   ', 'feeds': []},
-            {'title': 'New Zealand                   ', 'feeds': []},
-            {'title': 'Nicaragua                     ', 'feeds': []},
-            {'title': 'Niger                         ', 'feeds': []},
-            {'title': 'Nigeria                       ', 'feeds': []},
-            {'title': 'Norway                        ', 'feeds': []},
-            {'title': 'Oman                          ', 'feeds': []},
-            {'title': 'Pakistan                      ', 'feeds': []},
-            {'title': 'Palau                         ', 'feeds': []},
-            {'title': 'Panama                        ', 'feeds': []},
-            {'title': 'Papua New Guinea              ', 'feeds': []},
-            {'title': 'Paraguay                      ', 'feeds': []},
-            {'title': 'Peru                          ', 'feeds': []},
-            {'title': 'Philippines                   ', 'feeds': []},
-            {'title': 'Poland                        ', 'feeds': []},
-            {'title': 'Portugal                      ', 'feeds': []},
-            {'title': 'Qatar                         ', 'feeds': []},
-            {'title': 'Romania                       ', 'feeds': []},
-            {'title': 'Russian Federation            ', 'feeds': []},
-            {'title': 'Rwanda                        ', 'feeds': []},
-            {'title': 'St Kitts & Nevis              ', 'feeds': []},
-            {'title': 'St Lucia                      ', 'feeds': []},
-            {'title': 'Saint Vincent & the Grenadines', 'feeds': []},
-            {'title': 'Samoa                         ', 'feeds': []},
-            {'title': 'San Marino                    ', 'feeds': []},
-            {'title': 'Sao Tome & Principe           ', 'feeds': []},
-            {'title': 'Saudi Arabia                  ', 'feeds': []},
-            {'title': 'Senegal                       ', 'feeds': []},
-            {'title': 'Serbia                        ', 'feeds': []},
-            {'title': 'Seychelles                    ', 'feeds': []},
-            {'title': 'Sierra Leone                  ', 'feeds': []},
-            {'title': 'Singapore                     ', 'feeds': []},
-            {'title': 'Slovakia                      ', 'feeds': []},
-            {'title': 'Slovenia                      ', 'feeds': []},
-            {'title': 'Solomon Islands               ', 'feeds': []},
-            {'title': 'Somalia                       ', 'feeds': []},
-            {'title': 'South Africa                  ', 'feeds': []},
-            {'title': 'Spain                         ', 'feeds': []},
-            {'title': 'Sri Lanka                     ', 'feeds': []},
-            {'title': 'Sudan                         ', 'feeds': []},
-            {'title': 'Suriname                      ', 'feeds': []},
-            {'title': 'Swaziland                     ', 'feeds': []},
-            {'title': 'Sweden                        ', 'feeds': []},
-            {'title': 'Switzerland                   ', 'feeds': []},
-            {'title': 'Syria                         ', 'feeds': []},
-            {'title': 'Taiwan                        ', 'feeds': []},
-            {'title': 'Tajikistan                    ', 'feeds': []},
-            {'title': 'Tanzania                      ', 'feeds': []},
-            {'title': 'Thailand                      ', 'feeds': []},
-            {'title': 'Togo                          ', 'feeds': []},
-            {'title': 'Tonga                         ', 'feeds': []},
-            {'title': 'Trinidad & Tobago             ', 'feeds': []},
-            {'title': 'Tunisia                       ', 'feeds': []},
-            {'title': 'Turkey                        ', 'feeds': []},
-            {'title': 'Turkmenistan                  ', 'feeds': []},
-            {'title': 'Tuvalu                        ', 'feeds': []},
-            {'title': 'Uganda                        ', 'feeds': []},
-            {'title': 'Ukraine                       ', 'feeds': []},
-            {'title': 'United Arab Emirates          ', 'feeds': []},
-            {'title': 'United Kingdom                ', 'feeds': []},
-            {'title': 'United States                 ', 'feeds': []},
-            {'title': 'Uruguay                       ', 'feeds': []},
-            {'title': 'Uzbekistan                    ', 'feeds': []},
-            {'title': 'Vanuatu                       ', 'feeds': []},
-            {'title': 'Vatican City                  ', 'feeds': []},
-            {'title': 'Venezuela                     ', 'feeds': []},
-            {'title': 'Vietnam                       ', 'feeds': []},
-            {'title': 'Yemen                         ', 'feeds': []},
-            {'title': 'Zambia                        ', 'feeds': []},
-            {'title': 'Zimbabwe                      ', 'feeds': []}
-        ];
-
-
-        var industries = [
-            {'title': 'Don\'t care                      ', 'feeds': []},
-            {'title': 'Agriculture                      ', 'feeds': []},
-            {'title': 'Beverage & Tobacco               ', 'feeds': []},
-            {'title': 'Accounting                       ', 'feeds': []},
-            {'title': 'Advertising                      ', 'feeds': []},
-            {'title': 'Aerospace                        ', 'feeds': []},
-            {'title': 'Aircraft                         ', 'feeds': []},
-            {'title': 'Airline                          ', 'feeds': []},
-            {'title': 'Apparel & Accessories            ', 'feeds': []},
-            {'title': 'Automotive                       ', 'feeds': []},
-            {'title': 'Banking                          ', 'feeds': []},
-            {'title': 'Broadcasting                     ', 'feeds': []},
-            {'title': 'Brokerage                        ', 'feeds': []},
-            {'title': 'Biotechnology                    ', 'feeds': []},
-            {'title': 'Pension Funds                    ', 'feeds': []},
-            {'title': 'Call Centers                     ', 'feeds': []},
-            {'title': 'Cargo Handling                   ', 'feeds': []},
-            {'title': 'Chemical                         ', 'feeds': []},
-            {'title': 'Computer                         ', 'feeds': []},
-            {'title': 'Consulting                       ', 'feeds': []},
-            {'title': 'Consumer Products                ', 'feeds': []},
-            {'title': 'Cosmetics                        ', 'feeds': []},
-            {'title': 'Defense                          ', 'feeds': []},
-            {'title': 'Department Stores                ', 'feeds': []},
-            {'title': 'Software                         ', 'feeds': []},
-            {'title': 'Education                        ', 'feeds': []},
-            {'title': 'Sports                           ', 'feeds': []},
-            {'title': 'Electronics                      ', 'feeds': []},
-            {'title': 'Energy                           ', 'feeds': []},
-            {'title': 'Entertainment & Leisure          ', 'feeds': []},
-            {'title': 'Television                       ', 'feeds': []},
-            {'title': 'Executive Search                 ', 'feeds': []},
-            {'title': 'Financial Services               ', 'feeds': []},
-            {'title': 'Food                             ', 'feeds': []},
-            {'title': 'Grocery                          ', 'feeds': []},
-            {'title': 'Health Care                      ', 'feeds': []},
-            {'title': 'Internet Publishing              ', 'feeds': []},
-            {'title': 'Investment Banking               ', 'feeds': []},
-            {'title': 'Legal                            ', 'feeds': []},
-            {'title': 'Manufacturing                    ', 'feeds': []},
-            {'title': 'Motion Picture & Video           ', 'feeds': []},
-            {'title': 'Music                            ', 'feeds': []},
-            {'title': 'Newspaper Publishers             ', 'feeds': []},
-            {'title': 'Online Auctions                  ', 'feeds': []},
-            {'title': 'Pharmaceuticals                  ', 'feeds': []},
-            {'title': 'Private Equity                   ', 'feeds': []},
-            {'title': 'Publishing                       ', 'feeds': []},
-            {'title': 'Real Estate                      ', 'feeds': []},
-            {'title': 'Retail & Wholesale               ', 'feeds': []},
-            {'title': 'Securities & Commodity Exchanges ', 'feeds': []},
-            {'title': 'Service                          ', 'feeds': []},
-            {'title': 'Soap & Detergent                 ', 'feeds': []},
-            {'title': 'Technology                       ', 'feeds': []},
-            {'title': 'Telecommunications               ', 'feeds': []},
-            {'title': 'Transportation                   ', 'feeds': []},
-            {'title': 'Venture Capital                  ', 'feeds': []}
-        ];
-
-        var genders = [
-            {'title': 'Don\'t care', 'feeds': []},
-            {'title': 'Male       ', 'feeds': []},
-            {'title': 'Female     ', 'feeds': []}
-        ];
+        section($Loader);
 
         for (var i = 0; i < countries.length; i++) {
-            (function (i) {
+            (function (i, j) {
                 try {
                     var item = countries[i];
                     var clone = $countryItemTemplate.clone();
@@ -1003,6 +1011,8 @@ function initialSetup(){
                             alert(item.title);
                             item.feeds.forEach(function (value) {
                                 alert(value);
+                                $FeedSetupCountries.fadeOut("fast");
+                                $FeedSetupGenders.fadeIn("slow");
                                 _internal_screamLink(value);
                             })
 
@@ -1017,10 +1027,95 @@ function initialSetup(){
                             }
                         }});
                     }
+
+                    if(i + 1 == j){
+                        $FeedSetupGenders.hide();
+                        $FeedSetupIndustries.hide();
+                        section($FeedSetup);
+                    }
+
                 } catch (e) {
                     alert(e);
                 }
-            })(i);
+            })(i, countries.length);
+        }
+
+        for (var ig = 0; i < genders.length; i++) {
+            (function (i, j) {
+                try {
+                    var item = genders[i];
+                    var clone = $genderItemTemplate.clone();
+                    clone.find('.title').text(item.title);
+                    clone.click(
+                        function () {
+                            alert(item.title);
+                            item.feeds.forEach(function (value) {
+                                alert(value);
+                                $FeedSetupGenders.fadeOut("fast");
+                                $FeedSetupIndustries.fadeIn("slow");
+                                _internal_screamLink(value);
+                            })
+                        }
+                    );
+                    $genderList.append(clone);
+                    if (i < 20) {
+                        clone.animate({opacity: 0.0});
+                        clone.animate({opacity: 1.0}, {duration: i * 200, complete: function () {
+                            for (i = 0; i < 1; i++) {
+                                clone.fadeTo('slow', 0.5).fadeTo('slow', 1.0);
+                            }
+                        }});
+                    }
+
+                    if(i + 1 == j){
+                    }
+
+                } catch (e) {
+                    alert(e);
+                }
+            })(ig, genders.length);
+        }
+        for (var ii = 0; i < industries.length; i++) {
+            (function (i, j) {
+                try {
+                    var item = industries[i];
+                    var clone = $industryItemTemplate.clone();
+                    clone.find('.title').text(item.title);
+                    clone.click(
+                        function () {
+                            alert(item.title);
+                            item.feeds.forEach(function (value) {
+                                alert(value);
+                                $FeedSetupCountries.fadeOut("fast");
+                                $FeedSetupGenders.fadeIn("slow");
+                                _internal_screamLink(value);
+
+
+                                alert("Tap 'pink nm' to add RSS feed or share link.\n " +
+                                    "We added some for you.\n" +
+                                    "Click the asterisks to remove feed.");
+                                postSession();
+                            })
+
+                        }
+                    );
+                    $industryList.append(clone);
+                    if (i < 20) {
+                        clone.animate({opacity: 0.0});
+                        clone.animate({opacity: 1.0}, {duration: i * 200, complete: function () {
+                            for (i = 0; i < 1; i++) {
+                                clone.fadeTo('slow', 0.5).fadeTo('slow', 1.0);
+                            }
+                        }});
+                    }
+
+                    if(i + 1 == j){
+                    }
+
+                } catch (e) {
+                    alert(e);
+                }
+            })(ii, industries.length);
         }
     } catch (e) {
         alert(e);
