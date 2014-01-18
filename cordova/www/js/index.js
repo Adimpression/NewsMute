@@ -38,6 +38,8 @@ var humanId;
 
 const Country_Global_ABC = 'http://feeds.abcnews.com/abcnews/internationalheadlines';
 const Industry_Technology_Y_Combinator = 'https://news.ycombinator.com/rss';
+const Gender_Female_Elle = 'http://www.elle.com/rss/';
+const Gender_Male_Elle = 'http://feeds.feedburner.com/TrendHunter/Fashion-for-Men';
 
 const countries = [
     {'title': 'Don\'t care                   ', 'feeds': [Country_Global_ABC]},
@@ -241,68 +243,68 @@ const countries = [
 
 
 const industries = [
-    {'title': 'Don\'t care                      ', 'feeds': []},
-    {'title': 'Agriculture                      ', 'feeds': []},
-    {'title': 'Beverage & Tobacco               ', 'feeds': []},
-    {'title': 'Accounting                       ', 'feeds': []},
-    {'title': 'Advertising                      ', 'feeds': []},
-    {'title': 'Aerospace                        ', 'feeds': []},
-    {'title': 'Aircraft                         ', 'feeds': []},
-    {'title': 'Airline                          ', 'feeds': []},
-    {'title': 'Apparel & Accessories            ', 'feeds': []},
-    {'title': 'Automotive                       ', 'feeds': []},
-    {'title': 'Banking                          ', 'feeds': []},
-    {'title': 'Broadcasting                     ', 'feeds': []},
-    {'title': 'Brokerage                        ', 'feeds': []},
-    {'title': 'Biotechnology                    ', 'feeds': []},
-    {'title': 'Pension Funds                    ', 'feeds': []},
-    {'title': 'Call Centers                     ', 'feeds': []},
-    {'title': 'Cargo Handling                   ', 'feeds': []},
-    {'title': 'Chemical                         ', 'feeds': []},
-    {'title': 'Computer                         ', 'feeds': []},
-    {'title': 'Consulting                       ', 'feeds': []},
-    {'title': 'Consumer Products                ', 'feeds': []},
-    {'title': 'Cosmetics                        ', 'feeds': []},
-    {'title': 'Defense                          ', 'feeds': []},
-    {'title': 'Department Stores                ', 'feeds': []},
-    {'title': 'Software                         ', 'feeds': []},
-    {'title': 'Education                        ', 'feeds': []},
-    {'title': 'Sports                           ', 'feeds': []},
-    {'title': 'Electronics                      ', 'feeds': []},
-    {'title': 'Energy                           ', 'feeds': []},
-    {'title': 'Entertainment & Leisure          ', 'feeds': []},
-    {'title': 'Television                       ', 'feeds': []},
-    {'title': 'Executive Search                 ', 'feeds': []},
-    {'title': 'Financial Services               ', 'feeds': []},
-    {'title': 'Food                             ', 'feeds': []},
-    {'title': 'Grocery                          ', 'feeds': []},
-    {'title': 'Health Care                      ', 'feeds': []},
-    {'title': 'Internet Publishing              ', 'feeds': []},
-    {'title': 'Investment Banking               ', 'feeds': []},
-    {'title': 'Legal                            ', 'feeds': []},
-    {'title': 'Manufacturing                    ', 'feeds': []},
-    {'title': 'Motion Picture & Video           ', 'feeds': []},
-    {'title': 'Music                            ', 'feeds': []},
-    {'title': 'Newspaper Publishers             ', 'feeds': []},
-    {'title': 'Online Auctions                  ', 'feeds': []},
-    {'title': 'Pharmaceuticals                  ', 'feeds': []},
-    {'title': 'Private Equity                   ', 'feeds': []},
-    {'title': 'Publishing                       ', 'feeds': []},
-    {'title': 'Real Estate                      ', 'feeds': []},
-    {'title': 'Retail & Wholesale               ', 'feeds': []},
-    {'title': 'Securities & Commodity Exchanges ', 'feeds': []},
-    {'title': 'Service                          ', 'feeds': []},
-    {'title': 'Soap & Detergent                 ', 'feeds': []},
+    {'title': 'Don\'t care                      ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Agriculture                      ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Beverage & Tobacco               ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Accounting                       ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Advertising                      ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Aerospace                        ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Aircraft                         ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Airline                          ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Apparel & Accessories            ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Automotive                       ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Banking                          ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Broadcasting                     ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Brokerage                        ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Biotechnology                    ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Pension Funds                    ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Call Centers                     ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Cargo Handling                   ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Chemical                         ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Computer                         ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Consulting                       ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Consumer Products                ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Cosmetics                        ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Defense                          ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Department Stores                ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Software                         ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Education                        ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Sports                           ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Electronics                      ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Energy                           ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Entertainment & Leisure          ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Television                       ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Executive Search                 ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Financial Services               ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Food                             ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Grocery                          ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Health Care                      ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Internet Publishing              ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Investment Banking               ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Legal                            ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Manufacturing                    ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Motion Picture & Video           ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Music                            ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Newspaper Publishers             ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Online Auctions                  ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Pharmaceuticals                  ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Private Equity                   ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Publishing                       ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Real Estate                      ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Retail & Wholesale               ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Securities & Commodity Exchanges ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Service                          ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Soap & Detergent                 ', 'feeds': [Industry_Technology_Y_Combinator]},
     {'title': 'Technology                       ', 'feeds': [Industry_Technology_Y_Combinator]},
-    {'title': 'Telecommunications               ', 'feeds': []},
-    {'title': 'Transportation                   ', 'feeds': []},
-    {'title': 'Venture Capital                  ', 'feeds': []}
+    {'title': 'Telecommunications               ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Transportation                   ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Venture Capital                  ', 'feeds': [Industry_Technology_Y_Combinator]}
 ];
 
 const genders = [
     {'title': 'Don\'t care', 'feeds': []},
-    {'title': 'Male       ', 'feeds': []},
-    {'title': 'Female     ', 'feeds': []}
+    {'title': 'Male       ', 'feeds': [Gender_Male_Elle]},
+    {'title': 'Female     ', 'feeds': [Gender_Female_Elle]}
 ];
 
 
@@ -996,13 +998,11 @@ function isConnected() {
 
 
 function initialSetup(){
-
     try {
         section($Loader);
 
         for (var i = 0; i < countries.length; i++) {
             (function (i, j) {
-                try {
                     var item = countries[i];
                     var clone = $countryItemTemplate.clone();
                     clone.find('.title').text(item.title);
@@ -1035,15 +1035,11 @@ function initialSetup(){
                         section($FeedSetup);
                     }
 
-                } catch (e) {
-                    alert(e);
-                }
             })(i, countries.length);
         }
 
         for (var ig = 0; ig < genders.length; ig++) {
             (function (ig, j) {
-                try {
                     var item = genders[ig];
                     var clone = $genderItemTemplate.clone();
                     clone.find('.title').text(item.title);
@@ -1071,14 +1067,10 @@ function initialSetup(){
                     if(ig + 1 == j){
                     }
 
-                } catch (e) {
-                    alert(e);
-                }
             })(ig, genders.length);
         }
         for (var ii = 0; ii < industries.length; ii++) {
             (function (ii, j) {
-                try {
                     var item = industries[ii];
                     var clone = $industryItemTemplate.clone();
                     clone.find('.title').text(item.title);
@@ -1115,15 +1107,11 @@ function initialSetup(){
                     if(ii + 1 == j){
                     }
 
-                } catch (e) {
-                    alert(e);
-                }
             })(ii, industries.length);
         }
     } catch (e) {
         alert(e);
     }
-
 }
 
 function section(sectionToShow) {
