@@ -574,7 +574,7 @@ function WakeUp() {
                             var b1st = 1; // positive value means right item should appear first
                             var equal = 0; // zero means objects are equal
 
-                            try { // compare your object's property values and determine their order
+                            //DEBUGtry { // compare your object's property values and determine their order
                                 if (b.shocks < a.shocks) {
                                     return b1st;
                                 }
@@ -584,9 +584,9 @@ function WakeUp() {
                                 else {
                                     return equal;
                                 }
-                            } catch (e) {
-                                alert("Error comparing " + JSON.stringify(a) + " \nWith\n " + JSON.stringify(b));
-                            }
+                            //DEBUG} catch (e) {
+                            //DEBUG    alert("Error comparing " + JSON.stringify(a) + " \nWith\n " + JSON.stringify(b));
+                            //DEBUG}
                         }
                     );
 
