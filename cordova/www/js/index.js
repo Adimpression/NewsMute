@@ -565,6 +565,7 @@ function WakeUp() {
         dataType: 'text', //json
         success: function (response) {
             try {
+                //DEBUGalert('Got data');
                 var json = JSON.parse(response);
 
                 var data = json.returnValue.data;
@@ -606,16 +607,20 @@ function WakeUp() {
 
                     for (var i = 0; i < length; i++) {
                     (function(i){
-                        var item = data[i];
+                        const item = data[i];
                         if (item.link != "null" && item.link != "") {//@TODO remove me, temp fix until server fixed
-                            var clone = clones[i];
-                            var id = crc32(item.link);
+                            const clone = clones[i];
+                            const id = crc32(item.link);
+                            const feedItemTitle = clone.find(clsItemTitle);
+                            const feedItemBookmark = clone.find(clsItemBookmark);
+                            const feedItemHide = clone.find(clsItemHide);
+
                             clone.attr(strId, id);
-                            clone.find(clsItemTitle).text(item.title);
+                            feedItemTitle.text(item.title);
                             //clone.find('.itemTitle').attr('href', item.link);
-                            clone.find(clsItemTitle).attr("title", item.link);
-                            clone.find(clsItemTitle).attr("style", "font-size: 40px; text-decoration: underline;color: #271aad;");
-                            clone.find(clsItemTitle).click(
+                            feedItemTitle.attr("title", item.link);
+                            feedItemTitle.attr("style", "font-size: 40px; text-decoration: underline;color: #271aad;");
+                            feedItemTitle.click(
                                 function(){
                                     $('.itemTemplate:not(#'+ id + ')').animate({opacity:0.2});
                                     window.localStorage.setItem('lastVisited', this.title);
@@ -629,8 +634,8 @@ function WakeUp() {
                             //Without the iframe replacement, Pinterest gives the following error "Application Error - There was a network error. (file://instagram.com/p/iosdfadsf/embed). This comes as a Android alert.
 
                             {//itemBookmark
-                                clone.find(clsItemBookmark).attr("title", item.link);
-                                clone.find(clsItemBookmark).click(
+                                feedItemBookmark.attr("title", item.link);
+                                feedItemBookmark.click(
                                     function(){
                                         $(this).fadeTo('fast', 0.5).fadeIn('fast',
                                             function(){
@@ -644,8 +649,8 @@ function WakeUp() {
                             }
 
                             {//itemHide
-                                clone.find(clsItemHide).attr("title", item.link);
-                                clone.find(clsItemHide).click(
+                                feedItemHide.attr("title", item.link);
+                                feedItemHide.click(
                                     function(){
                                         $(this).fadeOut('fast', function(){
                                             hide($(this).attr('title'));
@@ -666,7 +671,7 @@ function WakeUp() {
                     })(i);
                 }
                 $feedsList.append(feedListDocumentFragment);
-                //DEBUGalert('Completed in ' + (new Date().getTime() - start ));
+                //DEBUG=alert('Completed in ' + (new Date().getTime() - start ));
             } catch (e) {
                 alert('Data render error' + e);
             }
