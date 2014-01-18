@@ -41,6 +41,13 @@ const Industry_Technology_Y_Combinator = 'https://news.ycombinator.com/rss';
 const Gender_Female_Elle = 'http://www.elle.com/rss/';
 const Gender_Male_Elle = 'http://feeds.feedburner.com/TrendHunter/Fashion-for-Men';
 
+
+
+const clones = new Array(35);
+for (var j = 0; j < 35; j++) {
+    clones[j] = $itemTemplate.clone();
+}
+
 const countries = [
     {'title': 'Don\'t care                   ', 'feeds': [Country_Global_ABC]},
     {'title': 'Afghanistan                   ', 'feeds': [Country_Global_ABC]},
@@ -595,17 +602,12 @@ function WakeUp() {
 
                 var length = data.length;
 
-                var clones = new Array(length);
-                for (var j = 0; j < length; j++) {
-                    clones[j] = $itemTemplate.clone();
-                }
-
                 //DEBUGvar start = new Date().getTime();
 
                 var feedListDocumentFragment = document.createDocumentFragment();
 
 
-                    for (var i = 0; i < length; i++) {
+                    for (var i = 0; i < length && i < clones.length; i++) {
                     (function(i){
                         const item = data[i];
                         if (item.link != "null" && item.link != "") {//@TODO remove me, temp fix until server fixed
