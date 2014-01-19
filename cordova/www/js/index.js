@@ -27,11 +27,11 @@ const strId = "id";
 const flag_super_friend = "flag_super_friend";
 const flag_app_launched = "flag_app_launched";
 
-const endpointYawn = "http://23.253.36.42:40200";
-const endpointScream = "http://23.253.36.42:30200";
-const endpointStalk = "http://23.253.36.42:16285";
-const endpointSuperFriend = "http://23.253.36.42:20200";
-const endpointGuardian = "http://23.253.36.42:50200";
+const endpointYawn = "http://yawn.newsmute.com:40200";//http://23.253.36.42:40200";
+const endpointScream = "http://scream.newsmute.com:30200";//http://23.253.36.42:30200";
+const endpointStalk = "http://stalk.newsmute.com:16285";//http://23.253.36.42:16285";
+const endpointSuperFriend = "http://superfriend.newsmute.com:20200";//http://23.253.36.42:20200";
+const endpointGuardian = "http://guardian.newsmute.com:50200";//http://23.253.36.42:50200";
 
 var humanId;
 
@@ -484,9 +484,6 @@ function postSession(){
         //initialSetup();
         WakeUp();
         justVisiting();
-        section($FeedInterface)
-        $feedsList.slideDown();
-        $feedNowSpeaking.slideUp();
 
         window.localStorage.setItem(flag_app_launched, "true");
 
@@ -557,6 +554,9 @@ var app = {
 
 
 function WakeUp() {
+
+    section($Loader);
+
     $.ajax({
         type: "GET",
         url: endpointYawn +
@@ -673,6 +673,10 @@ function WakeUp() {
                     })(i);
                 }
                 $feedsList.append(feedListDocumentFragment);
+                section($FeedInterface);
+                $feedsList.slideDown();
+                $feedNowSpeaking.slideUp();
+
                 //DEBUG=alert('Completed in ' + (new Date().getTime() - start ));
             } catch (e) {
                 alert('Data render error' + e);
