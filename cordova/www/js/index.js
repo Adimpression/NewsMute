@@ -722,8 +722,8 @@ function screamLink(url, successCallback, failureCallback){
 function _internal_screamLink(url, successCallback, failureCallback){
         $.ajax({
             type: "GET",
-            url: endpointScream +
-                "/?user=" + humanId + "&url=" + encodeURIComponent(url),
+            url: endpointStalk +
+                "/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=CREATE",
             crossDomain: true,
             beforeSend: function () {
             },
