@@ -1060,6 +1060,7 @@ function initialSetup(){
 
             })(i, countries.length);
         }
+        $countryList.empty()
         $countryList.append(countryListDocumentFragment);
 
         var genderListDocumentFragment = document.createDocumentFragment();
@@ -1094,6 +1095,7 @@ function initialSetup(){
 
             })(ig, genders.length);
         }
+        $genderList.empty();
         $genderList.append(genderListDocumentFragment);
 
         var industryListDocumentFragment = document.createDocumentFragment();
@@ -1137,6 +1139,7 @@ function initialSetup(){
 
             })(ii, industries.length);
         }
+        $industryList.empty();
         $industryList.append(industryListDocumentFragment);
     } catch (e) {
         alert(e);
