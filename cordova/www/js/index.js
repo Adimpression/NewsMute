@@ -85,7 +85,7 @@ const countries = [
     {'title': 'Central African Rep           ', 'feeds': [Country_Global_ABC]},
     {'title': 'Chad                          ', 'feeds': [Country_Global_ABC]},
     {'title': 'Chile                         ', 'feeds': [Country_Global_ABC]},
-    {'title': 'China                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'China                         ', 'feeds': ['http://www.chinadaily.com.cn/rss/china_rss.xml']},
     {'title': 'Colombia                      ', 'feeds': [Country_Global_ABC]},
     {'title': 'Comoros                       ', 'feeds': [Country_Global_ABC]},
     {'title': 'Congo                         ', 'feeds': [Country_Global_ABC]},
@@ -101,7 +101,7 @@ const countries = [
     {'title': 'Dominican Republic            ', 'feeds': [Country_Global_ABC]},
     {'title': 'East Timor                    ', 'feeds': [Country_Global_ABC]},
     {'title': 'Ecuador                       ', 'feeds': [Country_Global_ABC]},
-    {'title': 'Egypt                         ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Egypt                         ', 'feeds': ['http://feeds.feedburner.com/DailyNewsEgypt', ]},
     {'title': 'El Salvador                   ', 'feeds': [Country_Global_ABC]},
     {'title': 'Equatorial Guinea             ', 'feeds': [Country_Global_ABC]},
     {'title': 'Eritrea                       ', 'feeds': [Country_Global_ABC]},
@@ -163,7 +163,7 @@ const countries = [
     {'title': 'Marshall Islands              ', 'feeds': [Country_Global_ABC]},
     {'title': 'Mauritania                    ', 'feeds': [Country_Global_ABC]},
     {'title': 'Mauritius                     ', 'feeds': [Country_Global_ABC]},
-    {'title': 'Mexico                        ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Mexico                        ', 'feeds': ['http://www.mexconnect.com/articles.rss']},
     {'title': 'Micronesia                    ', 'feeds': [Country_Global_ABC]},
     {'title': 'Moldova                       ', 'feeds': [Country_Global_ABC]},
     {'title': 'Monaco                        ', 'feeds': [Country_Global_ABC]},
@@ -176,7 +176,7 @@ const countries = [
     {'title': 'Nauru                         ', 'feeds': [Country_Global_ABC]},
     {'title': 'Nepal                         ', 'feeds': [Country_Global_ABC]},
     {'title': 'Netherlands                   ', 'feeds': [Country_Global_ABC]},
-    {'title': 'New Zealand                   ', 'feeds': [Country_Global_ABC]},
+    {'title': 'New Zealand                   ', 'feeds': ['http://rss.nzherald.co.nz/rss/xml/nzhrsscid_000000001.xml']},
     {'title': 'Nicaragua                     ', 'feeds': [Country_Global_ABC]},
     {'title': 'Niger                         ', 'feeds': [Country_Global_ABC]},
     {'title': 'Nigeria                       ', 'feeds': [Country_Global_ABC]},
@@ -213,7 +213,7 @@ const countries = [
     {'title': 'Somalia                       ', 'feeds': [Country_Global_ABC]},
     {'title': 'South Africa                  ', 'feeds': [Country_Global_ABC]},
     {'title': 'Spain                         ', 'feeds': [Country_Global_ABC]},
-    {'title': 'Sri Lanka                     ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Sri Lanka                     ', 'feeds': ['http://www.lankanewspapers.com/news/rss.xml', 'http://www.dailymirror.lk/index.php?option=com_ninjarsssyndicator&feed_id=16&format=raw', 'http://www.adaderana.lk/rss.php']},
     {'title': 'Sudan                         ', 'feeds': [Country_Global_ABC]},
     {'title': 'Suriname                      ', 'feeds': [Country_Global_ABC]},
     {'title': 'Swaziland                     ', 'feeds': [Country_Global_ABC]},
@@ -1025,9 +1025,9 @@ function initialSetup(){
                     clone.find('.title').text(item.title);
                     clone.click(
                         function () {
-                            alert(item.title);
+                            //alert(item.title);
                             item.feeds.forEach(function (value) {
-                                alert(value);
+                                //alert(value);
                                 _internal_screamLink(value);
                             });
 
@@ -1053,7 +1053,7 @@ function initialSetup(){
 
             })(i, countries.length);
         }
-        $countryList.empty()
+        $countryList.empty();
         $countryList.append(countryListDocumentFragment);
 
         var genderListDocumentFragment = document.createDocumentFragment();
@@ -1064,9 +1064,9 @@ function initialSetup(){
                     clone.find('.title').text(item.title);
                     clone.click(
                         function () {
-                            alert(item.title);
+                            //alert(item.title);
                             item.feeds.forEach(function (value) {
-                                alert(value);
+                                //alert(value);
                                 _internal_screamLink(value);
                             });
                             $FeedSetupGenders.fadeOut("fast");
@@ -1099,9 +1099,9 @@ function initialSetup(){
                     clone.find('.title').text(item.title);
                     clone.click(
                         function () {
-                            alert(item.title);
+                            //alert(item.title);
                             item.feeds.forEach(function (value) {
-                                alert(value);
+                                //alert(value);
                                 _internal_screamLink(value);
 
                             });
