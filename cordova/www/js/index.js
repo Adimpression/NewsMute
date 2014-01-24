@@ -235,7 +235,7 @@ const countries = [
     {'title': 'Ukraine                       ', 'feeds': [Country_Global_ABC]},
     {'title': 'United Arab Emirates          ', 'feeds': [Country_Global_ABC]},
     {'title': 'United Kingdom                ', 'feeds': [Country_Global_ABC]},
-    {'title': 'United States                 ', 'feeds': [Country_Global_ABC]},
+    {'title': 'United States                 ', 'feeds': ['http://rss.upi.com/news/news.rss','http://www.usnews.com/rss/news', 'http://feeds.nbcnews.com/feeds/topstories']},
     {'title': 'Uruguay                       ', 'feeds': [Country_Global_ABC]},
     {'title': 'Uzbekistan                    ', 'feeds': [Country_Global_ABC]},
     {'title': 'Vanuatu                       ', 'feeds': [Country_Global_ABC]},
