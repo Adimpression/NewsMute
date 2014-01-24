@@ -218,7 +218,7 @@ const countries = [
     {'title': 'Suriname                      ', 'feeds': [Country_Global_ABC]},
     {'title': 'Swaziland                     ', 'feeds': [Country_Global_ABC]},
     {'title': 'Sweden                        ', 'feeds': [Country_Global_ABC]},
-    {'title': 'Switzerland                   ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Switzerland                   ', 'feeds': ['http://www.altran.ch/rss-feed/rss/70919/rss.xml','http://www.swissinfo.ch/eng/top_news/index.html?view=rss&amp;cid=1221074']},
     {'title': 'Syria                         ', 'feeds': [Country_Global_ABC]},
     {'title': 'Taiwan                        ', 'feeds': [Country_Global_ABC]},
     {'title': 'Tajikistan                    ', 'feeds': [Country_Global_ABC]},
