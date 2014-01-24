@@ -56,10 +56,10 @@ const countries = [
     {'title': 'Andorra                       ', 'feeds': ['http://topics.nytimes.com/top/news/international/countriesandterritories/andorra/']},
     {'title': 'Angola                        ', 'feeds': [Country_Global_ABC]},
     {'title': 'Antigua & Deps                ', 'feeds': [Country_Global_ABC]},
-    {'title': 'Argentina                     ', 'feeds': ['http://www.argentinaindependent.com/category/currentaffairs/newsfromargentina/feed/']},//
-    {'title': 'Armenia                       ', 'feeds': ['http://news.am/arm/rss/', 'http://www.tert.am/rss/?language=am']},//
-    {'title': 'Australia                     ', 'feeds': ['http://www.abc.net.au/news/feeds/rss/']},//
-    {'title': 'Austria                       ', 'feeds': ['http://rss.skynews.com.au/c/34485/f/628636/index.rss', 'http://feeds.news.com.au/public/rss/2.0/theaus_TWAM_13_3314.xml', 'http://feeds.news.com.au/public/rss1/2.0/theaus_wish_3072.xml', 'http://feeds.news.com.au/public/rss1/2.0/theaus_dealmag_3074.xml']},//
+    {'title': 'Argentina                     ', 'feeds': ['http://www.argentinaindependent.com/category/currentaffairs/newsfromargentina/feed/']},
+    {'title': 'Armenia                       ', 'feeds': ['http://news.am/arm/rss/', 'http://www.tert.am/rss/?language=am']},
+    {'title': 'Australia                     ', 'feeds': ['http://www.abc.net.au/news/feeds/rss/', 'http://rss.skynews.com.au/c/34485/f/628636/index.rss', 'http://feeds.news.com.au/public/rss/2.0/theaus_TWAM_13_3314.xml', 'http://feeds.news.com.au/public/rss1/2.0/theaus_wish_3072.xml', 'http://feeds.news.com.au/public/rss1/2.0/theaus_dealmag_3074.xml']},
+    {'title': 'Austria                       ', 'feeds': [Country_Global_ABC]},
     {'title': 'Azerbaijan                    ', 'feeds': ['http://www.today.az/rss.php']},
     {'title': 'Bahamas                       ', 'feeds': ['http://www.bahamaspress.com/?feed=rss2', 'http://www.bna.bh/portal/main_rss/ar/feed.rss']},
     {'title': 'Bahrain                       ', 'feeds': [Country_Global_ABC]},
@@ -182,7 +182,7 @@ const countries = [
     {'title': 'Nigeria                       ', 'feeds': [Country_Global_ABC]},
     {'title': 'Norway                        ', 'feeds': [Country_Global_ABC]},
     {'title': 'Oman                          ', 'feeds': [Country_Global_ABC]},
-    {'title': 'Pakistan                      ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Pakistan                      ', 'feeds': ['http://feeds.feedburner.com/com/YEor', 'http://tribune.com.pk/pakistan/feed/', ]},
     {'title': 'Palau                         ', 'feeds': [Country_Global_ABC]},
     {'title': 'Panama                        ', 'feeds': [Country_Global_ABC]},
     {'title': 'Papua New Guinea              ', 'feeds': [Country_Global_ABC]},
