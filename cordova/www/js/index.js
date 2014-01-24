@@ -193,7 +193,7 @@ const countries = [
     {'title': 'Portugal                      ', 'feeds': [Country_Global_ABC]},
     {'title': 'Qatar                         ', 'feeds': [Country_Global_ABC]},
     {'title': 'Romania                       ', 'feeds': [Country_Global_ABC]},
-    {'title': 'Russian Federation            ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Russia                        ', 'feeds': ['http://rt.com/rss/news/', 'http://english.pravda.ru/russia/export.xml', 'http://feeds.feedburner.com/themoscowtimes/gAjo', ]},
     {'title': 'Rwanda                        ', 'feeds': [Country_Global_ABC]},
     {'title': 'St Kitts & Nevis              ', 'feeds': [Country_Global_ABC]},
     {'title': 'St Lucia                      ', 'feeds': [Country_Global_ABC]},
