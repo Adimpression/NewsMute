@@ -206,7 +206,7 @@ const countries = [
     {'title': 'Serbia                        ', 'feeds': [Country_Global_ABC]},
     {'title': 'Seychelles                    ', 'feeds': [Country_Global_ABC]},
     {'title': 'Sierra Leone                  ', 'feeds': [Country_Global_ABC]},
-    {'title': 'Singapore                     ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Singapore                     ', 'feeds': ['http://www.channelnewsasia.com/starterkit/servlet/cna/rss/singapore.xml', 'http://www.todayonline.com/hot-news/feed','http://news.insing.com/rss','http://asiaone.feedsportal.com/c/34151/f/618415/index.rss']},
     {'title': 'Slovakia                      ', 'feeds': [Country_Global_ABC]},
     {'title': 'Slovenia                      ', 'feeds': [Country_Global_ABC]},
     {'title': 'Solomon Islands               ', 'feeds': [Country_Global_ABC]},
