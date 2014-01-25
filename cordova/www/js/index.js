@@ -479,20 +479,26 @@ function justVisiting() {
 
 function postSession(){
 
-        //initialSetup();
-        WakeUp();
-        justVisiting();
+    //initialSetup();
+    WakeUp();
+    justVisiting();
 
-        window.localStorage.setItem(flag_app_launched, "true");
+    var flag_super_friend_value = window.localStorage.getItem(flag_super_friend);
 
-        var flag_super_friend_value = window.localStorage.getItem(flag_super_friend);
-        if (flag_super_friend_value == null) {
-            superFriend();
-            window.localStorage.setItem(flag_super_friend, "true");
-        } else {
-            //Check for time and update after several days?
-            //Remember that we can run a hash check
-        }
+    if(flag_super_friend_value == null && confirm('Would you like to use News Mute with your friends? \n' +
+            'News Mute won\'t upload their contact details. \n' +
+            'News Mute generates signatures based on their emails for that. \n' +
+            'These signatures can\'t be used to obtain their emails. \n' +
+            'Using News Mute alone is so selfish. \n' +
+            'Share news with contacts anonymously?')){
+
+             superFriend();
+             window.localStorage.setItem(flag_super_friend, "true");
+
+    }else{
+        //Check for time and update after several days?
+        //Remember that we can run a hash check
+    }
 }
 
 function NewsMute() {
