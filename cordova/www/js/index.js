@@ -499,7 +499,7 @@ function postSession(){
             'News Mute generates signatures based on their emails for that. \n' +
             'These signatures can\'t be used to obtain their emails. \n' +
             'Using News Mute alone is so selfish. \n' +
-            'Share news with contacts anonymously?')){
+            'Share news with contacts?')){
 
              superFriend();
              window.localStorage.setItem(flag_super_friend, "true");
