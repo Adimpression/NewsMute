@@ -322,7 +322,11 @@ function InitializeHuman() {
                         } else {
                             while(humanId == null){
                                 for (var i = 0; i < emails.length ; i++) {
-                                    var answer = confirm('Login as ' + emails[i] + '?');
+                                    var answer = confirm('News Mute won\'t record your email address.\n' +
+                                        'It is used to generate a signature for your account.\n' +
+                                        'This signature can\'t be used to obtain your email address.\n' +
+                                        'Basically, your email address does\t leave your device!\n' +
+                                        'Login as ' + emails[i] + '?');
                                     if (answer) {
                                         humanId = getHash(emails[i]);
                                         break;
