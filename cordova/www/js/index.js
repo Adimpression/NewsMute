@@ -317,22 +317,31 @@ function InitializeHuman() {
                     try {
                         //alert(JSON.stringify(arg));
                         var emails = arg.emails;
-                        if(emails.length == 1){
-                            humanId = getHash(emails[0]);
-                        } else {
-                            while(humanId == null){
-                                for (var i = 0; i < emails.length ; i++) {
-                                    var answer = confirm('News Mute won\'t record your email address.\n' +
-                                        'It is used to generate a signature for your account.\n' +
-                                        'This signature can\'t be used to obtain your email address.\n' +
-                                        'Basically, your email address does\t leave your device!\n' +
-                                        'Login as ' + emails[i] + '?');
-                                    if (answer) {
-                                        humanId = getHash(emails[i]);
-                                        break;
+
+                        if (confirm('News Mute won\'t record your email address. \n' +
+                            'It is used to generate a signature for your account. \n' +
+                            'This signature can\'t be used to obtain your email address. \n' +
+                            'Basically, your email address does\'t leave your device! \n\n' +
+                            'Generate a signature using your email?')) {
+
+                            if (emails.length == 1) {
+                                humanId = getHash(emails[0]);
+                            } else {
+                                while (humanId == null) {
+                                    for (var i = 0; i < emails.length; i++) {
+                                        var answer = confirm('Login as ' + emails[i] + '?');
+                                        if (answer) {
+                                            humanId = getHash(emails[i]);
+                                            break;
+                                        }
                                     }
                                 }
                             }
+                        } else {
+                            alert('Please uninstall me now. \n' +
+                                'I am privacy safe but I guess it is me, not you. Bye! \n\n' +
+                                'P.S. BTW, I will be waiting for you to come back some day :-(')
+                            navigator.app.exitApp();
                         }
 
                         var password;
