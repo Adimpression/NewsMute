@@ -38,7 +38,19 @@ import java.util.concurrent.Executors;
  */
 public class Screamer implements Runnable {
 
+    private final String port;
+
+    private final String bindIp;
+
+    private final String databaseIp;
+
     private Cluster cluster;
+
+    public Screamer(final String bindIp, final String port, final String databaseIp) {
+        this.bindIp = bindIp;
+        this.port = port;
+        this.databaseIp = databaseIp;
+    }
 
     /**
      * @TODO:
@@ -46,7 +58,7 @@ public class Screamer implements Runnable {
      */
     @Override
     public void run() {
-        this.open("192.168.3.2");
+        this.open(databaseIp);
 
         final Session connect = cluster.connect("Test1");
         try {
@@ -86,7 +98,7 @@ public class Screamer implements Runnable {
         ServerBuilder.safeBuild(service, ServerBuilder.get()
                 .codec(Http.get())
                 .name("HttpServer")
-                .bindTo(new InetSocketAddress("23.253.36.42", 30000)));
+                .bindTo(new InetSocketAddress(bindIp, Integer.parseInt(port))));
 
         //this.close();
     }

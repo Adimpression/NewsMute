@@ -30,11 +30,11 @@ public class Main extends DroidGap {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.init();
-        //super.appView.clearCache(true);
+        super.appView.clearCache(true);
 
-        super.appView.setBackgroundColor(Color.TRANSPARENT);
-        super.appView.setBackgroundColor(0x00000000);
-        super.appView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
+        //super.appView.setBackgroundColor(Color.TRANSPARENT);
+        //super.appView.setBackgroundColor(0x00000000);
+        //super.appView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
 
         // Set by <content src="index.html" /> in config.xml
         super.loadUrl(Config.getStartUrl());

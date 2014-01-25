@@ -19,11 +19,17 @@ import java.util.TimerTask;
  */
 public class Counsellor implements Runnable {
 
+    private final String databaseIp;
+
     private Cluster cluster;
+
+    public Counsellor(final String databaseIp) {
+        this.databaseIp = databaseIp;
+    }
 
     @Override
     public void run() {
-        this.open("192.168.3.2");
+        this.open(databaseIp);
 
         final Timer timer = new Timer();
         final TimerTask task = new TimerTask() {

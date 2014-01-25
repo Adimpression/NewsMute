@@ -8,6 +8,7 @@ enum WHAT_TO_RUN {
     HARVESTER,
     SUPER_FRIENDER,
     GUARDIAN,
+    CONFIG,
     WEB_APP
 }
 
@@ -44,33 +45,57 @@ enum WHAT_TO_RUN {
 public class run {
     public static void main(final String args[]) {
         try {
+            String privateInterfaceIp = null;
+            String publicInterfaceIp = null;
+            String databaseIp = null;
+
+            config:
             for (final String arg : args) {
-                final WHAT_TO_RUN what_to_run = WHAT_TO_RUN.valueOf(arg.toUpperCase());
+                final WHAT_TO_RUN what_to_run = WHAT_TO_RUN.valueOf(arg.toUpperCase().split(",")[0]);
+                System.out.println("Configuring " + what_to_run.toString());
+
+                switch (what_to_run) {
+                    case CONFIG:
+                        final String[] config = arg.split(",");
+                        privateInterfaceIp = config[1];
+                        publicInterfaceIp = config[2];
+                        databaseIp = config[3];
+                        break config;
+                    default:
+                        throw new IllegalStateException("CONFIG parameter required, with private interface ip, public interface ip and database ip");
+                }
+            }
+
+            for (final String arg : args) {
+                final WHAT_TO_RUN what_to_run = WHAT_TO_RUN.valueOf(arg.toUpperCase().split(",")[0]);
                 System.out.println("Executing " + what_to_run.toString());
                 switch (what_to_run) {
                     case SCREAMER:
-                        StartThreadSafely(new Thread(new Screamer()));
+                        StartThreadSafely(new Thread(new Screamer(privateInterfaceIp, arg.split(",")[1], databaseIp)));
                         break;
                     case YAWNER:
-                        StartThreadSafely(new Thread(new Yawner()));
+                        StartThreadSafely(new Thread(new Yawner(privateInterfaceIp, arg.split(",")[1], databaseIp)));
                         break;
                     case COUNSELLOR:
-                        StartThreadSafely(new Thread(new Counsellor()));
+                        StartThreadSafely(new Thread(new Counsellor(databaseIp)));
                         break;
                     case STALKER:
-                        StartThreadSafely(new Thread(new Stalker()));
+                        StartThreadSafely(new Thread(new Stalker(privateInterfaceIp, arg.split(",")[1], databaseIp)));
                         break;
                     case HARVESTER:
-                        StartThreadSafely(new Thread(new Harvester()));
+                        StartThreadSafely(new Thread(new Harvester(databaseIp)));
                         break;
                     case SUPER_FRIENDER:
-                        StartThreadSafely(new Thread(new SuperFriender()));
+                        StartThreadSafely(new Thread(new SuperFriender(privateInterfaceIp, arg.split(",")[1], databaseIp)));
                         break;
                     case GUARDIAN:
-                        StartThreadSafely(new Thread(new Guardian()));
+                        StartThreadSafely(new Thread(new Guardian(privateInterfaceIp, arg.split(",")[1], databaseIp)));
                         break;
                     case WEB_APP:
                         StartThreadSafely(new Thread(new Web()));
+                        break;
+                    case CONFIG:
+                        //We've already processed this above
                         break;
                     default:
                         final StringBuilder options = new StringBuilder("");

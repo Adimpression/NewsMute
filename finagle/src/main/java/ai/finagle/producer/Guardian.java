@@ -73,14 +73,26 @@ public class Guardian implements Runnable {
     //final Map<String, String> sessions = Hazelcast.newHazelcastInstance(new Config()).getMap("sessions");
     final Map<String, String> sessions = new HashMap<String, String>();
 
+    private final String port;
+
+    private final String bindIp;
+
+    private final String databaseIp;
+
     private Cluster cluster;
+
+    public Guardian(final String bindIp, final String port, final String databaseIp) {
+        this.bindIp = bindIp;
+        this.port = port;
+        this.databaseIp = databaseIp;
+    }
 
     /**
      * @TODO: Command line config for IP, Port, Thread Pool Size
      */
     @Override
     public void run() {
-        this.open("192.168.3.2");
+        this.open(databaseIp);
 
         final Session connect = cluster.connect("Test1");
         try {
@@ -218,7 +230,7 @@ public class Guardian implements Runnable {
         ServerBuilder.safeBuild(service, ServerBuilder.get()
                 .codec(Http.get())
                 .name("HttpServer")
-                .bindTo(new InetSocketAddress("23.253.36.42", 31600)));
+                .bindTo(new InetSocketAddress(bindIp, Integer.parseInt(port))));
 
         //this.close();
     }
