@@ -25,8 +25,8 @@ enum FINAGLE_SERVICE {
  * So here's the new run String. Here goes:
  * <p/>
  * <p/>
- * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.2 screamer,30001
- * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.2 yawner,40001
+ * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.2 screamer,30000
+ * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.2 yawner,40000
  * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.2 stalker,16185
  * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.2 super_friender,20000
  * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.2 guardian,31600
