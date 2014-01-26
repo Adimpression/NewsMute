@@ -25,7 +25,20 @@ enum FINAGLE_SERVICE {
  * So here's the new run String. Here goes:
  * <p/>
  * <p/>
- * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.2 screamer,30000 yawner,40000 stalker,16158 super_friender,20000 guardian,31600 counsellor harvester web_app,screamer-30200-23.253.36.42:30000;yawner-40200-23.253.36.42:40000;stalker-16285-23.253.36.42:16185;super_friender-20200-23.253.36.42:20000;guardian-50200-23.253.36.42:31600
+ * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.2 screamer,30000
+ * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.2 yawner,40000
+ * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.2 stalker,16185
+ * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.2 super_friender,20000
+ * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.2 guardian,31600
+ * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.2 counsellor
+ * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.2 harvester
+ * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.2 web_app,SCREAMER-30200-23.253.36.42:30000#YAWNER-40200-23.253.36.42:40000#STALKER-16285-23.253.36.42:16185#SUPER_FRIENDER-20200-23.253.36.42:20000#GUARDIAN-50200-23.253.36.42:31600
+ *
+ *
+ * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.2 web_app,SCREAMER-30200-23.253.36.42:30000#YAWNER-40200-23.253.36.42:40000+23.253.36.42:40001#STALKER-16285-23.253.36.42:16185#SUPER_FRIENDER-20200-23.253.36.42:20000#GUARDIAN-50200-23.253.36.42:31600
+ *
+ *
+ * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.2 screamer,30000 yawner,40000 stalker,16158 super_friender,20000 guardian,31600 counsellor harvester web_app,SCREAMER-30200-23.253.36.42:30000#YAWNER-40200-23.253.36.42:40000#STALKER-16285-23.253.36.42:16185#SUPER_FRIENDER-20200-23.253.36.42:20000#GUARDIAN-50200-23.253.36.42:31600
  * <p/>
  * We are a bit confused what to do next. So here's the deal:
  * <p/>
@@ -123,7 +136,7 @@ public class run {
                         String exposeOnPortSuperFriender = null;
                         String hookUpWithSuperFrienders = null;
 
-                        for (final String bind : binds.split(";")) {
+                        for (final String bind : binds.split("#")) {
                             final String[] type_port_hosts = bind.split("-");
                             final FINAGLE_SERVICE service = FINAGLE_SERVICE.valueOf(type_port_hosts[0]);
                             switch (service) {
@@ -167,11 +180,11 @@ public class run {
                         }
 
                         StartThreadSafely(new Thread(new Web(
-                                new ServiceClientHookupConfigScreamer(publicInterfaceIp, Integer.parseInt(exposeOnPortScreamer), new HostsWithPorts(hookUpWithScreamers.split("/+"))),
-                                new ServiceClientHookupConfigYawner(publicInterfaceIp, Integer.parseInt(exposeOnPortYawner), new HostsWithPorts(hookUpWithYawners.split("/+"))),
-                                new ServiceClientHookupConfigStalker(publicInterfaceIp, Integer.parseInt(exposeOnPortStalker), new HostsWithPorts(hookUpWithStalkers.split("/+"))),
-                                new ServiceClientHookupConfigSuperFriender(publicInterfaceIp, Integer.parseInt(exposeOnPortSuperFriender), new HostsWithPorts(hookUpWithSuperFrienders.split("/+"))),
-                                new ServiceClientHookupConfigGuardian(publicInterfaceIp, Integer.parseInt(exposeOnPortGuardian), new HostsWithPorts(hookUpWithGuardians.split("/+")))
+                                new ServiceClientHookupConfigScreamer(publicInterfaceIp, Integer.parseInt(exposeOnPortScreamer), new HostsWithPorts(hookUpWithScreamers.split("[+]"))),
+                                new ServiceClientHookupConfigYawner(publicInterfaceIp, Integer.parseInt(exposeOnPortYawner), new HostsWithPorts(hookUpWithYawners.split("[+]"))),
+                                new ServiceClientHookupConfigStalker(publicInterfaceIp, Integer.parseInt(exposeOnPortStalker), new HostsWithPorts(hookUpWithStalkers.split("[+]"))),
+                                new ServiceClientHookupConfigSuperFriender(publicInterfaceIp, Integer.parseInt(exposeOnPortSuperFriender), new HostsWithPorts(hookUpWithSuperFrienders.split("[+]"))),
+                                new ServiceClientHookupConfigGuardian(publicInterfaceIp, Integer.parseInt(exposeOnPortGuardian), new HostsWithPorts(hookUpWithGuardians.split("[+]")))
                         )));
                         break;
                     case CONFIG:
