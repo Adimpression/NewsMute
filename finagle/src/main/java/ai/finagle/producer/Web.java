@@ -1,5 +1,6 @@
 package ai.finagle.producer;
 
+import ai.finagle.model.*;
 import com.datastax.driver.core.*;
 import com.twitter.finagle.Service;
 import com.twitter.finagle.builder.ClientBuilder;
@@ -13,8 +14,6 @@ import org.jboss.netty.handler.codec.http.*;
 import scala.actors.threadpool.TimeUnit;
 
 import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Executors;
 
 
@@ -31,6 +30,16 @@ public class Web implements Runnable {
 
     public static final String ACTION = "nmact";
 
+    private final ServiceClientHookupConfigScreamer serviceHookupConfigScreamer;
+
+    private final ServiceClientHookupConfigYawner serviceHookupConfigYawner;
+
+    private final ServiceClientHookupConfigStalker serviceHookupConfigStalker;
+
+    private final ServiceClientHookupConfigSuperFriender serviceHookupConfigSuperFriender;
+
+    private final ServiceClientHookupConfigGuardian serviceHookupConfigGuardian;
+
     private Cluster cluster;
 
     private Service<HttpRequest, HttpResponse> yawnerClient;
@@ -42,6 +51,19 @@ public class Web implements Runnable {
     private Service<HttpRequest, HttpResponse> superFrienderClient;
 
     private Service<HttpRequest, HttpResponse> guardianClient;
+
+    public Web(final ServiceClientHookupConfigScreamer serviceHookupConfigScreamer,
+               final ServiceClientHookupConfigYawner serviceHookupConfigYawner,
+               final ServiceClientHookupConfigStalker serviceHookupConfigStalker,
+               final ServiceClientHookupConfigSuperFriender serviceHookupConfigSuperFriender,
+               final ServiceClientHookupConfigGuardian serviceHookupConfigGuardian) {
+        this.serviceHookupConfigScreamer = serviceHookupConfigScreamer;
+        this.serviceHookupConfigYawner = serviceHookupConfigYawner;
+        this.serviceHookupConfigStalker = serviceHookupConfigStalker;
+        this.serviceHookupConfigSuperFriender = serviceHookupConfigSuperFriender;
+        this.serviceHookupConfigGuardian = serviceHookupConfigGuardian;
+
+    }
 
     /**
      * @TODO: Command line config for IP, Port, Thread Pool Size
@@ -60,7 +82,7 @@ public class Web implements Runnable {
     private void hookUpYawner() {
         yawnerClient = ClientBuilder
                 .safeBuild(ClientBuilder.get().codec(Http.get())
-                        .hosts("23.253.36.42:40000").hostConnectionLimit(1));
+                        .hosts(serviceHookupConfigYawner.getBindToHosts()).hostConnectionLimit(1));
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
 
@@ -80,13 +102,13 @@ public class Web implements Runnable {
         ServerBuilder.safeBuild(service, ServerBuilder.get()
                 .codec(Http.get())
                 .name("HttpServer")
-                .bindTo(new InetSocketAddress("23.253.36.42", 40200)));
+                .bindTo(new InetSocketAddress(serviceHookupConfigYawner.exposeOnIp, serviceHookupConfigYawner.exposeOnPort)));
     }
 
     private void hookUpScreamer() {
         screamerClient = ClientBuilder
                 .safeBuild(ClientBuilder.get().codec(Http.get())
-                        .hosts("23.253.36.42:30000").hostConnectionLimit(1));
+                        .hosts(serviceHookupConfigScreamer.getBindToHosts()).hostConnectionLimit(1));
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
 
@@ -106,13 +128,13 @@ public class Web implements Runnable {
         ServerBuilder.safeBuild(service, ServerBuilder.get()
                 .codec(Http.get())
                 .name("HttpServer")
-                .bindTo(new InetSocketAddress("23.253.36.42", 30200)));
+                .bindTo(new InetSocketAddress(serviceHookupConfigScreamer.exposeOnIp, serviceHookupConfigScreamer.exposeOnPort)));
     }
 
     private void hookUpStalker() {
         stalkerClient = ClientBuilder
                 .safeBuild(ClientBuilder.get().codec(Http.get())
-                        .hosts("23.253.36.42:16185").hostConnectionLimit(1));
+                        .hosts(serviceHookupConfigStalker.getBindToHosts()).hostConnectionLimit(1));
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
 
@@ -132,13 +154,13 @@ public class Web implements Runnable {
         ServerBuilder.safeBuild(service, ServerBuilder.get()
                 .codec(Http.get())
                 .name("HttpServer")
-                .bindTo(new InetSocketAddress("23.253.36.42", 16285)));
+                .bindTo(new InetSocketAddress(serviceHookupConfigStalker.exposeOnIp, serviceHookupConfigStalker.exposeOnPort)));
     }
 
     private void hookUpSuperFriender() {
         superFrienderClient = ClientBuilder
                 .safeBuild(ClientBuilder.get().codec(Http.get())
-                        .hosts("23.253.36.42:20000").hostConnectionLimit(1));
+                        .hosts(serviceHookupConfigSuperFriender.getBindToHosts()).hostConnectionLimit(1));
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
 
@@ -158,14 +180,14 @@ public class Web implements Runnable {
         ServerBuilder.safeBuild(service, ServerBuilder.get()
                 .codec(Http.get())
                 .name("HttpServer")
-                .bindTo(new InetSocketAddress("23.253.36.42", 20200)));
+                .bindTo(new InetSocketAddress(serviceHookupConfigSuperFriender.exposeOnIp, serviceHookupConfigSuperFriender.exposeOnPort)));
     }
 
 
     private void hookUpGuardian() {
         guardianClient = ClientBuilder
                 .safeBuild(ClientBuilder.get().codec(Http.get())
-                        .hosts("23.253.36.42:31600").hostConnectionLimit(1));
+                        .hosts(serviceHookupConfigGuardian.getBindToHosts()).hostConnectionLimit(1));
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
 
@@ -185,7 +207,7 @@ public class Web implements Runnable {
         ServerBuilder.safeBuild(service, ServerBuilder.get()
                 .codec(Http.get())
                 .name("HttpServer")
-                .bindTo(new InetSocketAddress("23.253.36.42", 50200)));
+                .bindTo(new InetSocketAddress(serviceHookupConfigGuardian.exposeOnIp, serviceHookupConfigGuardian.exposeOnPort)));
     }
 
     private HttpResponse blockingYawner(final HttpRequest request) {
@@ -207,8 +229,6 @@ public class Web implements Runnable {
     private HttpResponse blockingGuardian(final HttpRequest request) {
         return guardianClient.apply(request).apply(new Duration(TimeUnit.SECONDS.toNanos(30)));
     }
-
-
 
 }
 

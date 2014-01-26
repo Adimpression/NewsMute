@@ -1,3 +1,4 @@
+import ai.finagle.model.*;
 import ai.finagle.producer.*;
 
 enum WHAT_TO_RUN {
@@ -12,7 +13,20 @@ enum WHAT_TO_RUN {
     WEB_APP
 }
 
+enum FINAGLE_SERVICE {
+    SCREAMER,
+    YAWNER,
+    STALKER,
+    SUPER_FRIENDER,
+    GUARDIAN,
+}
+
 /**
+ * So here's the new run String. Here goes:
+ * <p/>
+ * <p/>
+ * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.2 screamer,30000 yawner,40000 stalker,16158 super_friender,20000 guardian,31600 counsellor harvester web_app,screamer-30200-23.253.36.42:30000|yawner-40200-23.253.36.42:40000|stalker-16285-23.253.36.42:16185|super_friender-20200-23.253.36.42:20000|guardian-50200-23.253.36.42:31600
+ * <p/>
  * We are a bit confused what to do next. So here's the deal:
  * <p/>
  * This class will have 3 services exposed for user based triggers.
@@ -92,7 +106,73 @@ public class run {
                         StartThreadSafely(new Thread(new Guardian(privateInterfaceIp, arg.split(",")[1], databaseIp)));
                         break;
                     case WEB_APP:
-                        StartThreadSafely(new Thread(new Web()));
+                        final String binds = arg.split(",")[1];
+
+                        String exposeOnPortScreamer = null;
+                        String hookUpWithScreamers = null;
+
+                        String exposeOnPortYawner = null;
+                        String hookUpWithYawners = null;
+
+                        String exposeOnPortStalker = null;
+                        String hookUpWithStalkers = null;
+
+                        String exposeOnPortGuardian = null;
+                        String hookUpWithGuardians = null;
+
+                        String exposeOnPortSuperFriender = null;
+                        String hookUpWithSuperFrienders = null;
+
+                        for (final String bind : binds.split("|")) {
+                            final String[] type_port_hosts = bind.split("-");
+                            final FINAGLE_SERVICE service = FINAGLE_SERVICE.valueOf(type_port_hosts[0]);
+                            switch (service) {
+                                case SCREAMER:
+                                    exposeOnPortScreamer = type_port_hosts[1];
+                                    hookUpWithScreamers = type_port_hosts[2];
+                                    break;
+                                case YAWNER:
+                                    exposeOnPortYawner = type_port_hosts[1];
+                                    hookUpWithYawners = type_port_hosts[2];
+                                    break;
+                                case STALKER:
+                                    exposeOnPortStalker = type_port_hosts[1];
+                                    hookUpWithStalkers = type_port_hosts[2];
+                                    break;
+                                case SUPER_FRIENDER:
+                                    exposeOnPortSuperFriender = type_port_hosts[1];
+                                    hookUpWithSuperFrienders = type_port_hosts[2];
+                                    break;
+                                case GUARDIAN:
+                                    exposeOnPortGuardian = type_port_hosts[1];
+                                    hookUpWithGuardians =  type_port_hosts[2];
+                                    break;
+                            }
+                        }
+
+                        if (exposeOnPortScreamer == null) {
+                            throw new IllegalStateException("Screamer service bind port not given to use with Web");
+                        }
+                        if (exposeOnPortYawner == null) {
+                            throw new IllegalStateException("Yawner service bind port not given to use with Web");
+                        }
+                        if (exposeOnPortStalker == null) {
+                            throw new IllegalStateException("Stalker service bind port not given to use with Web");
+                        }
+                        if (exposeOnPortSuperFriender == null) {
+                            throw new IllegalStateException("Super Friender service bind port not given to use with Web");
+                        }
+                        if (exposeOnPortGuardian == null) {
+                            throw new IllegalStateException("Guardian service bind port not given to use with Web");
+                        }
+
+                        StartThreadSafely(new Thread(new Web(
+                                new ServiceClientHookupConfigScreamer(publicInterfaceIp, Integer.parseInt(exposeOnPortScreamer), new HostsWithPorts(hookUpWithScreamers.split("/+"))),
+                                new ServiceClientHookupConfigYawner(publicInterfaceIp, Integer.parseInt(exposeOnPortYawner), new HostsWithPorts(hookUpWithYawners.split("/+"))),
+                                new ServiceClientHookupConfigStalker(publicInterfaceIp, Integer.parseInt(exposeOnPortStalker), new HostsWithPorts(hookUpWithStalkers.split("/+"))),
+                                new ServiceClientHookupConfigSuperFriender(publicInterfaceIp, Integer.parseInt(exposeOnPortSuperFriender), new HostsWithPorts(hookUpWithSuperFrienders.split("/+"))),
+                                new ServiceClientHookupConfigGuardian(publicInterfaceIp, Integer.parseInt(exposeOnPortGuardian), new HostsWithPorts(hookUpWithGuardians.split("/+")))
+                        )));
                         break;
                     case CONFIG:
                         //We've already processed this above
