@@ -82,7 +82,9 @@ public class Web implements Runnable {
     private void hookUpYawner() {
         yawnerClient = ClientBuilder
                 .safeBuild(ClientBuilder.get().codec(Http.get())
-                        .hosts(serviceHookupConfigYawner.getBindToHosts()).hostConnectionLimit(1));
+                        .hosts(serviceHookupConfigYawner.getBindToHosts())
+                        .retries(2)
+                        .hostConnectionLimit(1));
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
 
@@ -108,7 +110,9 @@ public class Web implements Runnable {
     private void hookUpScreamer() {
         screamerClient = ClientBuilder
                 .safeBuild(ClientBuilder.get().codec(Http.get())
-                        .hosts(serviceHookupConfigScreamer.getBindToHosts()).hostConnectionLimit(1));
+                        .hosts(serviceHookupConfigScreamer.getBindToHosts())
+                        .retries(2)
+                        .hostConnectionLimit(1));
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
 
@@ -134,7 +138,9 @@ public class Web implements Runnable {
     private void hookUpStalker() {
         stalkerClient = ClientBuilder
                 .safeBuild(ClientBuilder.get().codec(Http.get())
-                        .hosts(serviceHookupConfigStalker.getBindToHosts()).hostConnectionLimit(1));
+                        .hosts(serviceHookupConfigStalker.getBindToHosts())
+                        .retries(2)
+                        .hostConnectionLimit(1));
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
 
@@ -160,7 +166,9 @@ public class Web implements Runnable {
     private void hookUpSuperFriender() {
         superFrienderClient = ClientBuilder
                 .safeBuild(ClientBuilder.get().codec(Http.get())
-                        .hosts(serviceHookupConfigSuperFriender.getBindToHosts()).hostConnectionLimit(1));
+                        .hosts(serviceHookupConfigSuperFriender.getBindToHosts())
+                        .retries(2)
+                        .hostConnectionLimit(1));
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
 
@@ -187,7 +195,9 @@ public class Web implements Runnable {
     private void hookUpGuardian() {
         guardianClient = ClientBuilder
                 .safeBuild(ClientBuilder.get().codec(Http.get())
-                        .hosts(serviceHookupConfigGuardian.getBindToHosts()).hostConnectionLimit(1));
+                        .hosts(serviceHookupConfigGuardian.getBindToHosts())
+                        .retries(2)
+                        .hostConnectionLimit(1));
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
 
