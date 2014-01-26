@@ -25,7 +25,7 @@ enum FINAGLE_SERVICE {
  * So here's the new run String. Here goes:
  * <p/>
  * <p/>
- * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.2 screamer,30000 yawner,40000 stalker,16158 super_friender,20000 guardian,31600 counsellor harvester web_app,screamer-30200-23.253.36.42:30000|yawner-40200-23.253.36.42:40000|stalker-16285-23.253.36.42:16185|super_friender-20200-23.253.36.42:20000|guardian-50200-23.253.36.42:31600
+ * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.2 screamer,30000 yawner,40000 stalker,16158 super_friender,20000 guardian,31600 counsellor harvester web_app,screamer-30200-23.253.36.42:30000;yawner-40200-23.253.36.42:40000;stalker-16285-23.253.36.42:16185;super_friender-20200-23.253.36.42:20000;guardian-50200-23.253.36.42:31600
  * <p/>
  * We are a bit confused what to do next. So here's the deal:
  * <p/>
@@ -123,7 +123,7 @@ public class run {
                         String exposeOnPortSuperFriender = null;
                         String hookUpWithSuperFrienders = null;
 
-                        for (final String bind : binds.split("|")) {
+                        for (final String bind : binds.split(";")) {
                             final String[] type_port_hosts = bind.split("-");
                             final FINAGLE_SERVICE service = FINAGLE_SERVICE.valueOf(type_port_hosts[0]);
                             switch (service) {
