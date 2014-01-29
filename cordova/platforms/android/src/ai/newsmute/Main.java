@@ -19,13 +19,12 @@
 
 package ai.newsmute;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
+import android.widget.Toast;
 import org.apache.cordova.Config;
 import org.apache.cordova.DroidGap;
 
@@ -37,15 +36,6 @@ public class Main extends DroidGap {
         getWindow().requestFeature(Window.FEATURE_PROGRESS);
 
         super.init();
-
-        final WebView mWebView = super.appView;
-
-        final Activity activity = this;
-
-        mWebView.setWebChromeClient(new WebChromeClient() {
-
-
-        });
 
         super.appView.clearCache(true);
 
