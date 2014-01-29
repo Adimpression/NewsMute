@@ -20,11 +20,9 @@
 package ai.newsmute;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
-import android.widget.Toast;
 import org.apache.cordova.Config;
 import org.apache.cordova.DroidGap;
 
@@ -53,14 +51,22 @@ public class Main extends DroidGap {
             public boolean onKey(final View v, final int keyCode, final KeyEvent event) {
 // Check if the key event was the Back button and if there's history
                 if (keyCode == KeyEvent.KEYCODE_BACK && appView.canGoBack()) {
-                    //appView.goBack();
-                    Main.super.loadUrl(Config.getStartUrl());
-                    return true;
+                    if (!appView.getUrl().startsWith(Config.getStartUrl())) {
+                        Main.super.loadUrl(Config.getStartUrl());
+                        return true;
+                    } else {
+                        Main.super.finish();
+                        return onKeyDown(keyCode, event);
+                    }
                 } else {
                     // If it wasn't the Back key or there's no web page history, bubble up to the default
                     // system behavior (probably exit the activity)
-                    Main.super.finish();
-                    return onKeyDown(keyCode, event);
+                    if (appView.getUrl().startsWith(Config.getStartUrl())) {
+                        Main.super.finish();
+                        return onKeyDown(keyCode, event);
+                    } else{
+                        return onKeyDown(keyCode, event);
+                    }
                 }
             }
         });
