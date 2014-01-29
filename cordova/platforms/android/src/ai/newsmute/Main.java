@@ -62,14 +62,15 @@ public class Main extends DroidGap {
             @Override
             public boolean onKey(final View v, final int keyCode, final KeyEvent event) {
 // Check if the key event was the Back button and if there's history
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                if (keyCode == KeyEvent.KEYCODE_BACK && appView.canGoBack()) {
                     //appView.goBack();
                     Main.super.loadUrl(Config.getStartUrl());
                     return true;
                 } else {
                     // If it wasn't the Back key or there's no web page history, bubble up to the default
                     // system behavior (probably exit the activity)
-                    return Main.super.onKeyDown(keyCode, event);
+                    Main.super.finish();
+                    return onKeyDown(keyCode, event);
                 }
             }
         });
