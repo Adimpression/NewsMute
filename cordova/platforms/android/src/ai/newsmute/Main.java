@@ -56,21 +56,144 @@ public class Main extends DroidGap {
                         return true;
                     } else {
                         Main.super.finish();
-                        return onKeyDown(keyCode, event);
+                        return true;
                     }
                 } else {
-                    // If it wasn't the Back key or there's no web page history, bubble up to the default
-                    // system behavior (probably exit the activity)
-                    if (appView.getUrl().startsWith(Config.getStartUrl())) {
+                    return false;
+                }
+            }
+        });
+    }
+}
+
+
+
+/*
+
+package ai.newsmute;
+
+        import android.app.Activity;
+        import android.content.Intent;
+        import android.graphics.Bitmap;
+        import android.os.Bundle;
+        import android.util.Log;
+        import android.view.KeyEvent;
+        import android.view.View;
+        import android.webkit.WebView;
+        import android.webkit.WebViewClient;
+        import android.widget.Toast;
+        import org.apache.cordova.*;
+
+        import java.util.concurrent.ExecutorService;
+
+public class Main extends Activity implements CordovaInterface {
+    private CordovaWebView webView;
+
+    private CordovaPlugin activityResultCallback;
+
+    private boolean keepRunning;
+
+    private boolean activityResultKeepRunning;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.main);
+
+        webView = (CordovaWebView) findViewById(R.id.webView);
+
+        Config.init(this);
+
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
+                return super.shouldOverrideUrlLoading(view, url);
+            }
+
+            @Override
+            public void onPageStarted(final WebView view, final String url, final Bitmap favicon) {
+                Toast.makeText(Main.this, "Page loading", Toast.LENGTH_SHORT).show();
+                super.onPageStarted(view, url, favicon);
+            }
+
+            @Override
+            public void onPageFinished(final WebView view, final String url) {
+                Toast.makeText(Main.this, "Page loaded", Toast.LENGTH_SHORT).show();
+                super.onPageFinished(view, url);
+            }
+        });
+
+        webView.clearCache(true);
+
+        webView.loadUrl(Config.getStartUrl());
+
+
+
+        webView.loadUrl(Config.getStartUrl());
+
+        webView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(final View v, final int keyCode, final KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    final String url = webView.getUrl();
+                    final String startUrl = Config.getStartUrl();
+                    Log.wtf(Main.class.getSimpleName(), url);
+                    Log.wtf(Main.class.getSimpleName(), startUrl);
+                    if (url.equals(startUrl)) {
                         Main.super.finish();
-                        return onKeyDown(keyCode, event);
-                    } else{
-                        return onKeyDown(keyCode, event);
+                        return true;
+                    } else {
+                        webView.loadUrl(startUrl);
+                        return true;
                     }
+                } else {
+                    return false;
                 }
             }
         });
 
     }
+
+    @Override
+    public void startActivityForResult(final CordovaPlugin command, final Intent intent, final int requestCode) {
+        this.activityResultCallback = command;
+        this.activityResultKeepRunning = this.keepRunning;
+
+        if (command != null) {
+            this.keepRunning = false;
+        }
+
+        super.startActivityForResult(intent, requestCode);
+
+    }
+
+    @Override
+    public void setActivityResultCallback(final CordovaPlugin cordovaPlugin) {
+        this.activityResultCallback = cordovaPlugin;
+
+    }
+
+    @Override
+    public Activity getActivity() {
+        return this;
+    }
+
+    @Override
+    public Object onMessage(final String id, final Object data) {
+
+        LOG.d(Main.class.getClass().getSimpleName(), "onMessage(" + id + "," + data + ")");
+        if ("exit".equals(id)) {
+            super.finish();
+        }
+        return null;
+    }
+
+    @Override
+    public ExecutorService getThreadPool() {
+        return null;
+    }
 }
 
+
+*/
