@@ -551,8 +551,7 @@ var app = {
             document.addEventListener("pause", function () {
                 window.localStorage.removeItem(flag_app_launched);
                 window.localStorage.removeItem("lastVisited");
-                app.exitApp();//@FIXME: If the use is reading and article and receives a call?
-            }, false);
+                }, false);
 
 
         } catch (e) {
@@ -634,7 +633,7 @@ function WakeUp() {
                             feedItemTitle.text(item.title);
                             //clone.find('.itemTitle').attr('href', item.link);
                             feedItemTitle.attr("title", item.link);
-                            feedItemTitle.attr("style", "font-size: 40px; text-decoration: underline;color: #271aad;");
+                            feedItemTitle.attr("style", "font-size: 40px; text-decoration: underline;color: #000000;");
                             feedItemTitle.click(
                                 function(){
                                     $('.itemTemplate:not(#'+ id + ')').animate({opacity:0.2});
@@ -1057,14 +1056,14 @@ function initialSetup(){
                         }
                     );
                     clone.appendTo(countryListDocumentFragment);
-                    if (i < 20) {
-                        clone.animate({opacity: 0.0});
-                        clone.animate({opacity: 1.0}, {duration: i * 200, complete: function () {
-                            for (i = 0; i < 1; i++) {
-                                clone.fadeTo('slow', 0.5).fadeTo('slow', 1.0);
-                            }
-                        }});
-                    }
+//                    if (i < 20) {
+//                        clone.animate({opacity: 0.0});
+//                        clone.animate({opacity: 1.0}, {duration: i * 200, complete: function () {
+//                            for (i = 0; i < 1; i++) {
+//                                clone.fadeTo('slow', 0.5).fadeTo('slow', 1.0);
+//                            }
+//                        }});
+//                    }
                     if(i + 1 == j){
                         $FeedSetupGenders.hide();
                         $FeedSetupIndustries.hide();
@@ -1094,14 +1093,14 @@ function initialSetup(){
                         }
                     );
                     clone.appendTo(genderListDocumentFragment);
-                    if (ig < 20) {
-                        clone.animate({opacity: 0.0});
-                        clone.animate({opacity: 1.0}, {duration: ig * 200, complete: function () {
-                            for (ig = 0; ig < 1; ig++) {
-                                clone.fadeTo('slow', 0.5).fadeTo('slow', 1.0);
-                            }
-                        }});
-                    }
+//                    if (ig < 20) {
+//                        clone.animate({opacity: 0.0});
+//                        clone.animate({opacity: 1.0}, {duration: ig * 200, complete: function () {
+//                            for (ig = 0; ig < 1; ig++) {
+//                                clone.fadeTo('slow', 0.5).fadeTo('slow', 1.0);
+//                            }
+//                        }});
+//                    }
 
                     if(ig + 1 == j){
                     }
@@ -1138,14 +1137,14 @@ function initialSetup(){
                         }
                     );
                     clone.appendTo(industryListDocumentFragment);
-                    if (ii < 20) {
-                        clone.animate({opacity: 0.0});
-                        clone.animate({opacity: 1.0}, {duration: ii * 200, complete: function () {
-                            for (ii = 0; ii < 1; ii++) {
-                                clone.fadeTo('slow', 0.5).fadeTo('slow', 1.0);
-                            }
-                        }});
-                    }
+//                    if (ii < 20) {
+//                        clone.animate({opacity: 0.0});
+//                        clone.animate({opacity: 1.0}, {duration: ii * 200, complete: function () {
+//                            for (ii = 0; ii < 1; ii++) {
+//                                clone.fadeTo('slow', 0.5).fadeTo('slow', 1.0);
+//                            }
+//                        }});
+//                    }
 
                     if(ii + 1 == j){
                     }
