@@ -19,10 +19,15 @@
 
 package ai.newsmute;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import org.apache.cordova.Config;
 import org.apache.cordova.DroidGap;
 
@@ -35,6 +40,26 @@ public class Main extends DroidGap {
 
         super.init();
 
+        final WebViewClient client = new WebViewClient() {
+
+            public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
+//                view.loadUrl(url);
+                return false;
+            }
+
+            @Override
+            public void onPageStarted(final WebView view, final String url, final Bitmap favicon) {
+//                Toast.makeText(Main.this, "Page loading", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onPageFinished(final WebView view, final String url) {
+//                Toast.makeText(Main.this, "Page loaded", Toast.LENGTH_SHORT).show();
+            }
+        };
+//        appView.setWebViewClient(client);
+
+
         super.appView.clearCache(true);
 
         //super.appView.setBackgroundColor(Color.TRANSPARENT);
@@ -46,18 +71,33 @@ public class Main extends DroidGap {
         super.loadUrl(Config.getStartUrl());
         //super.loadUrl("file:///android_asset/www/index.html")
 
+        //appView.getUrl returns wrong and a lot of other issues
         super.appView.setOnKeyListener(new View.OnKeyListener() {
+            public boolean isAtHome = false;
+
             @Override
             public boolean onKey(final View v, final int keyCode, final KeyEvent event) {
 // Check if the key event was the Back button and if there's history
-                if (keyCode == KeyEvent.KEYCODE_BACK && appView.canGoBack()) {
-                    if (!appView.getUrl().startsWith(Config.getStartUrl())) {
-                        Main.super.loadUrl(Config.getStartUrl());
-                        return true;
-                    } else {
-                        Main.super.finish();
-                        return true;
-                    }
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    new AlertDialog.Builder(Main.this)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setTitle("Exit or go to home?")
+                            .setMessage("(Press back button to hide this alert)")
+                            .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+
+                            })
+                            .setNegativeButton("Home", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    appView.loadUrl(Config.getStartUrl());
+                                }
+                            })
+                            .show();
+                    return true;
                 } else {
                     return false;
                 }
