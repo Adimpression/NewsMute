@@ -70,9 +70,6 @@ import java.util.concurrent.Executors;
  */
 public class Guardian implements Runnable {
 
-    //final Map<String, String> sessions = Hazelcast.newHazelcastInstance(new Config()).getMap("sessions");
-    final Map<String, String> sessions = new HashMap<String, String>();
-
     private final String port;
 
     private final String bindIp;
@@ -94,11 +91,18 @@ public class Guardian implements Runnable {
     public void run() {
         this.open(databaseIp);
 
+
         final Session connect = cluster.connect("Test1");
         try {
             //connect.execute("drop table Guardian;");
             connect.execute(DBScripts.CREATE_GUARDIAN);
-
+        } catch (final Exception e) {//Table already exists
+            System.out.println(e.getMessage());
+        }
+        //Don't merge up and down try/catches, we need to see the failure upon consecutive runs
+        try {
+            //connect.execute("drop table Guardian;");
+            connect.execute(DBScripts.CREATE_SESSION);
         } catch (final Exception e) {//Table already exists
             System.out.println(e.getMessage());
         }
@@ -141,7 +145,7 @@ public class Guardian implements Runnable {
                             final String hashUser = BCrypt.hashpw(user.get(0), SuperFriender.GLOBAL_SALT);
                             System.out.println("hashUser:" + hashUser);
 
-                            final String humanIdHash = sessions.get(sessionCookie.getValue());
+                            final String humanIdHash = blockingSessionRead(sessionCookie.getValue());
                             System.out.println("humanIdHash:" + humanIdHash);
 
                             if (humanIdHash != null) {
@@ -187,7 +191,7 @@ public class Guardian implements Runnable {
                             final GuardianItem guardianItem = result.returnValue.data[0];
                             if (result.returnStatus.equals("OK") && guardianItem.status.equals(GuardianItem.OK)) {
                                 final String randomUnique = guardianItem.tokenHash + System.currentTimeMillis();
-                                sessions.put(randomUnique, guardianItem.humanIdHash);
+                                blockingSessionWrite(randomUnique, guardianItem.humanIdHash);
 
                                 CookieEncoder encoder = new CookieEncoder(true);
                                 final DefaultCookie defaultCookie = new DefaultCookie("session", randomUnique);
@@ -276,6 +280,23 @@ public class Guardian implements Runnable {
                 return new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.ERROR)}), "Unknown action", "ERROR");
         }
         return new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.ERROR)}), "Unhandled operation", "ERROR");
+    }
+
+    private String blockingSessionRead(final String sessionId) {
+        final Session connect = cluster.connect("Test1");
+        final ResultSet execute = connect.execute(String.format("select * from Session where sessionId='%s'", sessionId));
+        for (final Row row : execute.all()) {
+            final String aStoredSessionId = row.getString("sessionId");
+            if(aStoredSessionId.equals(sessionId)){
+                return  row.getString("value");
+            }
+        }
+        return null;
+    }
+
+    private void  blockingSessionWrite(final String sessionId, final String humanId) {
+        final Session connect = cluster.connect("Test1");
+        connect.execute(String.format("insert into Session(sessionId, value) values('%s','%s') USING TTL %d;", sessionId, humanId, DBScripts.SESSION_TTL));
     }
 
     public String open(String node) {
