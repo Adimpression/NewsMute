@@ -3,6 +3,9 @@ package com.borismus.webintent;
 import java.util.HashMap;
 import java.util.Map;
 
+import ai.newsmute.Main;
+import android.util.Log;
+import android.widget.Toast;
 import org.apache.cordova.CordovaActivity;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -114,6 +117,9 @@ public class WebIntent extends CordovaPlugin {
                     callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.INVALID_ACTION));
                     return false;
                 }
+
+
+                Main.share();
 
                 //this.onNewIntentCallback = callbackId;
                 PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);

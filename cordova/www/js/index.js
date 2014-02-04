@@ -475,7 +475,6 @@ function justVisiting() {
     var lastVisited = window.localStorage.getItem("lastVisited");
     if (lastVisited != null) {
         //alert('lv no null');
-        _internal_screamLink(lastVisited,function(e){}, function(e){});
         markRead(lastVisited);
         share(lastVisited);
         window.localStorage.removeItem("lastVisited");
@@ -533,6 +532,30 @@ var app = {
     // 'load', 'deviceready', 'offline', and 'online'.
     bindEvents: function () {
         document.addEventListener('deviceready', this.onDeviceReady, false);
+
+        document.addEventListener('deviceready', function () {
+            window.plugins.webintent.onNewIntent(function (url) {
+                        //alert(url);
+            })
+        }, false);
+
+//        document.addEventListener('deviceready', function () {
+//            window.plugins.webintent.onNewIntent(WebIntent.ACTION_VIEW, function (hasExtraResult) {
+//                if(hasExtraResult){
+//                    window.plugins.webintent.onNewIntent(WebIntent.EXTRA_TEXT, function (url) {
+//                        alert('Sharing:\n' + url);
+//                        screamLink(url);
+//                    },function(){
+//                        alert('Sorry, News Mute doesn\'t support that');
+//                    });
+//                } else {
+//                    alert('No extra found');
+//                }
+//
+//            }, function() {
+//                alert('No extra');
+//            });
+//        });
     },
     // deviceready Event Handler
     //
@@ -650,12 +673,11 @@ function WakeUp() {
                             {//itemBookmark
                                 feedItemBookmark.attr("title", item.link);
                                 feedItemBookmark.click(
-                                    function(){
-                                        $(this).fadeTo('fast', 0.5).fadeIn('fast',
-                                            function(){
-                                                share($(this).attr('title'));
-                                            });
+                                function(){
+                                    $(this).fadeOut('fast', function(){
+                                        _internal_screamLink($(this).attr('title'),function(e){}, function(e){});
                                     });
+                                });
                             }
 
                             {//itemAdvanced

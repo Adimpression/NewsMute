@@ -21,45 +21,55 @@ package ai.newsmute;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import org.apache.cordova.Config;
 import org.apache.cordova.DroidGap;
 
 public class Main extends DroidGap {
+    private static Intent currentLaunchIntent;
+
+    private static WebView currentLaunchWebview;
+
+    public static void share() {
+        String action = currentLaunchIntent.getAction();
+
+        if (action.equalsIgnoreCase(Intent.ACTION_SEND) && currentLaunchIntent.hasExtra(Intent.EXTRA_TEXT)) {
+            final String url = currentLaunchIntent.getStringExtra(Intent.EXTRA_TEXT);
+            Log.d("SHARE", "" + url);
+            currentLaunchWebview.loadUrl("javascript:_internal_screamLink('" + url + "');");
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         getWindow().requestFeature(Window.FEATURE_PROGRESS);
 
+        currentLaunchIntent = super.getIntent();
+
+        Log.d("SHARE", "" + currentLaunchIntent.getAction());
+
         super.init();
 
-        final WebViewClient client = new WebViewClient() {
+        final WebSettings settings = super.appView.getSettings();
 
-            public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
-//                view.loadUrl(url);
-                return false;
-            }
+        settings.setJavaScriptEnabled(true);
+        settings.setLoadsImagesAutomatically(true);
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(false);
+        settings.setSaveFormData(true);
+        settings.setSavePassword(true);
+        settings.setDefaultZoom(WebSettings.ZoomDensity.MEDIUM);
 
-            @Override
-            public void onPageStarted(final WebView view, final String url, final Bitmap favicon) {
-//                Toast.makeText(Main.this, "Page loading", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onPageFinished(final WebView view, final String url) {
-//                Toast.makeText(Main.this, "Page loaded", Toast.LENGTH_SHORT).show();
-            }
-        };
-//        appView.setWebViewClient(client);
-
-
+        currentLaunchWebview = super.appView;
         super.appView.clearCache(true);
 
         //super.appView.setBackgroundColor(Color.TRANSPARENT);
@@ -103,6 +113,14 @@ public class Main extends DroidGap {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onNewIntent(final Intent intent) {
+        Log.d("SHARE", intent.toString());
+        Log.d("SHARE", intent.getDataString());
+
+        super.appView.loadUrl("javascript:share('" + intent.getDataString() + "');");
     }
 }
 
