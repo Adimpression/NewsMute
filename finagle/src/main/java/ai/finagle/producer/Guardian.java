@@ -92,7 +92,7 @@ public class Guardian implements Runnable {
         this.open(databaseIp);
 
 
-        final Session connect = cluster.connect("Test1");
+        final Session connect = cluster.connect("NewsMute");
         try {
             //connect.execute("drop table Guardian;");
             connect.execute(DBScripts.CREATE_GUARDIAN);
@@ -240,7 +240,7 @@ public class Guardian implements Runnable {
     }
 
     private Return<ReturnValueGuardian> blocking(final HttpRequest request) {
-        final Session connect = cluster.connect("Test1");
+        final Session connect = cluster.connect("NewsMute");
 
         final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
         final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
@@ -283,7 +283,7 @@ public class Guardian implements Runnable {
     }
 
     private String blockingSessionRead(final String sessionId) {
-        final Session connect = cluster.connect("Test1");
+        final Session connect = cluster.connect("NewsMute");
         final ResultSet execute = connect.execute(String.format("select * from Session where sessionId='%s'", sessionId));
         for (final Row row : execute.all()) {
             final String aStoredSessionId = row.getString("sessionId");
@@ -295,7 +295,7 @@ public class Guardian implements Runnable {
     }
 
     private void  blockingSessionWrite(final String sessionId, final String humanId) {
-        final Session connect = cluster.connect("Test1");
+        final Session connect = cluster.connect("NewsMute");
         connect.execute(String.format("insert into Session(sessionId, value) values('%s','%s') USING TTL %d;", sessionId, humanId, DBScripts.SESSION_TTL));
     }
 

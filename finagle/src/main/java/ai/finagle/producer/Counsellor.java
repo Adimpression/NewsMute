@@ -38,7 +38,7 @@ public class Counsellor implements Runnable {
                 try {
                     System.out.println("Counselling...");
 
-                    final Session connect = cluster.connect("Test1");
+                    final Session connect = cluster.connect("NewsMute");
 
                     /**
                      * This operation is not heavy, Cassandra handles paging(via cursors) transparently

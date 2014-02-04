@@ -60,7 +60,7 @@ public class Yawner implements Runnable {
     public void run() {
         this.open(databaseIp);
 
-        final Session connect = cluster.connect("Test1");
+        final Session connect = cluster.connect("NewsMute");
 
         try {
             //connect.execute("drop table Yawn;");
@@ -112,7 +112,7 @@ public class Yawner implements Runnable {
     }
 
     private String blocking(HttpRequest request) {
-        final Session connect = cluster.connect("Test1");
+        final Session connect = cluster.connect("NewsMute");
 
         final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
         final Map<String, List<String>> parameters = queryStringDecoder.getParameters();

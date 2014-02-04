@@ -44,7 +44,7 @@ public class Harvester implements Runnable {
                 try {
                     System.out.println("Harvesting...");
 
-                    final Session connect = cluster.connect("Test1");
+                    final Session connect = cluster.connect("NewsMute");
 
                     final ResultSet executeStalkFetch = connect.execute("select * from Stalk;");
 

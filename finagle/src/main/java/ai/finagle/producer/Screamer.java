@@ -60,7 +60,7 @@ public class Screamer implements Runnable {
     public void run() {
         this.open(databaseIp);
 
-        final Session connect = cluster.connect("Test1");
+        final Session connect = cluster.connect("NewsMute");
         try {
             //connect.execute("drop table Scream;");
             connect.execute(DBScripts.CREATE_SCREAM);
@@ -105,7 +105,7 @@ public class Screamer implements Runnable {
 
     private String blocking(HttpRequest request) {
         try {
-            final Session connect = cluster.connect("Test1");
+            final Session connect = cluster.connect("NewsMute");
 
             final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
             final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
