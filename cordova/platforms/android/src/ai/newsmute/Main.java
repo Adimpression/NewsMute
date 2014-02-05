@@ -22,6 +22,7 @@ package ai.newsmute;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -29,6 +30,7 @@ import android.view.View;
 import android.view.Window;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import org.apache.cordova.Config;
 import org.apache.cordova.DroidGap;
 
@@ -59,15 +61,21 @@ public class Main extends DroidGap {
 
         super.init();
 
+
         final WebSettings settings = super.appView.getSettings();
+        super.appView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
 
         settings.setJavaScriptEnabled(true);
         settings.setLoadsImagesAutomatically(true);
         settings.setUseWideViewPort(true);
-        settings.setLoadWithOverviewMode(false);
+        settings.setLoadWithOverviewMode(true);
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setSaveFormData(true);
         settings.setSavePassword(true);
         settings.setDefaultZoom(WebSettings.ZoomDensity.MEDIUM);
+        settings.setAllowFileAccess(false);
+        settings.setJavaScriptCanOpenWindowsAutomatically(false);
+        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
 
         currentLaunchWebview = super.appView;
         super.appView.clearCache(true);

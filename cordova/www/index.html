@@ -2,8 +2,6 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="format-detection" content="telephone=no"/>
-    <meta name="viewport"
-          content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi"/>
     <link rel="stylesheet" type="text/css" href="css/layout.css"/>
     <title>News Mute</title>
     <link type="text/css" rel="stylesheet" href="css/groundwork.css">
@@ -55,12 +53,30 @@
             100% { opacity: 1.0; }
         }
     </style>
+
+    <style type="text/css" media="(orientation: )">
+        body{
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        .container{
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+    </style>
 </head>
 <!-- Let's keep the style of the body simple. Just the laying out. -->
-<body style="width: 100%; height: 100%; overflow:hidden;" class="">
+<body style="width: 100%; height: 100%; overflow:hidden; border-top-width: 0;border-right-width: 0;border-left-width: 0;border-bottom-width: 0; padding-top: 0;padding-right: 0;padding-left: 0;padding-bottom: 0; margin-top: 0;margin-right: 0;margin-left: 0;margin-bottom: 0;" class="">
 <div class="container ttlm"
-     style="width: 100%; height: 100%;">
-    <div class="Loader" style="display: block; width: 100%; height: 100%;">
+     style="width: 100%; height: 100%; border-top-width: 0;border-right-width: 0;border-left-width: 0;border-bottom-width: 0; padding-top: 0;padding-right: 0;padding-left: 0;padding-bottom: 0; margin-top: 0;margin-right: 0;margin-left: 0;margin-bottom: 0;">
+
+
+    <div class="Loader" style="display: block; width: 100%; height: 100%; background-image: url('images/backdrop.jpg'); background-size: 100% 100%;">
         <div class="use100" style="height: 40%;">
             &nbsp;
         </div>
@@ -79,6 +95,8 @@
             &nbsp;
         </div>
     </div>
+
+
     <div class="FeedSetup one" style="width: 100%; height: 100%; overflow: scroll;">
         <div class="FeedSetupGenders use100 hiddenN">
             <div class="one center" style="background-color: darkgray;">
@@ -112,6 +130,7 @@
         </div>
     </div>
 
+
     <div class="FeedInterface one">
         <div class="one left" style="height: 0; background-color: transparent;">
             <div class="one" style="">
@@ -128,7 +147,7 @@
         </div>
         <div class="one feedDataSection" style="height: 100%;overflow: scroll;">
             <div class="one"
-                 style="padding: 5%;">
+                 style="">
                 <div class="one" style="height: 100%;">
                     <div class="one active" id="feed"
                          style="display:none;  font-size: 30px;line-height: 116%;overflow: scroll; height: 100%;">
@@ -201,264 +220,10 @@
 <script type="text/javascript" src="cordova.js"></script>
 <script src="js/sha512.js"></script>
 <script src="js/jquery-2.0.3.min.js"></script>
-<script src="js/jquery.feeds.min.js"></script>
-<script src="js/libs/modernizr-2.6.2.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="js/tts.js"></script>
 <script type="text/javascript" src="js/index.js"></script>
 <script type="text/javascript">
     app.initialize();
 </script>
 <script type="text/javascript" src="js/groundwork.all.js"></script>
-<script type="text/javascript" src="js/plugins/jquery-responsiveText.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

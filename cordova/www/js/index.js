@@ -475,8 +475,8 @@ function justVisiting() {
     var lastVisited = window.localStorage.getItem("lastVisited");
     if (lastVisited != null) {
         //alert('lv no null');
+        _internal_screamLink(lastVisited,function(e){}, function(e){});
         markRead(lastVisited);
-        share(lastVisited);
         window.localStorage.removeItem("lastVisited");
     } else {
         //alert('lv null');
@@ -659,9 +659,10 @@ function WakeUp() {
                             feedItemTitle.attr("style", "font-size: 40px; text-decoration: underline;color: #000000;");
                             feedItemTitle.click(
                                 function(){
-                                    $('.itemTemplate:not(#'+ id + ')').animate({opacity:0.2});
                                     window.localStorage.setItem('lastVisited', this.title);
-                                    setTimeout("openLink(window.localStorage.getItem('lastVisited'))", 1000);
+                                    $('.itemTemplate:not(#'+ id + ')').animate({opacity:0.2},500,function(){
+                                        openLink(window.localStorage.getItem('lastVisited'));
+                                    });
                                 }
                             );
                             //clone.find('.itemDescription').html(item.description.replace(/<(?:.|\n)*?>/gm, ''));
@@ -675,7 +676,9 @@ function WakeUp() {
                                 feedItemBookmark.click(
                                 function(){
                                     $(this).fadeOut('fast', function(){
-                                        _internal_screamLink($(this).attr('title'),function(e){}, function(e){});
+                                        const url = $(this).attr('title');
+                                        hide(url);
+                                        _internal_screamLink(url,function(e){}, function(e){alert(e);});
                                     });
                                 });
                             }
@@ -726,8 +729,8 @@ function WakeUp() {
 
 function openLink(link){
     $FeedInterface.hide(0, function(){
-        //navigator.app.loadUrl(link, {wait:0, loadingDialog:"Loading external web page", loadUrlTimeoutValue: 1000, openExternal:false });
-        window.location.href = link;
+        navigator.app.loadUrl(link, {wait:0, loadingDialog:"Loading external web page", loadUrlTimeoutValue: 1000, openExternal:false });
+        //navigator.app.loadUrl(link, {openExternal : false})
     });
 }
 
@@ -758,10 +761,11 @@ function screamLink(url, successCallback, failureCallback){
 }
 
 function _internal_screamLink(url, successCallback, failureCallback){
+        alert('Sharing ' + url);
         $.ajax({
             type: "GET",
-            url: endpointStalk +
-                "/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=CREATE",
+            url: endpointScream +
+                "/?user=" + humanId + "&url=" + encodeURIComponent(url),
             crossDomain: true,
             beforeSend: function () {
             },
