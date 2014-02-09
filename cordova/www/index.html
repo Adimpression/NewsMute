@@ -18,7 +18,7 @@
         }
         .ttlm_setup {
             font-family: "ttlm";
-            font-size:12fpx;
+            font-size:12px;
         }
         .blink_me {
             -webkit-animation-name: blinker;
@@ -56,7 +56,7 @@
         }
     </style>
 
-    <style type="text/css" media="(orientation: )">
+    <style type="text/css" media="(orientation: handheld)">
         body{
             width: 100%;
             height: 100%;
@@ -79,22 +79,24 @@
 
 
     <div class="Loader" style="display: block; width: 100%; height: 100%; background-image: url('images/backdrop.jpg'); background-size: cover;">
-        <div class="use100" style="height: 40%;">
-            &nbsp;
-        </div>
-        <div class="use100" style="height: 20%;">
-            <div class="use30">
-                &nbsp;
-            </div>
-            <div class="use40">
-                <img src="Logo.png" class="use100 center blink_me" style="width: 100%:"/>
-            </div>
-            <div class="use30">
-                &nbsp;
-            </div>
-        </div>
-        <div class="use100" style="height: 40%;">
-            &nbsp;
+        <div class="use100" style="height: 100%;width: 100%;">
+                <div class="use35" style="height: 100%">
+                    &nbsp;
+                </div>
+                <div class="use30" style="height: 100%">
+                    <div class="use100" style="height: 35%">
+                        &nbsp;
+                    </div>
+                    <div class="use100" style="height: 30%;">
+                        <img src="Logo.png" class="blink_me" style="width: 100%;"/>
+                    </div>
+                    <div class="use100" style="height: 35%;">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="use35" style="height: 100%">
+                    &nbsp;
+                </div>
         </div>
     </div>
 
@@ -164,10 +166,14 @@
                                 <div class="one itemTemplate" id="http%3A%2F%2Fwww.newsmute.com" style="overflow: hidden;">
                                     <div class="one ttlm" style="overflow: hidden">
                                         <div class="one left" style="overflow: hidden;">
-                                            <a class="itemTitle" href="#"
-                                               style="/*Overridden in JS cloning*/">
-                                                The Earth has Come to Its Beginning
-                                            </a>
+                                            <u style="text-decoration: none; border-bottom: 1px solid #dddddd;">
+                                                <a class="itemTitle" href="#"
+                                                   style="/*Overridden in JS cloning*/">
+                                                    The Earth has Come to Its Beginning
+                                                </a>
+                                            </u>
+                                        </div>
+                                        <div class="one" style="height: 1%;">
                                         </div>
                                         <div class="one left itemDescription" style="font-size: 15px;overflow: hidden">
                                             Sins have all been washed away to see if we can revive and recover from all the
@@ -184,7 +190,7 @@
                                                     <div href="#" class="itemBookmark center">
                                                         <a href="#"><span style="color: #000000;font-size: 15px;">News</span></a>
                                                     </div>
-                                                    <hr style="color:#000000; background-color: #000000;height: 2px;"/>
+                                                    <hr style="color:#bbbbbb; background-color: #bbbbbb;height: 2px;"/>
                                                 </div>
                                                 <div class="use40 center">
                                                     <div class="itemAdvanced" style="text-decoration: none;"
@@ -196,7 +202,7 @@
                                                     <div href="#" class="center" title="http://www.google.com">
                                                         <a href="#"><span style="color: #000000;font-size: 15px;">Mute</span></a>
                                                     </div>
-                                                    <hr style="color:#000000; background-color: #000000;height: 2px;"/>
+                                                    <hr style="color:#bbbbbb; background-color: #bbbbbb;height: 2px;"/>
                                                 </div>
                                             </div>
                                             <div class="use5">
