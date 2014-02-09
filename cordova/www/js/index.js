@@ -1062,6 +1062,8 @@ function initialSetup(){
     try {
         section($Loader);
 
+        $FeedSetupCountries.fadeIn("fast");
+
         var countryListDocumentFragment = document.createDocumentFragment();
         for (var i = 0; i < countries.length; i++) {
             (function (i, j) {
@@ -1076,7 +1078,7 @@ function initialSetup(){
                                 _internal_screamLink(value);
                             });
 
-                            $FeedSetupCountries.fadeOut("fast");
+                            $FeedSetupCountries.hide();
                             $FeedSetupGenders.fadeIn("slow");
 
                         }
@@ -1114,7 +1116,7 @@ function initialSetup(){
                                 //alert(value);
                                 _internal_screamLink(value);
                             });
-                            $FeedSetupGenders.fadeOut("fast");
+                            $FeedSetupGenders.hide();
                             $FeedSetupIndustries.fadeIn("slow");
                         }
                     );
