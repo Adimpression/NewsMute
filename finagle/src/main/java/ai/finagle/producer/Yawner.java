@@ -1,5 +1,6 @@
 package ai.finagle.producer;
 
+import ai.finagle.auth.Gatekeeper;
 import ai.finagle.db.DBScripts;
 import ai.finagle.db.MOOD;
 import ai.finagle.model.*;
@@ -103,7 +104,7 @@ public class Yawner implements Runnable {
             }
         };
 
-        ServerBuilder.safeBuild(service, ServerBuilder.get()
+        ServerBuilder.safeBuild(new Gatekeeper().andThen(service), ServerBuilder.get()
                 .codec(Http.get())
                 .name("HttpServer")
                 .bindTo(new InetSocketAddress(bindIp, Integer.parseInt(port))));
