@@ -13,7 +13,7 @@ public class DBScripts {
 
     public static final String CREATE_STALK = "create table Stalk(humanId varchar, mood varchar, urlHash varchar, value varchar, PRIMARY KEY (humanId, mood, urlHash));";
 
-    public static final String CREATE_SUPERFRIEND = "create table SuperFriend(humanId varchar, value varchar,  PRIMARY KEY (humanId));";
+    public static final String CREATE_SUPERFRIEND = "create table SuperFriend(humanId varchar, humanSuperFriend value varchar,  PRIMARY KEY (humanId, humanSuperFriend));";
 
     public static final String CREATE_GUARDIAN = "create table Guardian(humanId varchar, value varchar,  PRIMARY KEY (humanId));";
 

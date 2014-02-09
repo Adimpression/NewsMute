@@ -116,48 +116,26 @@ public class SuperFriender implements Runnable {
             final String hasheduser = BCrypt.hashpw(user, new String(SuperFriender.GLOBAL_SALT));
             System.out.println("hashed user:" + hasheduser);
             if (usersParameterValues != null) {//Adding friends
-                    System.out.println("users:" + usersParameterValues.get(0));
-                final ResultSet execute = connect.execute(String.format("select * from SuperFriend where humanId='%s'", hasheduser));
-                final List<Row> all = execute.all();
-                final SuperFriendValue superFriendValue;
-                if (all.size() != 0) {
-                    superFriendValue = new Gson().fromJson(all.get(0).getString("value"), SuperFriendValue.class);
-                } else {
-                    superFriendValue = null;
-                }
-                final Set<String> contacts = new HashSet<String>();
-
-                if (superFriendValue != null) {
-                    contacts.addAll(Arrays.asList(superFriendValue.superFriends));
-                }
 
                 final String[] newContacts = usersParameterValues.get(0).split("\\|");
 
                 for (final String contact : newContacts) {
                     if (contact != null && !contact.isEmpty()) {
-                        contacts.add(BCrypt.hashpw(contact, new String(GLOBAL_SALT)));
+                        final String superFriendHash = BCrypt.hashpw(contact, new String(GLOBAL_SALT));
+                        connect.execute(String.format("insert into SuperFriend(humanId, humanSuperFriend, value) values('%s','%s','%s');",
+                                hasheduser,
+                                superFriendHash,
+                                new Gson().toJson(new SuperFriendValue(hasheduser, new String[]{superFriendHash}))));//Yet to hash the urlHash value
                     }
                 }
 
-                final String[] finalContacts = new String[contacts.size()];
-
-                connect.execute(String.format("insert into SuperFriend(humanId, value) values('%s','%s');", hasheduser, new Gson().toJson(new SuperFriendValue(hasheduser, contacts.toArray(finalContacts)))));//Yet to hash the urlHash value
                 returnVal = new Gson().toJson(new Return<ReturnValueSuperFriend>(new ReturnValueSuperFriend(new SuperFriendValue[]{}), "", "OK"));
 
-            } else {//querying friends
-                final ResultSet execute = connect.execute(String.format("select * from SuperFriend where humanId='%s'", hasheduser));
-                final List<Row> all = execute.all();
-                final SuperFriendValue superFriendValue;
-                if (all.size() != 0) {
-                    superFriendValue = new Gson().fromJson(all.get(0).getString("value"), SuperFriendValue.class);
-                } else {
-                    superFriendValue = null;
-                }
-                returnVal = new Gson().toJson(new Return<ReturnValueSuperFriend>(new ReturnValueSuperFriend(superFriendValue != null ? new SuperFriendValue[]{superFriendValue} : new SuperFriendValue[0]), "", "OK"));
-
+            } else {
+                returnVal = new Gson().toJson(new Return<ReturnValueSuperFriend>(new ReturnValueSuperFriend(new SuperFriendValue[0]), "MINIMALLY, THE user AND users PARAMETER ARE REQUIRED", "ERROR"));
             }
         } else {
-            returnVal = new Gson().toJson(new Return<ReturnValueSuperFriend>(new ReturnValueSuperFriend(new SuperFriendValue[]{}), "MINIMALLY, THE user PARAMETER IS REQUIRED", "ERROR"));
+            returnVal = new Gson().toJson(new Return<ReturnValueSuperFriend>(new ReturnValueSuperFriend(new SuperFriendValue[]{}), "MINIMALLY, THE user AND users PARAMETER ARE REQUIRED", "ERROR"));
         }
 
         return returnVal;

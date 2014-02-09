@@ -58,14 +58,11 @@ public class Counsellor implements Runnable {
                     for (final Row screamRow : allScreams) {
                         //@FIXME: Duplicate fetches. Can we fetch by partition? For, humanId on one partition will be the same
                         final List<Row> allSuperFriends = connect.execute(String.format("select * from SuperFriend where humanId='%s'", screamRow.getString(0))).all();
-                        final SuperFriendValue superFriendValue;
-                        if (allSuperFriends.size() != 0) {
-                            superFriendValue = new Gson().fromJson(allSuperFriends.get(0).getString("value"), SuperFriendValue.class);
-                        } else {
-                            superFriendValue = new SuperFriendValue(screamRow.getString(0), new String[0]);
-                        }
 
-                        for (final String friend : superFriendValue.superFriends) {//Ideally, all screams are not friends of this person, but we do so for now for testing
+                        for (final Row friendRow : allSuperFriends) {//Ideally, all screams are not friends of this person, but we do so for now for testing
+                            final String humanId = friendRow.getString("humanId");
+                            final String friend = friendRow.getString("humanSuperFriend");
+
                             if(MOOD.DESTINY(screamRow.getString("mood")).life == MOOD.LIFE.ALIVE){
 
                                 final String urlHash = screamRow.getString("urlHash");
@@ -84,11 +81,14 @@ public class Counsellor implements Runnable {
                                     System.out.println("Inserting:" + yawnFeedItem.toString());
                                     connect.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", friend, MOOD.LIFE.ALIVE.state, yawnRow.getString("urlHash"), new Gson().toJson(yawnFeedItem), DBScripts.YAWN_COUNSELLED_TTL));
                                 }
-                                connect.execute(String.format("delete from Scream where humanId='%s' and mood='%c' and urlHash='%s';",
-                                        superFriendValue.humanId, MOOD.LIFE.ALIVE.state, urlHash));//Yet to hash the urlHash value
 
+                                //Removing scream record as alive
+                                connect.execute(String.format("delete from Scream where humanId='%s' and mood='%c' and urlHash='%s';",
+                                        humanId, MOOD.LIFE.ALIVE.state, urlHash));//Yet to hash the urlHash value
+
+                                //Inserting scream record as dead
                                 connect.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;",
-                                        superFriendValue.humanId, MOOD.LIFE.DEAD.state, urlHash, value, DBScripts.YAWN_TTL));
+                                        humanId, MOOD.LIFE.DEAD.state, urlHash, value, DBScripts.YAWN_TTL));
 
 
                                 totalInsertions++;
