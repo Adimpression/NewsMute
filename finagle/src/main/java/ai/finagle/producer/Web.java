@@ -233,7 +233,7 @@ public class Web implements Runnable {
     }
 
     private HttpResponse blockingSuperFriender(final HttpRequest request) {
-        return superFrienderClient.apply(request).apply(new Duration(TimeUnit.SECONDS.toNanos(30)));
+        return superFrienderClient.apply(request).apply(new Duration(TimeUnit.SECONDS.toNanos(300)));//300, because the clients burst friends in batches of 20, but all at once
     }
 
     private HttpResponse blockingGuardian(final HttpRequest request) {

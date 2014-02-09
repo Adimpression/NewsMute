@@ -17,7 +17,6 @@ public class Gatekeeper extends SimpleFilter<HttpRequest, HttpResponse>{
     @Override
     public Future<HttpResponse> apply(final HttpRequest httpRequest, final Service<HttpRequest, HttpResponse> httpRequestHttpResponseService) {
         final HttpResponse httpResponsePostive = new DefaultHttpResponse(HttpVersion.HTTP_1_0, HttpResponseStatus.OK);
-        final HttpResponse httpResponseNegative = new DefaultHttpResponse(HttpVersion.HTTP_1_0, HttpResponseStatus.UNAUTHORIZED);
 
         Cookie sessionCookie = null;
 
