@@ -49,7 +49,7 @@ for (var j = 0; j < 35; j++) {
 }
 
 const countries = [
-    {'title': 'Don\'t care                   ', 'feeds': [Country_Global_ABC]},
+    {'title': 'Don\'t care                   ', 'feeds': []},//Don't put anything here, this is the users exit strategy in case (s)he doesn't want to chose anything
     {'title': 'Afghanistan                   ', 'feeds': ['http://feeds.feedburner.com/khaama']},
     {'title': 'Albania                       ', 'feeds': ['http://topics.nytimes.com/top/news/international/countriesandterritories/albania/?rss=1']},
     {'title': 'Algeria                       ', 'feeds': ['http://www.aps.dz/spip.php?page=backend&id_rubrique=32']},
@@ -250,7 +250,7 @@ const countries = [
 
 
 const industries = [
-    {'title': 'Don\'t care                      ', 'feeds': [Industry_Technology_Y_Combinator]},
+    {'title': 'Don\'t care                      ', 'feeds': []},//Don't put anything here, this is the users exit strategy in case (s)he doesn't want to chose anything
 //    {'title': 'Agriculture                      ', 'feeds': [Industry_Technology_Y_Combinator]},
 //    {'title': 'Beverage & Tobacco               ', 'feeds': [Industry_Technology_Y_Combinator]},
 //    {'title': 'Accounting                       ', 'feeds': [Industry_Technology_Y_Combinator]},
@@ -303,7 +303,7 @@ const industries = [
 ];
 
 const genders = [
-    {'title': 'Don\'t care', 'feeds': []},
+    {'title': 'Don\'t care', 'feeds': []},//Don't put anything here, this is the users exit strategy in case (s)he doesn't want to chose anything
     {'title': 'Male       ', 'feeds': [Gender_Male_Elle]},
     {'title': 'Female     ', 'feeds': [Gender_Female_Elle]}
 ];
