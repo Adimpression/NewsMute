@@ -352,8 +352,13 @@ function InitializeHuman() {
                         //Now we have the email, we try to login, if we fail
                         //If password failure
 
-                        signIn(getHash(password), function(response){
+                        signIn(getHash(password), function(response, textStatus, request){
                             try {
+
+                                var sessionHeader = request.getResponseHeader('x-session-header');
+                                //alert(sessionHeader);
+                                window.localStorage.setItem("x-session-header", sessionHeader);
+
                                 var json = JSON.parse(response);
                                 //alert(JSON.stringify(json));
                                 var dataArray = json.returnValue.data;
@@ -368,9 +373,12 @@ function InitializeHuman() {
                                         window.location.href = window.location.href;
                                     } else if (status == "NO_ACCOUNT") {
                                         alert("No account, signing you up");
-                                        signUp(getHash(password), function (response) {
-
+                                        signUp(getHash(password), function (response, textStatus, request) {
                                             try {
+                                                var sessionHeader = request.getResponseHeader('x-session-header');
+                                                alert(sessionHeader);
+                                                window.localStorage.setItem("x-session-header", sessionHeader);
+
                                                 var json = JSON.parse(response);
                                                 //alert(JSON.stringify(json));
                                                 var dataArray = json.returnValue.data;
@@ -438,8 +446,8 @@ function signUp(passwordHash, successCallback, failureCallback){
         },
         data: {},
         dataType: 'text', //json
-        success: function (response) {
-            successCallback(response);
+        success: function (response, statusText, request) {
+            successCallback(response, statusText, request);
         },
         error: function (e) {
             failureCallback(e);
@@ -461,8 +469,8 @@ function signIn(passwordHash, successCallback, failureCallback){
         },
         data: {},
         dataType: 'text', //json
-        success: function (response) {
-            successCallback(response);
+        success: function (response, statusText, request) {
+            successCallback(response, statusText, request);
         },
         error: function (e) {
             failureCallback(e);
@@ -594,6 +602,7 @@ function WakeUp() {
 
     $.ajax({
         type: "GET",
+        headers: { 'x-session-header': getSessionValue()},
         url: endpointYawn +
             "/?nmact=READ&user=" + humanId,
         crossDomain: true,
@@ -739,6 +748,7 @@ function screamLink(url, successCallback, failureCallback){
         //alert("Sharing:" + url)
         $.ajax({
             type: "GET",
+            headers: { 'x-session-header': getSessionValue()},
             url: endpointScream +
                 "/?user=" + humanId + "&url=" + encodeURIComponent(url),
             crossDomain: true,
@@ -764,6 +774,7 @@ function _internal_screamLink(url, successCallback, failureCallback){
         //alert('Sharing ' + url);
         $.ajax({
             type: "GET",
+            headers: { 'x-session-header': getSessionValue()},
             url: endpointScream +
                 "/?user=" + humanId + "&url=" + encodeURIComponent(url),
             crossDomain: true,
@@ -788,7 +799,7 @@ function scream() {
         return;
     }
 
-    screamLink(url, function(e){}, function(e){});
+    screamLink(url, function(e){alert(e)}, function(e){alert(e)});
 }
 
 function stalk(url) {
@@ -805,6 +816,7 @@ function stalk(url) {
     if (isValidURL(url)) {
         $.ajax({
             type: "GET",
+            headers: { 'x-session-header': getSessionValue()},
             url: endpointStalk +
                 "/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=CREATE",
             crossDomain: true,
@@ -831,9 +843,16 @@ function stalk(url) {
     }
 
 }
+function getSessionValue() {
+    var session = window.localStorage.getItem("x-session-header");
+    //alert("Session in Local Storage\n" + session);
+    return  session;
+}
+
 function _internal_stalk(url) {
     $.ajax({
             type: "GET",
+            headers: { 'x-session-header': getSessionValue()},
             url: endpointStalk +
                 "/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=CREATE",
             crossDomain: true,
@@ -873,6 +892,7 @@ function unshare(url) {
         if(confirm("Remove feed permanently?")){
             $.ajax({
                 type: "GET",
+                headers: { 'x-session-header': getSessionValue()},
                 url: endpointStalk +
                     "/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=DELETE",
                 crossDomain: true,
@@ -899,6 +919,7 @@ function unshare(url) {
 function markRead(url) {
             $.ajax({
                 type: "GET",
+                headers: { 'x-session-header': getSessionValue()},
                 url: endpointYawn +
                     "/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=DELETE",
                 crossDomain: true,
@@ -934,6 +955,7 @@ function superFriend() {
                 if (i % 20 == 0) {//Why? Because we might hit the maximum length of the URL. Right now my contacts count on the phone is some 1900+
                     $.ajax({
                         type: "GET",
+                        headers: { 'x-session-header': getSessionValue()},
                         url: endpointSuperFriend +
                             "/?user=" + humanId + "&users=" + contactSet,
                         crossDomain: true,
@@ -1075,7 +1097,7 @@ function initialSetup(){
                             //alert(item.title);
                             item.feeds.forEach(function (value) {
                                 //alert(value);
-                                _internal_screamLink(value);
+                                _internal_stalk(value);
                             });
 
                             $FeedSetupCountries.hide();
@@ -1114,7 +1136,7 @@ function initialSetup(){
                             //alert(item.title);
                             item.feeds.forEach(function (value) {
                                 //alert(value);
-                                _internal_screamLink(value);
+                                _internal_stalk(value);
                             });
                             $FeedSetupGenders.hide();
                             $FeedSetupIndustries.fadeIn("slow");
@@ -1149,7 +1171,7 @@ function initialSetup(){
                             //alert(item.title);
                             item.feeds.forEach(function (value) {
                                 //alert(value);
-                                _internal_screamLink(value);
+                                _internal_stalk(value);
 
                             });
 

@@ -34,6 +34,9 @@ import android.webkit.WebViewClient;
 import org.apache.cordova.Config;
 import org.apache.cordova.DroidGap;
 
+import java.net.CookieHandler;
+import java.net.CookieManager;
+
 public class Main extends DroidGap {
     private static Intent currentLaunchIntent;
 
@@ -61,6 +64,7 @@ public class Main extends DroidGap {
 
         super.init();
 
+        CookieHandler.setDefault(new CookieManager());
 
         final WebSettings settings = super.appView.getSettings();
         super.appView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
@@ -105,6 +109,7 @@ public class Main extends DroidGap {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     finish();
+                                    System.exit(0);
                                 }
 
                             })
