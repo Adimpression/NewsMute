@@ -1,3 +1,5 @@
+const debug = false;
+
 const $feedNowSpeaking = $('#feedNowSpeaking');
 const $feedsList = $('#feedsList');
 const $itemTemplate = $('.itemTemplate');
@@ -395,37 +397,55 @@ function InitializeHuman() {
                                                         alert('News Mute had an error:' + status);
                                                     }
                                                 } else {
-                                                    alert("returnStatus:" + data.returnStatus);
+                                                    if(debug){
+                                                        alert("returnStatus:" + data.returnStatus);
+                                                    }
                                                 }
                                             } catch (e) {
-                                                alert(e);
+                                                if (debug) {
+                                                    alert(e);
+                                                }
                                             }
 
 
                                         }, function (argS) {
-                                            alert(JSON.stringify(argS));
+                                            if (debug) {
+                                                alert(JSON.stringify(argS));
+                                            }
                                         })
 
                                     } else {
                                         alert('News Mute had an error:' + status);
                                     }
                                 } else {
-                                    alert("returnStatus:" + data.returnStatus);
+                                    if (debug) {
+                                        alert("returnStatus:" + data.returnStatus);
+                                    }
                                 }
                             } catch (e) {
-                                alert(e);
+                                if (debug) {
+                                    alert(e);
+                                }
                             }
 
                         }, function(arg){
-                            alert(arg);
-                            alert(JSON.stringify(arg));
+                            if (debug) {
+                                alert(arg);
+                                alert(JSON.stringify(arg));
+                            }
                         });
 
                     } catch (e) {
-                        alert(e);
+                        if (debug) {
+                            alert(e);
+                        }
                     }
                 },
-                function(arg){alert(arg);});
+                function(arg){
+                    if (debug) {
+                        alert(arg);
+                    }
+                });
         } else {
             postSession();
         }
@@ -521,7 +541,9 @@ function NewsMute() {
     try {
         InitializeHuman();
     } catch (e) {
-        alert(e);
+        if (debug) {
+            alert(e);
+        }
     }
 }
 
@@ -586,8 +608,10 @@ var app = {
 
 
         } catch (e) {
-            alert('init error');
-            alert(e);
+            if (debug) {
+                alert('init error');
+                alert(e);
+            }
         }
     },
     // Update DOM on a Received Event
@@ -730,13 +754,17 @@ function WakeUp() {
 
                 //DEBUG=alert('Completed in ' + (new Date().getTime() - start ));
             } catch (e) {
-                alert('Data render error' + e);
+                if (debug) {
+                    alert('Data render error' + e);
+                }
             }
 
 
         },
         error: function (e) {
-            alert(JSON.stringify(e));
+            if (debug) {
+                alert(JSON.stringify(e));
+            }
         }
     });
 }
@@ -840,7 +868,9 @@ function stalk(url) {
                 }
             },
             error: function (e) {
-                alert(JSON.stringify(e));
+                if (debug) {
+                    alert(JSON.stringify(e));
+                }
             }
         });
     } else {
@@ -872,7 +902,9 @@ function _internal_stalk(url) {
                     //alert("Subscribed");//@TODO: Check response
                     //window.location.href = window.location.href;
                 } catch (e) {
-                    alert(e);
+                    if (debug) {
+                        alert(e);
+                    }
                 }
             },
             error: function (e) {
@@ -888,7 +920,9 @@ function share(link) {
         };
         window.socialmessage.send(message);
     } catch (e) {
-        alert(e);
+        if (debug) {
+            alert(e);
+        }
     }
 
 }
@@ -911,7 +945,9 @@ function unshare(url) {
                     alert('Removed feed!');
                 },
                 error: function (e) {
-                    alert(JSON.stringify(e));
+                    if (debug) {
+                        alert(JSON.stringify(e));
+                    }
                 }
             });
         }
@@ -937,7 +973,9 @@ function markRead(url) {
                 success: function (response) {
                 },
                 error: function (e) {
-                    alert(JSON.stringify(e));
+                    if (debug) {
+                        alert(JSON.stringify(e));
+                    }
                 }
             });
 }
@@ -981,7 +1019,9 @@ function superFriend() {
                 }
             }
         } catch (e) {
-            alert(e);
+            if (debug) {
+                alert(e);
+            }
         }
 
     }
@@ -997,7 +1037,9 @@ function superFriend() {
 
         navigator.contacts.find(['emails'], findAllContactsSuccess, findAllContactsFailure, options);
     } catch (e) {
-        alert(e);
+        if (debug) {
+            alert(e);
+        }
     }
 
 }
@@ -1011,7 +1053,9 @@ function hide(url){
             $("#" + id).slideUp(300);
         }});
     } catch (e) {
-        alert(e);
+        if (debug) {
+            alert(e);
+        }
     }
 
 }
