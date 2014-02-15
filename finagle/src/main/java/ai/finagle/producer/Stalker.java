@@ -6,6 +6,7 @@ import ai.finagle.db.MOOD;
 import ai.finagle.model.Return;
 import ai.finagle.model.ReturnValueStalk;
 import ai.finagle.model.StalkItem;
+import ai.finagle.model.YawnItem;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -20,6 +21,9 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.http.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
+import org.jsoup.select.Elements;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.net.InetSocketAddress;
@@ -153,6 +157,42 @@ public class Stalker implements Runnable {
                         System.out.println("description:" + description);
 
                         connect.execute(String.format("insert into Stalk(humanId, mood, urlHash, value) values('%s','%c','%s','%s');", hashUser, MOOD.LIFE.ALIVE.state, url, new Gson().toJson(new StalkItem(url, title, description))));//Yet to hash the urlHash value
+
+                        try {//Please match this with Harvester first time feed setup
+                            final Document feedDocument = Jsoup.parse(new URL(url).openStream(), "UTF-8", url, Parser.xmlParser());
+
+                            final Elements itemElements = feedDocument.getElementsByTag("item");
+                            Element[]  feedItems = new Element[itemElements.size()];
+                            feedItems =  itemElements.toArray(feedItems);
+
+                            for (final Element feedItem : feedItems) {
+
+                                final String feedItemTitle = feedItem.getElementsByTag("title").first().text();
+                                System.out.println("title:" + feedItemTitle);
+
+                                final String feedItemLink = feedItem.getElementsByTag("link").first().text();
+                                System.out.println("link:" + feedItemLink);
+
+                                final String feedItemDescription = feedItem.getElementsByTag("description").first().text();
+                                System.out.println("description:" + feedItemDescription);
+
+                                final ResultSet yawnRowsNotRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", url,  MOOD.LIFE.ALIVE.state, feedItemLink));
+                                final ResultSet yawnRowsDidRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", url, MOOD.LIFE.DEAD.state, feedItemLink));
+
+                                final boolean feedItemLinkMissing = yawnRowsNotRead.all().isEmpty() && yawnRowsDidRead.all().isEmpty();
+
+                                if(feedItemLinkMissing){
+                                    connect.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %s;", url, MOOD.LIFE.ALIVE.state, feedItemLink, new Gson().toJson(new YawnItem(feedItemLink, feedItemTitle, feedItemDescription, url, "0")), DBScripts.INITIAL_INSERT_TTL));//Yet to hash the urlHash value
+                                } else {
+                                    //Ignoring insert
+                                }
+
+
+                            }
+                        } catch (final Throwable throwable) {
+                            throwable.printStackTrace(System.err);
+                        }
+
                     } catch (final Throwable e) {
                         e.printStackTrace(System.err);
                     }

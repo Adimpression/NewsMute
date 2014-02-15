@@ -56,7 +56,7 @@ public class Harvester implements Runnable {
 
                         final StalkItem stalkItem = new Gson().fromJson(stalk.getString("value"), StalkItem.class);
 
-                        try {
+                        try {//Please match this with Stalker first time feed setup
                             final Document feedDocument = Jsoup.parse(new URL(stalkItem.link).openStream(), "UTF-8", stalkItem.link, Parser.xmlParser());
 
                             final Elements itemElements = feedDocument.getElementsByTag("item");
