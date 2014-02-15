@@ -206,11 +206,7 @@ public class Stalker implements Runnable {
                     stalkItems = new StalkItem[all.size()];
 
                     for (int i = 0; i < stalkItems.length; i++) {
-                        try {
-                            stalkItems[i] = new Gson().fromJson(all.get(i).getString("value"), StalkItem.class);
-                        } catch (JsonSyntaxException e) { //@TODO: Remove after table cleanup
-                            stalkItems[i] = new StalkItem(all.get(i).getString("value"), all.get(i).getString("value"), all.get(i).getString("value"));
-                        }
+                        stalkItems[i] = new Gson().fromJson(all.get(i).getString("value"), StalkItem.class);
                     }
                 }
                 break;
