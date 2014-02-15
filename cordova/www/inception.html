@@ -136,21 +136,35 @@
 
 
     <div class="Inception" style="display: block; width: 100%; height: 100%; overflow: scroll;">
-        <div class="one center" style="padding: 10%;">
+        <div class="one center ttlm" style="padding-top: 5%;padding-right: 5%;padding-left: 5%;padding-bottom: 20%;">
             <div class="one">
+                <div class="use100">
+                    <div class="use35">
+                        &nbsp;
+                    </div>
+                    <div class="use30">
+                        <img src="Logo.png" class="use100">
+                    </div>
+                    <div class="use35 animated blink_me">
+                        &nbsp;
+                    </div>
+                </div>
                 <div class="use100">
                     <h2>
                         Familiarize yourself
                     </h2>
+                    <p>
+                        Find out how <i class="pink">News Mute</i> can help you filter good news through friends
+                    </p>
                 </div>
                 <div class="use100">
-                    <div class="use20p">
+                    <div class="use15p">
                         &nbsp;
                     </div>
-                    <div class="use60">
+                    <div class="use70">
                         <button class="pink use100 large" style=""><i class="icon-play-sign"> Quick Tour</i></button>
                     </div>
-                    <div class="use20a">
+                    <div class="use15a">
                         &nbsp;
                     </div>
                 </div>
@@ -158,25 +172,28 @@
                     <h2>
                         Connect
                     </h2>
+                    <p>
+                        <i class="pink">News Mute</i> works best with friends and feed subscriptions
+                    </p>
                 </div>
                 <div class="use100">
-                    <div class="use20p">
+                    <div class="use15p">
                         &nbsp;
                     </div>
-                    <div class="use60">
+                    <div class="use70">
                         <div class="use100">
                             <div class="third">
-                                <button class="yellow large use100" onclick="share('https://play.google.com/store/apps/details?id=ai.newsmute');"><i class="icon-rss-sign"> Add feeds</i></button>
+                                <button class="yellow large use100" onclick="initialSetup();"><i class="icon-rss-sign"> Add feeds</i></button>
                             </div>
                             <div class="third">
-                                <button class="pink large use100" onclick="share('https://play.google.com/store/apps/details?id=ai.newsmute');"><i class="icon-link"> Share link</i></button>
+                                <button class="pink large use100" onclick="superFriend();"><i class="icon-link" onclick="addFriends();"> Add friends</i></button>
                             </div>
                             <div class="third">
-                                <button class="purple large use100" onclick="share('https://play.google.com/store/apps/details?id=ai.newsmute');"><i class="icon-share-alt"> Add friends</i></button>
+                                <button class="purple large use100" onclick="section($FeedInterface); share('https://play.google.com/store/apps/details?id=ai.newsmute');"><i class="icon-share-alt"> Share News Mute</i></button>
                             </div>
                         </div>
                     </div>
-                    <div class="use20a">
+                    <div class="use15a">
                         &nbsp;
                     </div>
                 </div>
@@ -184,21 +201,28 @@
                     <h2>
                         Learn more
                     </h2>
+                    <p>
+                        We are here to help and if you don't find it here, drop in a non-private email to <i class="icon-envelope-alt pink" style="text-decoration: underline;"> nmd@adimpression.mobi</i>.
+                    </p>
                 </div>
                 <div class="use100">
-                    <div class="use20p">
+                    <div class="use15p">
                         &nbsp;
                     </div>
-                    <div class="use60">
+                    <div class="use70">
                         <button class="pink use100 large"><i class="icon-question-sign"> Check Help</i></button>
                     </div>
-                    <div class="use20a">
+                    <div class="use15a">
                         &nbsp;
                     </div>
-               </div>
+                </div>
+                <div>
+                    <span class="small">© MMXIV. Adimpression LLC. Delaware, USA</span>
+                </div>
             </div>
         </div>
     </div>
+
 
     <div class="FeedInterface one" style="display: none; width: 100%; height: 100%; overflow: scroll;">
         <div class="one left" style="height: 0; background-color: transparent;">
@@ -206,10 +230,6 @@
                 <div class="dropdown" style="font-size: 15px; background-color: transparent;border: none;">
                     <button style="width: 100%;color: transparent; border:none; background: transparent url('icon.png'); -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;;"
                             onclick=""></button>
-                    <ul style="border:none; background-color: transparent;" >
-                        <li><a href="#" onclick="scream();"><i class="icon-link" style="color: #ff1493;font-size: 18px;"></i></a></li>
-                        <li><a href="#" onclick="stalk(null);"><i class="icon-rss" style="color: #ff1493;font-size: 18px;"></i></a></li>
-                        <li><a href="#" onclick="initialSetup();"><i class="icon-cogs" style="color: #ff1493;font-size: 18px;"></i></a></li>
                     </ul>
                 </div>
             </div>

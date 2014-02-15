@@ -996,9 +996,15 @@ function markRead(url) {
             });
 }
 
+function addFriends(){
+    superFriend();
+    section($FeedInterface);
+}
+
 function superFriend() {
     //alert('Finding contacts');
     function findAllContactsSuccess(contacts) {
+        navigator.splashscreen.show();
         //alert('Found contacts: ' + contacts.length);
         try {
             var contactSet = "";
@@ -1034,6 +1040,9 @@ function superFriend() {
 
                 }
             }
+
+            navigator.splashscreen.hide();
+
         } catch (e) {
             if (debug) {
                 alert(e);
@@ -1147,8 +1156,6 @@ function isConnected() {
 
 function initialSetup(){
     try {
-//        section($Inception);
-//        return;
         section($Loader);
 
         $FeedSetupCountries.fadeIn("fast");
