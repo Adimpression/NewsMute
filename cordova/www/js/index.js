@@ -376,7 +376,7 @@ function InitializeHuman() {
                                         signUp(getHash(password), function (response, textStatus, request) {
                                             try {
                                                 var sessionHeader = request.getResponseHeader('x-session-header');
-                                                alert(sessionHeader);
+                                                //alert(sessionHeader);
                                                 window.localStorage.setItem("x-session-header", sessionHeader);
 
                                                 var json = JSON.parse(response);
@@ -718,6 +718,11 @@ function WakeUp() {
                         }
                     })(i);
                 }
+
+                if(length > 0){
+                    $feedsList.empty();
+                }
+
                 $feedsList.append(feedListDocumentFragment);
                 section($FeedInterface);
                 $feedsList.slideDown();
