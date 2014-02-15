@@ -15,10 +15,12 @@ const $FeedSetupIndustries = $('.FeedSetupIndustries');
 const $Loader = $(".Loader");
 const $FeedSetup = $(".FeedSetup");
 const $FeedInterface = $(".FeedInterface");
+const $Inception = $(".Inception ");
 
 const clsItemTitle = '.itemTitle';
 const clsItemDescription = '.itemDescription';
 const clsItemBookmark = '.itemBookmark';
+const clsItemBookmarkText = '.itemBookmarkText';
 const clsItemAdvanced = '.itemAdvanced';
 const clsItemHide = '.itemHide';
 
@@ -684,6 +686,7 @@ function WakeUp() {
                             const feedItemTitle = clone.find(clsItemTitle);
                             const feedItemBookmark = clone.find(clsItemBookmark);
                             const feedItemHide = clone.find(clsItemHide);
+                            const feedItemBookmarkText = clone.find(clsItemBookmarkText);
 
                             clone.attr(strId, id);
                             feedItemTitle.text(item.title);
@@ -708,11 +711,22 @@ function WakeUp() {
                                 feedItemBookmark.attr("title", item.link);
                                 feedItemBookmark.click(
                                 function(){
-                                    $(this).fadeOut('fast', function(){
-                                        const url = $(this).attr('title');
+                                    const url = $(this).attr('title');
+                                    _internal_screamLink(
+                                        url,
+                                        function(e){
+                                        },
+                                        function(e){
+                                            if (debug) {
+                                                alert(e);
+                                            }
+                                        }
+                                    );
+                                    feedItemBookmarkText.text("Shared!");
+                                    $(this).fadeOut('slow', function(){
                                         hide(url);
-                                        _internal_screamLink(url,function(e){}, function(e){alert(e);});
                                     });
+
                                 });
                             }
 
@@ -745,6 +759,8 @@ function WakeUp() {
 
                 if(length > 0){
                     $feedsList.empty();
+                } else {
+                    setTimeout("WakeUp", 2000);
                 }
 
                 $feedsList.append(feedListDocumentFragment);
@@ -1131,6 +1147,8 @@ function isConnected() {
 
 function initialSetup(){
     try {
+//        section($Inception);
+//        return;
         section($Loader);
 
         $FeedSetupCountries.fadeIn("fast");
@@ -1155,14 +1173,6 @@ function initialSetup(){
                         }
                     );
                     clone.appendTo(countryListDocumentFragment);
-//                    if (i < 20) {
-//                        clone.animate({opacity: 0.0});
-//                        clone.animate({opacity: 1.0}, {duration: i * 200, complete: function () {
-//                            for (i = 0; i < 1; i++) {
-//                                clone.fadeTo('slow', 0.5).fadeTo('slow', 1.0);
-//                            }
-//                        }});
-//                    }
                     if(i + 1 == j){
                         $FeedSetupGenders.hide();
                         $FeedSetupIndustries.hide();
@@ -1192,15 +1202,6 @@ function initialSetup(){
                         }
                     );
                     clone.appendTo(genderListDocumentFragment);
-//                    if (ig < 20) {
-//                        clone.animate({opacity: 0.0});
-//                        clone.animate({opacity: 1.0}, {duration: ig * 200, complete: function () {
-//                            for (ig = 0; ig < 1; ig++) {
-//                                clone.fadeTo('slow', 0.5).fadeTo('slow', 1.0);
-//                            }
-//                        }});
-//                    }
-
                     if(ig + 1 == j){
                     }
 
@@ -1236,14 +1237,6 @@ function initialSetup(){
                         }
                     );
                     clone.appendTo(industryListDocumentFragment);
-//                    if (ii < 20) {
-//                        clone.animate({opacity: 0.0});
-//                        clone.animate({opacity: 1.0}, {duration: ii * 200, complete: function () {
-//                            for (ii = 0; ii < 1; ii++) {
-//                                clone.fadeTo('slow', 0.5).fadeTo('slow', 1.0);
-//                            }
-//                        }});
-//                    }
 
                     if(ii + 1 == j){
                     }
@@ -1267,19 +1260,10 @@ function section(sectionToShow) {
     if (sectionToShow != $FeedInterface){
         $FeedInterface.hide();
     }
+    if (sectionToShow != $Inception){
+        $Inception.hide();
+    }
     sectionToShow.show();
-}
-
-function sectionFadeOut() {
-        $Loader.fadeOut();
-        $FeedSetup.fadeOut();
-        $FeedInterface.fadeOut();
-}
-
-function sectionHide() {
-        $Loader.hide();
-        $FeedSetup.hide();
-        $FeedInterface.hide();
 }
 
 
