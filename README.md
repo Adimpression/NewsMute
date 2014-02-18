@@ -7,8 +7,6 @@ https://play.google.com/store/apps/details?id=ai.newsmute
 
 More info here: http://NewsMute.com/
 
-Description
-Exclusively by NewsMute.com: Download the News Mute news reader WHILE IT IS FREE!
 Features and Benefits You Get:
 * Discover most popular news your friends are talking about. If your friends read or rated a news article more, you'll see it.
 * Subscribe for news websites, popular and special.
