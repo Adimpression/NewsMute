@@ -16,7 +16,7 @@ Features and Benefits You Get:
 * Your data is not stored using your plain email or password! (Two times hashed)
 * You have protection against news spam because your friends sort your news for you, automatically, without them or you knowing it.
 
-Do you know any application that can find you new news based on what your friends liked? Can this application remove news your friends didn't like? News Mute does that! The only application that does that! Can you see your own news choices? Yes, that can be done too!
+***Do you know any application that can find you new news based on what your friends liked? Can this application remove news your friends didn't like? News Mute does that! The only application that does that! Can you see your own news choices? Yes, that can be done too!***
 
 With News Mute you won't miss any important news. You won't see any unwanted news.
 
