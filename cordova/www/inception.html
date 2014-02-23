@@ -135,9 +135,9 @@
     </div>
 
 
-    <div class="Inception" style="display: block; width: 100%; height: 100%; overflow: scroll;">
+    <div class="Inception" style="display: block; width: 100%; height: 100%; overflow: hidden; background-color: #000000;">
         <div class="use100 polarizer">
-            <div class="polarizer_news" style="width: 49%; height: 100%; float: left;background-color: #ffffff;">
+            <div class="polarizer_news" style="width: 50%; height: 100%; float: left;background-color: #ffffff;">
                 <div style="height: 31%;">
                     &nbsp;
                 </div>
@@ -145,24 +145,15 @@
                     <button class="black use100 large"
                             style="width: 70%;height: 60%;margin-top: 20%;margin-right: 10%;margin-left: 20%;margin-bottom: 20%;"
                             onclick="$('.polarizer_mute').css('visibility', 'hidden');$('.polarizer,.mute').fadeOut(1000, function(){$('.news').fadeIn(100, function(){});});">
-                        <i class="icon-bullhorn"> News</i></button>
+                        <i class="icon-bullhorn" style="text-decoration: underline;"> News</i><br/>
+                        <sub>(Get news)</sub>
+                    </button> <br>
                 </div>
                 <div style="height: 31%">
                     &nbsp;
                 </div>
             </div>
-            <div style="width: 2%; height: 100%; float: left;">
-                <div class="use45p">
-                    &nbsp;
-                </div>
-                <div class="use10" style="background-color: #eeeeee; height: 100%;">
-                    &nbsp;
-                </div>
-                <div class="use45a">
-                    &nbsp;
-                </div>
-            </div>
-            <div  class="polarizer_mute" style="width: 49%; height: 100%; float: left; background-color: #000000;">
+            <div  class="polarizer_mute" style="width: 50%; height: 100%; float: left; background-color: #000000;">
                 <div style="height: 31%;">
                     &nbsp;
                 </div>
@@ -170,7 +161,9 @@
                     <button class="white use100 large"
                             style="width: 70%;height: 60%;margin-top: 20%;margin-right: 20%;margin-left: 10%;margin-bottom: 20%;"
                             onclick="$('.polarizer_news').css('visibility', 'hidden');$('.polarizer,.news').fadeOut(1000, function(){$('.mute').fadeIn(100, function(){});});">
-                        <i class="icon-comments"> Mute</i></button>
+                        <i class="icon-comments" style="text-decoration: underline;"> Mute</i><br/>
+                        <sub>(By friends)</sub>
+                    </button>
                 </div>
                 <div style="height: 31%;">
                     &nbsp;
@@ -178,40 +171,34 @@
             </div>
         </div>
 
-        <div class="one center ttlm news" style="display:none;height: 100%; padding-top: 5%;padding-right: 5%;padding-left: 5%;padding-bottom: 20%;background-color: #000000; color: #ffffff;">
+        <div class="one center ttlm news" style="display:none;height: 100%; padding-top: 5%;padding-right: 5%;padding-left: 5%;padding-bottom: 20%;background-color: #000000; color: #ffffff; overflow: scroll;">
             <div class="one" style="padding: 20%;">
                 <div class="use100">
                     <h2>
-                        Don't miss one single important News.
+                        More News means More Updates
                     </h2>
-                    <p>
-                        Add all your important News Sources through <i class="pink">News Mute</i>
-                    </p>
                     <h4>
-                        Add subscriptions
+                        Add More News Sources
                     </h4>
+                    <p>
+                        Your friends will sort the important ones
+                    </p>
                 </div>
                 <div class="use100">
                     <div class="use100">
                         <div class="use100">
                             <div class="one">
-                                <button class="white large use100" onclick="initialSetup();"><i class=""> Popular subscriptions</i></button>
-                            </div>
-                            <div class="use100" style="height: 10px;">
-                                &nbsp;
-                            </div>
-                            <div class="one">
-                                <button class="white large use100" onclick="section($FeedInterface); stalk();"><i class=""> Personal subscriptions</i></button>
+                                <button class="white large animated blink_me use100" onclick="$('.news,.mute').hide();$('.polarizer_news, .polarizer_mute').css('visibility', 'visible');$('.polarizer').show();initialSetup();"><i class=""> Add more news</i></button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="use100" style="height: 10px;">
+                <div class="use100" style="height: 30px;">
                     &nbsp;
                 </div>
                 <div class="use100">
                     <p>
-                        We are here to help and if you don't find it here, drop in a non-private email to <br/><i class="icon-envelope-alt pink" style="text-decoration: underline;"> nmd@adimpression.mobi</i>
+                        We are always here to help,  drop in a non-private email to <br/><i class="icon-envelope-alt pink" style="text-decoration: underline;"> nmd@adimpression.mobi</i>
                     </p>
                 </div>
                 <div class="use100">
@@ -219,40 +206,37 @@
                 </div>
             </div>
         </div>
-        <div class="one center ttlm mute" style="display:none;height: 100%; padding-top: 5%;padding-right: 5%;padding-left: 5%;padding-bottom: 20%;background-color: #ffffff; color: #000000;">
+        <div class="one center ttlm mute" style="display:none;height: 100%; padding-top: 5%;padding-right: 5%;padding-left: 5%;padding-bottom: 20%;background-color: #ffffff; color: #000000; overflow: scroll;">
             <div class="one" style="padding: 20%;">
                 <div class="use100">
                     <h2>
-                        Don't let unwanted news waste your time.
+                        More Friends means Better News
                     </h2>
-                    <p>
-                        Just because they update you, you don't have to read all news. Find only the important ones through <i class="pink">News Mute</i>
-                    </p>
                     <h4>
-                        Using friends
+                        Get Only Important News
                     </h4>
+                    <p>
+                        By sharing News Mute with more friends
+                    </p>
                 </div>
                 <div class="use100">
                     <div class="use100">
                         <div class="use100">
-                            <div class="one">
-                                <button class="black large use100" onclick="section($FeedInterface); addFriends();"><i class=""> Filter news</i></button>
-                            </div>
                             <div class="use100" style="height: 10px;">
                                 &nbsp;
                             </div>
                             <div class="one">
-                                <button class="black large use100" onclick="section($FeedInterface); share('https://play.google.com/store/apps/details?id=ai.newsmute');"><i class=""> Discover news</i></button>
+                                <button class="black large animate blink_me use100" onclick="$('.news,.mute').hide();$('.polarizer_news, .polarizer_mute').css('visibility', 'visible');$('.polarizer').show();section($FeedInterface); share('https://play.google.com/store/apps/details?id=ai.newsmute');"><i class=""> Give it to friends</i></button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="use100" style="height: 10px;">
+                <div class="use100" style="height: 30px;">
                     &nbsp;
                 </div>
                 <div class="use100">
                     <p>
-                        We are here to help and if you don't find it here, drop in a non-private email to <br/><i class="icon-envelope-alt pink" style="text-decoration: underline;"> nmd@adimpression.mobi</i>
+                        We are always here to help,  drop in a non-private email to <br/><i class="icon-envelope-alt pink" style="text-decoration: underline;"> nmd@adimpression.mobi</i>
                     </p>
                 </div>
                 <div class="use100">
