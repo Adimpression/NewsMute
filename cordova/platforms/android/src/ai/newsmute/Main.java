@@ -48,7 +48,7 @@ public class Main extends DroidGap {
         if (action.equalsIgnoreCase(Intent.ACTION_SEND) && currentLaunchIntent.hasExtra(Intent.EXTRA_TEXT)) {
             final String url = currentLaunchIntent.getStringExtra(Intent.EXTRA_TEXT);
             Log.d("SHARE", "" + url);
-            currentLaunchWebview.loadUrl("javascript:_internal_screamLink('" + url + "');");
+            currentLaunchWebview.loadUrl("javascript:share('" + url + "');");
         }
     }
 

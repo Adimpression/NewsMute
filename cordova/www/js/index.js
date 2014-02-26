@@ -1,4 +1,5 @@
-const debug = false;
+//const debug = false;
+const debug = true;
 
 const $feedNowSpeaking = $('#feedNowSpeaking');
 const $feedsList = $('#feedsList');
@@ -505,7 +506,11 @@ function justVisiting() {
     var lastVisited = window.localStorage.getItem("lastVisited");
     if (lastVisited != null) {
         //alert('lv no null');
-        _internal_screamLink(lastVisited,function(e){}, function(e){});
+        _internal_screamLink(lastVisited,function(e){}, function(e){
+            if(debug){
+                alert(e);
+            }
+        });
         markRead(lastVisited);
         window.localStorage.removeItem("lastVisited");
     } else {
@@ -924,17 +929,17 @@ function _internal_stalk(url) {
                 }
             },
             error: function (e) {
-                alert(JSON.stringify(e));
+                if(debug){
+                    alert(JSON.stringify(e));
+                }
             }
         });
 }
 
 function share(link) {
     try {
-        var message = {
-            url: link
-        };
-        window.socialmessage.send(message);
+        //alert('Sharing');
+        checkFeed(link);
     } catch (e) {
         if (debug) {
             alert(e);
@@ -1002,9 +1007,10 @@ function addFriends(){
 }
 
 function superFriend() {
+    //navigator.splashscreen.show();
     //alert('Finding contacts');
     function findAllContactsSuccess(contacts) {
-        navigator.splashscreen.show();
+        //navigator.splashscreen.hide();
         //alert('Found contacts: ' + contacts.length);
         try {
             var contactSet = "";
@@ -1041,7 +1047,6 @@ function superFriend() {
                 }
             }
 
-            navigator.splashscreen.hide();
 
         } catch (e) {
             if (debug) {
@@ -1307,3 +1312,31 @@ function section(sectionToShow) {
         return crc ^ (-1);
     };
 })();
+
+
+function checkFeed(rssFeedUrl) {
+    try {
+            discoverFeedUrlFor(rssFeedUrl.replace(/\s+/g, ''))//We replace all spaces since a user can type something like Facebook.com which ends up with spaces in the end
+                .done(function (data) {
+                    var queryResult = data.responseData;
+                    if (!!queryResult) {
+                        //'http://feeds.feedburner.com/techcrunch/social?format=xml';
+                        alert('Found RSS feed. Subscribed!');
+                        _internal_stalk(queryResult.url);
+                    } else {
+                        alert('Sorry, this is not a news feed.');
+                    }
+                });
+    } catch (e) {
+        alert(e);
+    }
+}
+
+
+var discoverFeedUrlFor = function (pageURL) {
+    var baseApiUrl = "http://ajax.googleapis.com/ajax/services/feed/lookup?v=1.0";
+    var jQueryJsonpToken = "&callback=?"; // tells jQuery to treat it as JSONP request
+    var pageUrlParameter = "&q=" + pageURL;
+    var requestUrl = baseApiUrl + jQueryJsonpToken + pageUrlParameter;
+    return $.getJSON(requestUrl);
+};
