@@ -938,6 +938,21 @@ function _internal_stalk(url) {
 
 function share(link) {
     try {
+        var message = {
+            url: link
+        };
+        window.socialmessage.send(message);
+    } catch (e) {
+        if (debug) {
+            alert(e);
+        }
+    }
+
+}
+
+
+function _subscribe_rss_from_android_share(link) {
+    try {
         //alert('Sharing');
         checkFeed(link);
     } catch (e) {
@@ -947,6 +962,8 @@ function share(link) {
     }
 
 }
+
+
 function unshare(url) {
     if (isValidURL(url)) {
         if(confirm("Remove feed permanently?")){
@@ -1321,10 +1338,11 @@ function checkFeed(rssFeedUrl) {
                     var queryResult = data.responseData;
                     if (!!queryResult) {
                         //'http://feeds.feedburner.com/techcrunch/social?format=xml';
-                        alert('Found RSS feed. Subscribed!');
                         _internal_stalk(queryResult.url);
+                        window.plugins.toast.showShortBottom('Found RSS feed. Subscribed!')
+                        //We can exit here, but why would a user want to exit after a feed subscription, except explore feeds
                     } else {
-                        alert('Sorry, this is not a news feed.');
+                        window.plugins.toast.showShortBottom("Sorry, News Mute doesn't recognise this website!");
                     }
                 });
     } catch (e) {
