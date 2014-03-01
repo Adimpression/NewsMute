@@ -72,6 +72,8 @@ public class Main extends DroidGap {
         final WebSettings settings = super.appView.getSettings();
         super.appView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
 
+        super.appView.setBackgroundColor(0);
+
         settings.setJavaScriptEnabled(true);
         settings.setLoadsImagesAutomatically(true);
         settings.setUseWideViewPort(true);

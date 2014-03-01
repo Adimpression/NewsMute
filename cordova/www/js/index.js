@@ -41,6 +41,7 @@ const endpointGuardian = "http://guardian.newsmute.com:50200";//http://23.253.36
 
 var humanId;
 var feedRefreshTimeout;
+var isFirstWake = true;
 
 
 const Country_Global_ABC = 'http://feeds.abcnews.com/abcnews/internationalheadlines';
@@ -634,7 +635,9 @@ var app = {
 
 function WakeUp() {
 
-    section($Loader);
+    if(isFirstWake){
+        section($Loader);
+    }
 
     $.ajax({
         type: "GET",
@@ -643,9 +646,12 @@ function WakeUp() {
             "/?nmact=READ&user=" + humanId,
         crossDomain: true,
         beforeSend: function () {
-            section($Loader);
+            if(isFirstWake){
+                section($Loader);
+            }
         },
         complete: function () {
+            isFirstWake = false;
             section($FeedInterface);
         },
         data: {},
@@ -687,7 +693,7 @@ function WakeUp() {
                 var feedListDocumentFragment = document.createDocumentFragment();
 
 
-                    for (var i = 0; i < length && i < 2; i++) {
+                    for (var i = 0; i < length && i < 10; i++) {
                     (function(i){
                         const item = data[i];
                         if (item.link != "null" && item.link != "") {//@TODO remove me, temp fix until server fixed
@@ -702,20 +708,18 @@ function WakeUp() {
                             clone.attr(strId, id);
                             clone.attr(strClass,'itemTemplateShown');
 
-                            {//Title related
-                                feedItemTitle.text(item.title);
-                                //clone.find('.itemTitle').attr('href', item.link);
-                                feedItemTitle.attr("title", item.link);
-                                feedItemTitle.attr("style", "font-size: 20px; color: #000000;");
-                                feedItemTitle.click(
-                                    function(){
-                                        window.localStorage.setItem('lastVisited', this.title);
-                                        $('.itemTemplate:not(#'+ id + ')').animate({opacity:0.2},500,function(){
-                                            openLink(window.localStorage.getItem('lastVisited'));
-                                        });
-                                    }
-                                );
-                            }
+                            feedItemTitle.text(item.title);
+                            //clone.find('.itemTitle').attr('href', item.link);
+                            feedItemTitle.attr("title", item.link);
+                            feedItemTitle.attr("style", "font-size: 20px; color: #000000;");
+                            feedItemTitle.click(
+                                function(){
+                                    window.localStorage.setItem('lastVisited', this.title);
+                                    //$('.itemTemplate:not(#'+ id + ')').animate({opacity:0.2},500,function(){
+                                        openLink(window.localStorage.getItem('lastVisited'));
+                                    //});
+                                }
+                            );
 
                             //clone.find('.itemDescription').html(item.description.replace(/<(?:.|\n)*?>/gm, ''));
                             clone.find(clsItemDescription).html(item.description.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '').replace(/<iframe\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/iframe>/gi, ''));
@@ -742,8 +746,9 @@ function WakeUp() {
                                     $(this).fadeOut('slow', function(){
                                         hide(url);
                                         $('#' + id).removeClass('itemTemplateShown');
+                                        $('#' + id).addClass('itemTemplateHidden');
                                         if ($feedsList.find('.itemTemplateShown').length == 0) {
-                                            setTimeout("WakeUp();", 1000);//If we do an immediate call instead, the UI, as it is still in an animation, renders weird
+                                            setTimeout("WakeUp();", 0);
                                         }
                                     });
 
@@ -761,8 +766,9 @@ function WakeUp() {
                                         $(this).fadeOut('fast', function(){
                                             hide($(this).attr('title'));
                                             $('#' + id).removeClass('itemTemplateShown');
+                                            $('#' + id).addClass('itemTemplateHidden');
                                             if ($feedsList.find('.itemTemplateShown').length == 0) {
-                                                setTimeout("WakeUp();", 1000);
+                                                setTimeout("WakeUp();", 0);
                                             }
                                         });
                                     });
@@ -782,7 +788,7 @@ function WakeUp() {
                 }
 
                 if(length > 0){
-                    $feedsList.empty();
+                    $feedsList.find('.itemTemplateHidden').empty();
                     $('.no_news').hide();
                     clearTimeout(feedRefreshTimeout);
                 } else {

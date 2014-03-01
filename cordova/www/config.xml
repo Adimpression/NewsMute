@@ -9,9 +9,8 @@
     </author>
     <access origin="*" />
     <preference name="webviewbounce" value="true" />
-    <preference name="show-splash-screen-spinner" value="true" />
+    <preference name="show-splash-screen-spinner" value="false" />
     <preference name="auto-hide-splash-screen" value="true" />
-    <preference name="fullscreen" value="false" />
-    <preference name="loadingDialog" value="Shhhhhhhhhh!!!, News Mute is muting news!" />
+    <preference name="fullscreen" value="true" />
 
 </widget>
