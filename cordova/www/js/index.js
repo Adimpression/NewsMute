@@ -1,5 +1,5 @@
-//const debug = false;
-const debug = true;
+const debug = false;
+//const debug = true;
 
 const $feedNowSpeaking = $('#feedNowSpeaking');
 const $feedsList = $('#feedsList');
@@ -343,10 +343,7 @@ function InitializeHuman() {
                                 }
                             }
                         } else {
-                            alert('Please uninstall me now. \n' +
-                                'I am privacy safe but I guess it is me, not you. Bye! \n\n' +
-                                'P.S. BTW, I will be waiting for you to come back some day :-(')
-                            navigator.app.exitApp();
+                            alert('Please exit the application. Bye!');
                         }
 
                         var password;
@@ -546,6 +543,18 @@ function postSession(){
 
 function NewsMute() {
     try {
+
+        $.ajaxSetup(
+            {
+                statusCode:{
+                    401: function(){
+                        window.localStorage.removeItem("humanId");//This will cause the InitializeHuman to run with a new signup
+                        window.location.href = window.location.href;//This will cause the InitializeHuman to run with a new signup
+                    }
+                }
+            }
+        );
+
         InitializeHuman();
     } catch (e) {
         if (debug) {
@@ -730,6 +739,10 @@ function WakeUp() {
                                     feedItemBookmarkText.text("Shared!");
                                     $(this).fadeOut('slow', function(){
                                         hide(url);
+                                        $('#' + id).remove();
+                                        if ($feedsList.find('.itemTemplate').length == 0) {
+                                            WakeUp();
+                                        }
                                     });
 
                                 });
@@ -745,6 +758,10 @@ function WakeUp() {
                                     function(){
                                         $(this).fadeOut('fast', function(){
                                             hide($(this).attr('title'));
+                                            $('#' + id).remove();
+                                            if ($feedsList.find('.itemTemplate').length == 0) {
+                                                WakeUp();
+                                            }
                                         });
                                     });
                             }

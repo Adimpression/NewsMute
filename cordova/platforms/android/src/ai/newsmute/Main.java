@@ -42,13 +42,16 @@ public class Main extends DroidGap {
 
     private static WebView currentLaunchWebview;
 
+    private static boolean sharedOnce = false;
+
     public static void share() {
         String action = currentLaunchIntent.getAction();
 
-        if (action.equalsIgnoreCase(Intent.ACTION_SEND) && currentLaunchIntent.hasExtra(Intent.EXTRA_TEXT)) {
+        if (action.equalsIgnoreCase(Intent.ACTION_SEND) && currentLaunchIntent.hasExtra(Intent.EXTRA_TEXT) && !sharedOnce) {
             final String url = currentLaunchIntent.getStringExtra(Intent.EXTRA_TEXT);
             Log.d("SHARE", "" + url);
             currentLaunchWebview.loadUrl("javascript:_subscribe_rss_from_android_share('" + url + "');");
+            sharedOnce = true;
         }
     }
 
