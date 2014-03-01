@@ -39,6 +39,7 @@ const endpointSuperFriend = "http://superfriend.newsmute.com:20200";//http://23.
 const endpointGuardian = "http://guardian.newsmute.com:50200";//http://23.253.36.42:50200";
 
 var humanId;
+var feedRefreshTimeout;
 
 
 const Country_Global_ABC = 'http://feeds.abcnews.com/abcnews/internationalheadlines';
@@ -782,8 +783,12 @@ function WakeUp() {
 
                 if(length > 0){
                     $feedsList.empty();
+                    $('.no_news').hide();
+                    clearTimeout(feedRefreshTimeout);
                 } else {
-                    setTimeout("WakeUp", 2000);
+                    $('.no_news').show();
+                    clearTimeout(feedRefreshTimeout);
+                    feedRefreshTimeout = setTimeout("window.plugins.toast.showShortBottom('Checking for any updates...'); WakeUp()", 5000);
                 }
 
                 $feedsList.append(feedListDocumentFragment);
@@ -1196,6 +1201,8 @@ function isConnected() {
 
 function initialSetup(){
     try {
+        clearTimeout(feedRefreshTimeout);
+
         section($Loader);
 
         $FeedSetupCountries.fadeIn("fast");
@@ -1297,6 +1304,11 @@ function initialSetup(){
     }
 }
 
+function launchInception(){
+    clearInterval(feedRefreshTimeout);
+    section($Inception);
+}
+
 function section(sectionToShow) {
     if (sectionToShow != $Loader){
         $Loader.hide();
@@ -1357,7 +1369,7 @@ function checkFeed(rssFeedUrl) {
                     if (!!queryResult) {
                         //'http://feeds.feedburner.com/techcrunch/social?format=xml';
                         _internal_stalk(queryResult.url);
-                        window.plugins.toast.showShortBottom('Found RSS feed. Subscribed!')
+                        window.plugins.toast.showShortBottom('Found RSS feed. Subscribed!');
                         //We can exit here, but why would a user want to exit after a feed subscription, except explore feeds
                     } else {
                         window.plugins.toast.showShortBottom("Sorry, News Mute doesn't recognise this website!");
