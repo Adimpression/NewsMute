@@ -344,6 +344,7 @@ function InitializeHuman() {
                             }
                         } else {
                             alert('Please exit the application. Bye!');
+                            return;
                         }
 
                         var password;
