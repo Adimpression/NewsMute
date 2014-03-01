@@ -27,6 +27,7 @@ const clsItemHide = '.itemHide';
 
 
 const strId = "id";
+const strClass = "class";
 
 
 const flag_super_friend = "flag_super_friend";
@@ -46,13 +47,6 @@ const Country_Global_ABC = 'http://feeds.abcnews.com/abcnews/internationalheadli
 const Industry_Technology_Y_Combinator = 'https://news.ycombinator.com/rss';
 const Gender_Female_Elle = 'http://www.elle.com/rss/';
 const Gender_Male_Elle = 'http://feeds.feedburner.com/TrendHunter/Fashion-for-Men';
-
-
-
-const clones = new Array(35);
-for (var j = 0; j < 35; j++) {
-    clones[j] = $itemTemplate.clone();
-}
 
 const countries = [
     {'title': 'Don\'t care                   ', 'feeds': []},//Don't put anything here, this is the users exit strategy in case (s)he doesn't want to chose anything
@@ -107,7 +101,7 @@ const countries = [
 //    {'title': 'Dominican Republic            ', 'feeds': [Country_Global_ABC]},
 //    {'title': 'East Timor                    ', 'feeds': [Country_Global_ABC]},
 //    {'title': 'Ecuador                       ', 'feeds': [Country_Global_ABC]},
-    {'title': 'Egypt                         ', 'feeds': ['http://feeds.feedburner.com/DailyNewsEgypt', ]},
+    {'title': 'Egypt                         ', 'feeds': ['http://feeds.feedburner.com/DailyNewsEgypt']},
 //    {'title': 'El Salvador                   ', 'feeds': [Country_Global_ABC]},
 //    {'title': 'Equatorial Guinea             ', 'feeds': [Country_Global_ABC]},
 //    {'title': 'Eritrea                       ', 'feeds': [Country_Global_ABC]},
@@ -199,7 +193,7 @@ const countries = [
 //    {'title': 'Portugal                      ', 'feeds': [Country_Global_ABC]},
 //    {'title': 'Qatar                         ', 'feeds': [Country_Global_ABC]},
 //    {'title': 'Romania                       ', 'feeds': [Country_Global_ABC]},
-    {'title': 'Russia                        ', 'feeds': ['http://rt.com/rss/news/', 'http://english.pravda.ru/russia/export.xml', 'http://feeds.feedburner.com/themoscowtimes/gAjo', ]},
+    {'title': 'Russia                        ', 'feeds': ['http://rt.com/rss/news/', 'http://english.pravda.ru/russia/export.xml', 'http://feeds.feedburner.com/themoscowtimes/gAjo']},
 //    {'title': 'Rwanda                        ', 'feeds': [Country_Global_ABC]},
 //    {'title': 'St Kitts & Nevis              ', 'feeds': [Country_Global_ABC]},
 //    {'title': 'St Lucia                      ', 'feeds': [Country_Global_ABC]},
@@ -693,11 +687,12 @@ function WakeUp() {
                 var feedListDocumentFragment = document.createDocumentFragment();
 
 
-                    for (var i = 0; i < length && i < clones.length; i++) {
+                    for (var i = 0; i < length && i < 2; i++) {
                     (function(i){
                         const item = data[i];
                         if (item.link != "null" && item.link != "") {//@TODO remove me, temp fix until server fixed
-                            const clone = clones[i];
+                            const clone = $itemTemplate.clone();
+
                             const id = crc32(item.link);
                             const feedItemTitle = clone.find(clsItemTitle);
                             const feedItemBookmark = clone.find(clsItemBookmark);
@@ -705,18 +700,23 @@ function WakeUp() {
                             const feedItemBookmarkText = clone.find(clsItemBookmarkText);
 
                             clone.attr(strId, id);
-                            feedItemTitle.text(item.title);
-                            //clone.find('.itemTitle').attr('href', item.link);
-                            feedItemTitle.attr("title", item.link);
-                            feedItemTitle.attr("style", "font-size: 20px; color: #000000;");
-                            feedItemTitle.click(
-                                function(){
-                                    window.localStorage.setItem('lastVisited', this.title);
-                                    $('.itemTemplate:not(#'+ id + ')').animate({opacity:0.2},500,function(){
-                                        openLink(window.localStorage.getItem('lastVisited'));
-                                    });
-                                }
-                            );
+                            clone.attr(strClass,'itemTemplateShown');
+
+                            {//Title related
+                                feedItemTitle.text(item.title);
+                                //clone.find('.itemTitle').attr('href', item.link);
+                                feedItemTitle.attr("title", item.link);
+                                feedItemTitle.attr("style", "font-size: 20px; color: #000000;");
+                                feedItemTitle.click(
+                                    function(){
+                                        window.localStorage.setItem('lastVisited', this.title);
+                                        $('.itemTemplate:not(#'+ id + ')').animate({opacity:0.2},500,function(){
+                                            openLink(window.localStorage.getItem('lastVisited'));
+                                        });
+                                    }
+                                );
+                            }
+
                             //clone.find('.itemDescription').html(item.description.replace(/<(?:.|\n)*?>/gm, ''));
                             clone.find(clsItemDescription).html(item.description.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '').replace(/<iframe\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/iframe>/gi, ''));
                             //clone.find('.itemDescription').html(item.description.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ''));
@@ -741,9 +741,9 @@ function WakeUp() {
                                     feedItemBookmarkText.text("Shared!");
                                     $(this).fadeOut('slow', function(){
                                         hide(url);
-                                        $('#' + id).remove();
-                                        if ($feedsList.find('.itemTemplate').length == 0) {
-                                            WakeUp();
+                                        $('#' + id).removeClass('itemTemplateShown');
+                                        if ($feedsList.find('.itemTemplateShown').length == 0) {
+                                            setTimeout("WakeUp();", 1000);//If we do an immediate call instead, the UI, as it is still in an animation, renders weird
                                         }
                                     });
 
@@ -760,9 +760,9 @@ function WakeUp() {
                                     function(){
                                         $(this).fadeOut('fast', function(){
                                             hide($(this).attr('title'));
-                                            $('#' + id).remove();
-                                            if ($feedsList.find('.itemTemplate').length == 0) {
-                                                WakeUp();
+                                            $('#' + id).removeClass('itemTemplateShown');
+                                            if ($feedsList.find('.itemTemplateShown').length == 0) {
+                                                setTimeout("WakeUp();", 1000);
                                             }
                                         });
                                     });
