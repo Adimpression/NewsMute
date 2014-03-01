@@ -27,6 +27,6 @@ public class DBScripts {
 
     public static final int STALK_HARVESTER_REINCARNATION = 600000;
 
-    public static final Object HARVESTED_YAWN_TTL = 1200;
-    public static final Object INITIAL_INSERT_TTL= 1200;
+    public static final Object HARVESTED_YAWN_TTL = 86400 * 1;//One day
+    public static final Object INITIAL_INSERT_TTL = 1200;
 }
