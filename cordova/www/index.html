@@ -39,19 +39,19 @@
 
         @-moz-keyframes blinker {
             0% { opacity: 1.0; }
-            50% { opacity: 0.0; }
+            50% { opacity: 0.5; }
             100% { opacity: 1.0; }
         }
 
         @-webkit-keyframes blinker {
             0% { opacity: 1.0; }
-            50% { opacity: 0.0; }
+            50% { opacity: 0.5; }
             100% { opacity: 1.0; }
         }
 
         @keyframes blinker {
             0% { opacity: 1.0; }
-            50% { opacity: 0.0; }
+            50% { opacity: 0.5; }
             100% { opacity: 1.0; }
         }
     </style>
@@ -78,6 +78,10 @@
      style="width: 100%; height: 100%; border-top-width: 0;border-right-width: 0;border-left-width: 0;border-bottom-width: 0; padding-top: 0;padding-right: 0;padding-left: 0;padding-bottom: 0; margin-top: 0;margin-right: 0;margin-left: 0;margin-bottom: 0;">
 
 
+<div id="Busy" class="use100 Busy">
+    <div class="Spinner" style="width: 100%;height: 100%;">
+    </div>
+</div>
 <div class="use100 Loader">
     <div class="" style="width: 50%; height: 100%; float: left;background-color: #ffffff;">
         <div style="height: 31%;">
@@ -269,7 +273,7 @@
         </div>
         <div class="one feedDataSection" style="height: 100%;overflow: scroll;">
             <div class="one"
-                 style="padding: 5%;">
+                 style="padding: 0;">
                 <div class="one" style="height: 100%;">
                     <div class="one active" id="feed"
                          style="display:none;  font-size: 15px;line-height: 116%;overflow: scroll; height: 100%;">
@@ -311,7 +315,7 @@
                                 </div>
                             </div>
                             <div class="one hidden">
-                                <div class="one itemTemplate" id="http%3A%2F%2Fwww.newsmute.com" style="overflow: hidden;">
+                                <div class="one itemTemplate" id="http%3A%2F%2Fwww.newsmute.com" style="overflow: hidden; padding-left: 5%; padding-right: 5%;">
                                     <div class="one ttlm" style="overflow: hidden">
                                         <div class="one left" style="overflow: hidden;">
                                             <u style="text-decoration: none; border-bottom: 1px solid #dddddd;">
@@ -375,6 +379,7 @@
 <script src="js/sha512.js"></script>
 <script src="js/jquery.feeds.min.js"></script>
 <script src="js/jquery-2.0.3.min.js"></script>
+<script type="text/javascript" src="js/spin.js"></script>
 <script type="text/javascript" src="js/Toast.js"></script>
 <script type="text/javascript" src="js/index.js"></script>
 <script type="text/javascript">

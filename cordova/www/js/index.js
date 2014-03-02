@@ -1,5 +1,5 @@
-const debug = false;
-//const debug = true;
+//const debug = false;
+const debug = true;
 
 const $feedNowSpeaking = $('#feedNowSpeaking');
 const $feedsList = $('#feedsList');
@@ -16,7 +16,8 @@ const $FeedSetupIndustries = $('.FeedSetupIndustries');
 const $Loader = $(".Loader");
 const $FeedSetup = $(".FeedSetup");
 const $FeedInterface = $(".FeedInterface");
-const $Inception = $(".Inception ");
+const $Inception = $(".Inception");
+const $Busy = $(".Busy");
 
 const clsItemTitle = '.itemTitle';
 const clsItemDescription = '.itemDescription';
@@ -538,6 +539,50 @@ function postSession(){
     }
 }
 
+
+var spinner;
+
+function busy(){
+    try {
+        var target = document.getElementById('Busy');
+
+        spinner = new Spinner({
+            lines: 17, // The number of lines to draw
+            length: 0, // The length of each line
+            width: 2, // The line thickness
+            radius: 24, // The radius of the inner circle
+            corners: 1, // Corner roundness (0..1)
+            rotate: 0, // The rotation offset
+            direction: 1, // 1: clockwise, -1: counterclockwise
+            color: '#aaa', // #rgb or #rrggbb or array of colors
+            speed: 1.3, // Rounds per second
+            trail: 100, // Afterglow percentage
+            shadow: false, // Whether to render a shadow
+            hwaccel: false, // Whether to use hardware acceleration
+            className: 'spinner', // The CSS class to assign to the spinner
+            zIndex: 2e9, // The z-index (defaults to 2000000000)
+            top: 'auto', // Top position relative to parent in px
+            left: 'auto' // Left position relative to parent in px
+        }).spin(target);
+
+        section($Busy);
+
+    } catch (e) {
+        if(debug){
+            alert(e);
+        }
+    }
+}
+
+function free(){
+    try {
+        spinner.stop();
+    } catch (e) {
+        alert(e);
+    }
+}
+
+
 function NewsMute() {
     try {
 
@@ -637,6 +682,8 @@ function WakeUp() {
 
     if(isFirstWake){
         section($Loader);
+    }else{
+        busy();
     }
 
     $.ajax({
@@ -648,6 +695,8 @@ function WakeUp() {
         beforeSend: function () {
             if(isFirstWake){
                 section($Loader);
+            }else{
+                busy();
             }
         },
         complete: function () {
@@ -1327,6 +1376,9 @@ function section(sectionToShow) {
     }
     if (sectionToShow != $Inception){
         $Inception.hide();
+    }
+    if (sectionToShow != $Busy){
+        $Busy.hide();
     }
     sectionToShow.show();
 }
