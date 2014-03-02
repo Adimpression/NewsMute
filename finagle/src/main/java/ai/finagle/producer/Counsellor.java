@@ -2,14 +2,12 @@ package ai.finagle.producer;
 
 import ai.finagle.db.DBScripts;
 import ai.finagle.db.MOOD;
-import ai.finagle.model.SuperFriendValue;
 import ai.finagle.model.YawnItem;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
 
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA Ultimate.
@@ -36,7 +34,9 @@ public class Counsellor implements Runnable {
             @Override
             public void run() {
                 try {
-                    System.out.println("Counselling...");
+                    final Date startTime = Calendar.getInstance().getTime();
+
+                    System.out.printf("Counselling started at %s...", new SimpleDateFormat("MM-dd HH:mm:ss").format(startTime));
 
                     final Session connect = cluster.connect("NewsMute");
 
@@ -63,7 +63,7 @@ public class Counsellor implements Runnable {
                             final String humanId = friendRow.getString("humanId");
                             final String friend = friendRow.getString("humanSuperFriend");
 
-                            if(MOOD.DESTINY(screamRow.getString("mood")).life == MOOD.LIFE.ALIVE){
+                            if (MOOD.DESTINY(screamRow.getString("mood")).life == MOOD.LIFE.ALIVE) {
 
                                 final String urlHash = screamRow.getString("urlHash");
                                 final String value = screamRow.getString("value");
@@ -98,7 +98,10 @@ public class Counsellor implements Runnable {
                         }
                     }
 
-                    System.out.println("Counselled successfully " + totalInsertions + " sessions");
+                    final Date endTime = Calendar.getInstance().getTime();
+                    System.out.printf("Counselling finished at %s counselling %d sessions", new SimpleDateFormat("MM-dd HH:mm:ss").format(endTime), totalInsertions);
+                    System.out.println("Counselling took %d" + new Long(endTime.getTime() - startTime.getTime()) + "  milliseconds");
+
                 } catch (final Exception e) {
                     e.printStackTrace(System.err);
                 }

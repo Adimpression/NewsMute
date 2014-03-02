@@ -13,9 +13,8 @@ import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
 import java.net.URL;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA Ultimate.
@@ -42,7 +41,8 @@ public class Harvester implements Runnable {
             @Override
             public void run() {
                 try {
-                    System.out.println("Harvesting...");
+                    final Date startTime = Calendar.getInstance().getTime();
+                    System.out.println(String.format("Harvesting started at %s...", new SimpleDateFormat("MM-dd HH:mm:ss").format(startTime)));
 
                     final Session connect = cluster.connect("NewsMute");
 
@@ -99,8 +99,9 @@ public class Harvester implements Runnable {
 
                     }
 
-                    System.out.println("Harvested successfully " + totalInsertions + " sessions");
-
+                    final Date endTime = Calendar.getInstance().getTime();
+                    System.out.printf("Harvested finished at %s harvesting %d sessions",  new SimpleDateFormat("MM-dd HH:mm:ss").format(endTime), totalInsertions);
+                    System.out.println("Harvesting took %d" + new Long(endTime.getTime() - startTime.getTime()) + "  milliseconds");
 
                 } catch (final Exception e) {
                     e.printStackTrace(System.err);
