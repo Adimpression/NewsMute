@@ -52,12 +52,16 @@ public class Harvester implements Runnable {
 
                     int totalInsertions = 0;
 
+                    System.out.println("Number of feeds:" + allStalks.size());
+
                     for (final Row stalk : allStalks) {
 
                         final StalkItem stalkItem = new Gson().fromJson(stalk.getString("value"), StalkItem.class);
 
                         try {//Please match this with Stalker first time feed setup
-                            final Document feedDocument = Jsoup.parse(new URL(stalkItem.link).openStream(), "UTF-8", stalkItem.link, Parser.xmlParser());
+                            final String feedLink = stalkItem.link;
+                            System.out.println("Processing feed:" + feedLink);
+                            final Document feedDocument = Jsoup.parse(new URL(feedLink).openStream(), "UTF-8", feedLink, Parser.xmlParser());
 
                             final Elements itemElements = feedDocument.getElementsByTag("item");
                             Element[]  feedItems = new Element[itemElements.size()];
@@ -66,13 +70,13 @@ public class Harvester implements Runnable {
                             for (final Element feedItem : feedItems) {
 
                                 final String feedItemTitle = feedItem.getElementsByTag("title").first().text();
-                                System.out.println("title:" + feedItemTitle);
+                                //System.out.println("title:" + feedItemTitle);
 
                                 final String feedItemLink = feedItem.getElementsByTag("link").first().text();
-                                System.out.println("link:" + feedItemLink);
+                                //System.out.println("link:" + feedItemLink);
 
                                 final String feedItemDescription = feedItem.getElementsByTag("description").first().text();
-                                System.out.println("description:" + feedItemDescription);
+                                //System.out.println("description:" + feedItemDescription);
 
                                 final ResultSet yawnRowsNotRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", stalk.getString(0), MOOD.LIFE.ALIVE.state, feedItemLink));
                                 final ResultSet yawnRowsDidRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", stalk.getString(0), MOOD.LIFE.DEAD.state, feedItemLink));
@@ -80,19 +84,19 @@ public class Harvester implements Runnable {
                                 final boolean feedItemLinkMissing = yawnRowsNotRead.all().isEmpty() && yawnRowsDidRead.all().isEmpty();
 
                                 if(feedItemLinkMissing){
-                                    connect.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %s;", stalk.getString(0), MOOD.LIFE.ALIVE.state, feedItemLink, new Gson().toJson(new YawnItem(feedItemLink, feedItemTitle, feedItemDescription, stalkItem.link, "0")), DBScripts.HARVESTED_YAWN_TTL));//Yet to hash the urlHash value
+                                    connect.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %s;", stalk.getString(0), MOOD.LIFE.ALIVE.state, feedItemLink, new Gson().toJson(new YawnItem(feedItemLink, feedItemTitle, feedItemDescription, feedLink, "0")), DBScripts.HARVESTED_YAWN_TTL));//Yet to hash the urlHash value
                                     totalInsertions++;
                                 } else {
                                     //Ignoring insert
                                 }
-
-
                             }
+
+                            totalInsertions++;
+
                         } catch (final Throwable throwable) {
-                            throwable.printStackTrace(System.err);
+                            System.err.println(throwable.getMessage());//Don't print full stack trace, will be hard to see what is failing and what is not
                         }
 
-                        totalInsertions++;
                     }
 
                     System.out.println("Harvested successfully " + totalInsertions + " sessions");
