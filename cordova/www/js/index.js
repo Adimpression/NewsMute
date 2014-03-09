@@ -1,7 +1,6 @@
 //const debug = false;
 const debug = true;
 
-const $feedNowSpeaking = $('#feedNowSpeaking');
 const $feedsList = $('#feedsList');
 const $itemTemplate = $('.itemTemplate');
 const $genderItemTemplate = $('.genderItemTemplate');
@@ -840,7 +839,7 @@ function WakeUp() {
                 } else {
                     $('.no_news').show();
                     clearTimeout(feedRefreshTimeout);
-                    feedRefreshTimeout = setTimeout("window.plugins.toast.showShortBottom('Checking for any updates...'); WakeUp()", 5000);
+                    feedRefreshTimeout = setTimeout("window.plugins.toast.showShortBottom('Checking for any updates...'); WakeUp()", 10000);
                 }
 
                 $feedsList.append(feedListDocumentFragment);
@@ -852,7 +851,6 @@ function WakeUp() {
                 }
 
                 $feedsList.slideDown();
-                $feedNowSpeaking.slideUp();
 
                 //DEBUG=alert('Completed in ' + (new Date().getTime() - start ));
             } catch (e) {
