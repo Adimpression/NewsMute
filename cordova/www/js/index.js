@@ -1,5 +1,5 @@
-//const debug = false;
-const debug = true;
+const debug = false;
+//const debug = true;
 
 const $feedsList = $('#feedsList');
 const $itemTemplate = $('.itemTemplate');
@@ -789,7 +789,7 @@ function WakeUp() {
                                     );
                                     feedItemBookmarkText.text("Shared!");
                                     $(this).fadeOut('slow', function(){
-                                        hide(url);
+                                        hideUp(url);
                                         $('#' + id).removeClass('itemTemplateShown');
                                         $('#' + id).addClass('itemTemplateHidden');
                                         if ($feedsList.find('.itemTemplateShown').length == 0) {
@@ -809,7 +809,7 @@ function WakeUp() {
                                 feedItemHide.click(
                                     function(){
                                         $(this).fadeOut('fast', function(){
-                                            hide($(this).attr('title'));
+                                            hideDown($(this).attr('title'));
                                             $('#' + id).removeClass('itemTemplateShown');
                                             $('#' + id).addClass('itemTemplateHidden');
                                             if ($feedsList.find('.itemTemplateShown').length == 0) {
@@ -834,7 +834,7 @@ function WakeUp() {
                 }
 
                 if(length > 0){
-                    $feedsList.find('.itemTemplateHidden').empty();
+                    $feedsList.find('.itemTemplateHidden').remove();
                     $('.no_news').hide();
                     clearTimeout(feedRefreshTimeout);
                 } else {
@@ -846,7 +846,7 @@ function WakeUp() {
                 $feedsList.append(feedListDocumentFragment);
                 section($FeedInterface);
                 if(isFirstWake){
-
+                    //Nothing to do here
                 } else {
                   free();
                 }
@@ -1172,7 +1172,22 @@ function superFriend() {
 }
 
 
-function hide(url){
+function hideUp(url){
+    try {
+        markRead(url);
+        var id = crc32(url);
+        $("#" + id).animate({opacity:0.1}, {duration: 100, complete: function(){
+            $("#" + id).slideUp(300);
+        }});
+    } catch (e) {
+        if (debug) {
+            alert(e);
+        }
+    }
+
+}
+
+function hideDown(url){
     try {
         markRead(url);
         var id = crc32(url);

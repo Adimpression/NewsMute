@@ -85,6 +85,7 @@ public class Main extends DroidGap {
         settings.setAllowFileAccess(false);
         settings.setJavaScriptCanOpenWindowsAutomatically(false);
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
+        settings.setLightTouchEnabled(false);
 
         currentLaunchWebview = super.appView;
         super.appView.clearCache(true);
