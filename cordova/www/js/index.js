@@ -825,6 +825,7 @@ function WakeUp() {
                                 clone.animate({opacity:1.0}, {duration: i * 300, complete: function(){
                                     for( i = 0 ; i < 1 ; i++ ) {
                                         clone.fadeTo('slow', 0.5).fadeTo('slow', 1.0);
+                                        setTimeout('clone.fadeTo(0, 2.0);', 2000);//In case of UI glitches in animations
                                     }
                                 }});
                             }
