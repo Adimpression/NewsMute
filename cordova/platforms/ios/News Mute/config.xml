@@ -1,33 +1,24 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.cordova.helloCordova" version="2.0.0" xmlns="http://www.w3.org/ns/widgets">
-    <name>Hello Cordova</name>
-    <description>
-        A sample Apache Cordova application that responds to the deviceready event.
-    </description>
-    <author email="dev@cordova.apache.org" href="http://cordova.io">
-        Apache Cordova Team
-    </author>
-    <content src="index.html" />
+<widget id="ai.newsmute" version="News Mute, BREAKING NEWS by Friends - The Smart RSS Website Reader - 101" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <preference name="AllowInlineMediaPlayback" value="false" />
+    <preference name="AutoHideSplashScreen" value="true" />
+    <preference name="BackupWebStorage" value="cloud" />
+    <preference name="DisallowOverscroll" value="false" />
+    <preference name="EnableViewportScale" value="false" />
+    <preference name="FadeSplashScreen" value="true" />
+    <preference name="FadeSplashScreenDuration" value=".25" />
+    <preference name="KeyboardDisplayRequiresUserAction" value="true" />
+    <preference name="MediaPlaybackRequiresUserAction" value="false" />
+    <preference name="ShowSplashScreenSpinner" value="true" />
+    <preference name="SuppressesIncrementalRendering" value="false" />
+    <preference name="TopActivityIndicator" value="gray" />
+    <preference name="GapBetweenPages" value="0" />
+    <preference name="PageLength" value="0" />
+    <preference name="PaginationBreakingMode" value="page" />
+    <preference name="PaginationMode" value="unpaginated" />
     <feature name="LocalStorage">
         <param name="ios-package" value="CDVLocalStorage" />
     </feature>
-    <access origin="*" />
-    <preference name="KeyboardDisplayRequiresUserAction" value="true" />
-    <preference name="SuppressesIncrementalRendering" value="false" />
-    <preference name="UIWebViewBounce" value="true" />
-    <preference name="TopActivityIndicator" value="gray" />
-    <preference name="EnableLocation" value="false" />
-    <preference name="EnableViewportScale" value="false" />
-    <preference name="AutoHideSplashScreen" value="true" />
-    <preference name="ShowSplashScreenSpinner" value="true" />
-    <preference name="MediaPlaybackRequiresUserAction" value="false" />
-    <preference name="AllowInlineMediaPlayback" value="false" />
-    <preference name="OpenAllWhitelistURLsInWebView" value="false" />
-    <preference name="BackupWebStorage" value="cloud" />
-    <preference name="webviewbounce" value="true" />
-    <preference name="show-splash-screen-spinner" value="false" />
-    <preference name="auto-hide-splash-screen" value="true" />
-    <preference name="fullscreen" value="true" />
     <feature name="Toast">
         <param name="ios-package" value="Toast" />
     </feature>
@@ -44,4 +35,19 @@
     <feature name="SocialMessage">
         <param name="ios-package" value="SocialMessage" />
     </feature>
+    <feature name="InAppBrowser">
+        <param name="ios-package" value="CDVInAppBrowser" />
+    </feature>
+    <name>News Mute</name>
+    <description>
+        News Mute has My Kind of News
+    </description>
+    <author email="TalkToMe@Adimpression.mobi" href="http://Adimpression.mobi">
+        Adimpression LLC
+    </author>
+    <access origin="*" />
+    <preference name="webviewbounce" value="true" />
+    <preference name="show-splash-screen-spinner" value="false" />
+    <preference name="auto-hide-splash-screen" value="true" />
+    <preference name="fullscreen" value="true" />
 </widget>

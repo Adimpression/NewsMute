@@ -1,4 +1,4 @@
-cordova.define("validemail.ValidEmail", function(require, exports, module) {var exec = require("cordova/exec");
+cordova.define("validemail.ValidEmail", function(require, exports, module) { var exec = require("cordova/exec");
 
 var ValidEmail = function () {
     this.name = "ValidEmail";
@@ -10,4 +10,5 @@ ValidEmail.prototype.send = function (message, success, failure) {
 };
 
 module.exports = new ValidEmail();
+
 });

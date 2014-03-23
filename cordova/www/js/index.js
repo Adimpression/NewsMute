@@ -745,14 +745,6 @@ function WakeUp() {
                             //clone.find('.itemTitle').attr('href', item.link);
                             feedItemTitle.attr("title", item.link);
                             feedItemTitle.attr("style", "font-size: 20px; color: #000000;");
-                            feedItemTitle.click(
-                                function(){
-                                    window.localStorage.setItem('lastVisited', this.title);
-                                    //$('.itemTemplate:not(#'+ id + ')').animate({opacity:0.2},500,function(){
-                                        openLink(window.localStorage.getItem('lastVisited'));
-                                    //});
-                                }
-                            );
 
                             //clone.find('.itemDescription').html(item.description.replace(/<(?:.|\n)*?>/gm, ''));
                             clone.find(clsItemDescription).html(item.description.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '').replace(/<iframe\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/iframe>/gi, ''));
@@ -765,6 +757,9 @@ function WakeUp() {
                                 feedItemBookmark.click(
                                 function(){
                                     const url = $(this).attr('title');
+
+                                    window.localStorage.setItem('lastVisited', this.title);
+
                                     _internal_screamLink(
                                         url,
                                         function(e){
@@ -775,6 +770,7 @@ function WakeUp() {
                                             }
                                         }
                                     );
+
                                     feedItemBookmarkText.text("Shared!");
                                     $(this).fadeOut('slow', function(){
                                         hideUp(url);
@@ -783,6 +779,8 @@ function WakeUp() {
                                         if ($feedsList.find('.itemTemplateShown').length == 0) {
                                             setTimeout("WakeUp();", 0);
                                         }
+
+                                        openLink(window.localStorage.getItem('lastVisited'));
                                     });
 
                                 });
@@ -860,7 +858,13 @@ function WakeUp() {
 
 function openLink(link){
     $FeedInterface.hide(0, function(){
-        navigator.app.loadUrl(link, {wait:0, loadingDialog:"Loading external web page", loadUrlTimeoutValue: 1000, openExternal:false });
+        //navigator.app.loadUrl(link, {wait:0, loadingDialog:"Loading external web page", loadUrlTimeoutValue: 1000, openExternal:false });
+        try {
+            var ref = window.open(link, '_blank', 'location=yes;closebuttoncaption=Done;toolbar=no;');
+            ref.addEventListener('exit',function(){WakeUp();});
+        } catch (e) {
+            alert(e);
+        }
         //navigator.app.loadUrl(link, {openExternal : false})
     });
 }
@@ -1400,7 +1404,7 @@ function section(sectionToShow) {
 
  -------------------------------------------------------------------------------
  Copyright (c) 2006 Andrea Ercolino
- http://www.opensource.org/licenses/mit-license.php
+ http://www.9opensource.org/licenses/mit-license.php
  ===============================================================================
  */
 

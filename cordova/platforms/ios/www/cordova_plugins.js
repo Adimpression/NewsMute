@@ -119,6 +119,26 @@ module.exports = [
         "clobbers": [
             "validemail"
         ]
+    },
+    {
+        "file": "plugins/org.apache.cordova.inappbrowser/www/inappbrowser.js",
+        "id": "org.apache.cordova.inappbrowser.inappbrowser",
+        "clobbers": [
+            "window.open"
+        ]
     }
-]
+];
+module.exports.metadata = 
+// TOP OF METADATA
+{
+    "com.borismus.webintent": "1.0.0",
+    "nl.x-services.plugins.toast": "1.0",
+    "org.apache.cordova.contacts": "0.2.4",
+    "org.apache.cordova.network-information": "0.2.5",
+    "org.apache.cordova.splashscreen": "0.2.7",
+    "socialmessage": "0.2.0",
+    "validemail": "0.2.0",
+    "org.apache.cordova.inappbrowser": "0.3.3"
+}
+// BOTTOM OF METADATA
 });

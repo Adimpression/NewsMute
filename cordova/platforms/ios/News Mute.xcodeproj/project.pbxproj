@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		032046DC66974BB491333B98 /* Toast+UIView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1316892060B547C3891EA08A /* Toast+UIView.m */; };
 		0BFA6F913FC94C2A874FD7F5 /* Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 497A3A0216E34A37A33C1595 /* Toast.m */; };
@@ -54,6 +53,7 @@
 		DE9C11BAF1864EA18B4A9B31 /* CDVSplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = E25A6C26FC234D6781D6A59F /* CDVSplashScreen.m */; };
 		F840E1F1165FE0F500CFE078 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = F840E1F0165FE0F500CFE078 /* config.xml */; };
 		FE9EEA4E9AEB4F51A86692BE /* CDVContacts.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CC6B0BF94774B9A88642C26 /* CDVContacts.m */; };
+		6CD12883441F453A9B99EAAA /* CDVInAppBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 830C221129BF4AAF9E213AEC /* CDVInAppBrowser.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -135,6 +135,8 @@
 		E25A6C26FC234D6781D6A59F /* CDVSplashScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDVSplashScreen.m; path = org.apache.cordova.splashscreen/CDVSplashScreen.m; sourceTree = "<group>"; };
 		EAF89674965648A4831F8862 /* SocialMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SocialMessage.h; path = socialmessage/SocialMessage.h; sourceTree = "<group>"; };
 		F840E1F0165FE0F500CFE078 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = "News Mute/config.xml"; sourceTree = "<group>"; };
+		830C221129BF4AAF9E213AEC /* CDVInAppBrowser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "CDVInAppBrowser.m"; path = "org.apache.cordova.inappbrowser/CDVInAppBrowser.m"; sourceTree = "<group>"; fileEncoding = 4; };
+		E58867335D0B4BFBB06EFBE3 /* CDVInAppBrowser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVInAppBrowser.h"; path = "org.apache.cordova.inappbrowser/CDVInAppBrowser.h"; sourceTree = "<group>"; fileEncoding = 4; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -297,6 +299,8 @@
 				2E4A7ACFEE4D437FB423E8BB /* CDVSplashScreen.h */,
 				796364938C9B4C50A0118CF8 /* SocialMessage.m */,
 				EAF89674965648A4831F8862 /* SocialMessage.h */,
+				830C221129BF4AAF9E213AEC /* CDVInAppBrowser.m */,
+				E58867335D0B4BFBB06EFBE3 /* CDVInAppBrowser.h */,
 			);
 			name = Plugins;
 			path = "News Mute/Plugins";
@@ -472,6 +476,7 @@
 				D473C8FBEC5F4BF3822B5BBC /* CDVReachability.m in Sources */,
 				DE9C11BAF1864EA18B4A9B31 /* CDVSplashScreen.m in Sources */,
 				10EEB4E76E594FAD94CC1AB8 /* SocialMessage.m in Sources */,
+				6CD12883441F453A9B99EAAA /* CDVInAppBrowser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
