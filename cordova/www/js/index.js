@@ -318,29 +318,24 @@ function InitializeHuman() {
                     try {
                         //alert(JSON.stringify(arg));
                         var emails = arg.emails;
+                        window.plugins.toast.showShortBottom('Your personal details will not be recorded');
 
-                        if (confirm('News Mute won\'t record your email address. \n' +
-                            'It is used to generate a signature for your account. \n' +
-                            'This signature can\'t be used to obtain your email address. \n' +
-                            'Basically, your email address does\'t leave your device! \n\n' +
-                            'Generate a signature using your email?')) {
-
-                            if (emails.length == 1) {
-                                humanId = getHash(emails[0]);
-                            } else {
+                        if (emails.length == 1) {
+                            var email = emails[0];
+                            humanId = getHash(email);
+                            window.plugins.toast.showLongBottom('Registration with DOUBLE-HASHED ' + email +'\n (Your email will not be recorded anywhere)');
+                        } else {
                                 while (humanId == null) {
                                     for (var i = 0; i < emails.length; i++) {
-                                        var answer = confirm('Login as ' + emails[i] + '?');
+                                        const choseEmail = emails[i];
+                                        var answer = confirm('Login as ' + choseEmail + '?');
                                         if (answer) {
-                                            humanId = getHash(emails[i]);
+                                            humanId = getHash(choseEmail);
+                                            window.plugins.toast.showLongBottom('Registration with DOUBLE-HASHED ' + choseEmail +'\n (Your email will not be recorded anywhere)');
                                             break;
                                         }
                                     }
                                 }
-                            }
-                        } else {
-                            alert('Please exit the application. Bye!');
-                            return;
                         }
 
                         var password;
@@ -522,17 +517,10 @@ function postSession(){
 
     var flag_super_friend_value = window.localStorage.getItem(flag_super_friend);
 
-    if(flag_super_friend_value == null && confirm('Would you like to use News Mute with your friends? \n' +
-            'News Mute won\'t upload their contact details. \n' +
-            'News Mute generates signatures based on their emails for that. \n' +
-            'These signatures can\'t be used to obtain their emails. \n' +
-            'Using News Mute alone is so selfish. \n' +
-            'Share news with contacts?')){
-
-             superFriend();
-             window.localStorage.setItem(flag_super_friend, "true");
-
-    }else{
+    if(flag_super_friend_value == null){
+       superFriend();
+        window.plugins.toast.showLongBottom('Matching friends with DOUBLE-HASHED emails.\n (Emails will not be recorded anywhere)');
+    } else {
         //Check for time and update after several days?
         //Remember that we can run a hash check
     }
@@ -840,7 +828,7 @@ function WakeUp() {
                 } else {
                     $('.no_news').show();
                     clearTimeout(feedRefreshTimeout);
-                    feedRefreshTimeout = setTimeout("window.plugins.toast.showShortBottom('Checking for any updates...'); WakeUp()", 10000);
+                    feedRefreshTimeout = setTimeout("window.plugins.toast.showShortBottom('Checking for any updates (News Mute)'); WakeUp()", 10000);
                 }
 
                 $feedsList.append(feedListDocumentFragment);
@@ -1143,7 +1131,7 @@ function superFriend() {
 
                 }
             }
-
+            window.localStorage.setItem(flag_super_friend, "true");
 
         } catch (e) {
             if (debug) {
