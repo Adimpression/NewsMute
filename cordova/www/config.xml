@@ -8,9 +8,10 @@
         Adimpression LLC
     </author>
     <access origin="*" />
-    <preference name="webviewbounce" value="true" />
+    <preference name="webviewbounce" value="false" />
     <preference name="show-splash-screen-spinner" value="false" />
     <preference name="auto-hide-splash-screen" value="true" />
     <preference name="fullscreen" value="true" />
+    <preference name="DisallowOverscroll" value="true" />
 
 </widget>
