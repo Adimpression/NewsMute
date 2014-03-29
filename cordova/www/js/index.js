@@ -799,6 +799,7 @@ function WakeUp() {
                                             $('#' + id).removeClass('itemTemplateShown');
                                             $('#' + id).addClass('itemTemplateHidden');
                                             if ($feedsList.find('.itemTemplateShown').length == 0) {
+                                                $feedsList.find('.itemTemplateHidden').remove();
                                                 setTimeout("WakeUp();", 0);
                                             }
                                         });
@@ -857,15 +858,9 @@ function WakeUp() {
 }
 
 function openLink(link){
-    $FeedInterface.hide(0, function(){
-        //navigator.app.loadUrl(link, {wait:0, loadingDialog:"Loading external web page", loadUrlTimeoutValue: 1000, openExternal:false });
-        try {
-            var ref = window.open(link, '_blank', 'location=yes;closebuttoncaption=Done;toolbar=no;');
-            ref.addEventListener('exit',function(){WakeUp();});
-        } catch (e) {
-            alert(e);
-        }
-        //navigator.app.loadUrl(link, {openExternal : false})
+    var ref = window.open(link, '_blank', 'location=yes;closebuttoncaption=Done;toolbar=no;');
+    ref.addEventListener('exit',function(){
+        //WakeUp();
     });
 }
 
