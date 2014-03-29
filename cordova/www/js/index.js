@@ -860,7 +860,6 @@ function WakeUp() {
 function openLink(link){
     var ref = window.open(link, '_blank', 'location=yes;closebuttoncaption=Done;toolbar=yes;EnableViewportScale=yes;allowInlineMediaPlayback=yes;');
     ref.addEventListener('loadstop', function() {
-        alert('Loading css');
         ref.insertCSS({code: "body {" +
             "zoom: 0.5;" +
             "-moz-transform: scale(0.5);" +
