@@ -724,9 +724,9 @@ function WakeUp() {
                 //DEBUGvar start = new Date().getTime();
 
                 var feedListDocumentFragment = document.createDocumentFragment();
+                $feedsList.empty();
 
-
-                    for (var i = 0; i < length && i < 10; i++) {
+                for (var i = 0; i < length && i < 10; i++) {
                     (function(i){
                         const item = data[i];
                         if (item.link != "null" && item.link != "") {//@TODO remove me, temp fix until server fixed
@@ -799,7 +799,6 @@ function WakeUp() {
                                             $('#' + id).removeClass('itemTemplateShown');
                                             $('#' + id).addClass('itemTemplateHidden');
                                             if ($feedsList.find('.itemTemplateShown').length == 0) {
-                                                $feedsList.find('.itemTemplateHidden').remove();
                                                 setTimeout("WakeUp();", 0);
                                             }
                                         });
@@ -821,7 +820,6 @@ function WakeUp() {
                 }
 
                 if(length > 0){
-                    $feedsList.find('.itemTemplateHidden').remove();
                     $('.no_news').hide();
                     clearTimeout(feedRefreshTimeout);
                 } else {
@@ -867,7 +865,7 @@ function openLink(link){
             "}"});
     });
     ref.addEventListener('exit',function(){
-        WakeUp();
+        //WakeUp();
     });
 }
 
