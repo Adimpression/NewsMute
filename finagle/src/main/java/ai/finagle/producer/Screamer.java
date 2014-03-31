@@ -132,7 +132,7 @@ public class Screamer implements Runnable {
                                 System.out.println("title:" + title);
                                 String description = title;
                                 for (final Element meta : document.getElementsByTag("meta")) {
-                                    if (meta.attr("name").equals("description")) {
+                                    if (meta.attr("name").equalsIgnoreCase("description")) {
                                         description = meta.attr("content");
                                         break;
                                     }
