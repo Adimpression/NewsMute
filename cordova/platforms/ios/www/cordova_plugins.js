@@ -85,21 +85,6 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/org.apache.cordova.network-information/www/network.js",
-        "id": "org.apache.cordova.network-information.network",
-        "clobbers": [
-            "navigator.connection",
-            "navigator.network.connection"
-        ]
-    },
-    {
-        "file": "plugins/org.apache.cordova.network-information/www/Connection.js",
-        "id": "org.apache.cordova.network-information.Connection",
-        "clobbers": [
-            "Connection"
-        ]
-    },
-    {
         "file": "plugins/org.apache.cordova.splashscreen/www/splashscreen.js",
         "id": "org.apache.cordova.splashscreen.SplashScreen",
         "clobbers": [
@@ -134,7 +119,6 @@ module.exports.metadata =
     "com.borismus.webintent": "1.0.0",
     "nl.x-services.plugins.toast": "1.0",
     "org.apache.cordova.contacts": "0.2.4",
-    "org.apache.cordova.network-information": "0.2.5",
     "org.apache.cordova.splashscreen": "0.2.7",
     "socialmessage": "0.2.0",
     "validemail": "0.2.0",

@@ -606,9 +606,9 @@ var app = {
         document.addEventListener('deviceready', this.onDeviceReady, false);
 
         document.addEventListener('deviceready', function () {
-            //window.plugins.webintent.onNewIntent(function (url) {
+            window.plugins.webintent.onNewIntent(function (url) {
                         //alert(url);
-            //})
+            })
         }, false);
 
 //        document.addEventListener('deviceready', function () {
@@ -724,9 +724,9 @@ function WakeUp() {
                 //DEBUGvar start = new Date().getTime();
 
                 var feedListDocumentFragment = document.createDocumentFragment();
+                $feedsList.empty();
 
-
-                    for (var i = 0; i < length && i < 10; i++) {
+                for (var i = 0; i < length && i < 10; i++) {
                     (function(i){
                         const item = data[i];
                         if (item.link != "null" && item.link != "") {//@TODO remove me, temp fix until server fixed
@@ -820,7 +820,6 @@ function WakeUp() {
                 }
 
                 if(length > 0){
-                    $feedsList.find('.itemTemplateHidden').remove();
                     $('.no_news').hide();
                     clearTimeout(feedRefreshTimeout);
                 } else {
@@ -857,15 +856,16 @@ function WakeUp() {
 }
 
 function openLink(link){
-    $FeedInterface.hide(0, function(){
-        //navigator.app.loadUrl(link, {wait:0, loadingDialog:"Loading external web page", loadUrlTimeoutValue: 1000, openExternal:false });
-        try {
-            var ref = window.open(link, '_blank', 'location=yes;closebuttoncaption=Done;toolbar=no;');
-            ref.addEventListener('exit',function(){alert('waking up'); WakeUp();});
-        } catch (e) {
-            alert(e);
-        }
-        //navigator.app.loadUrl(link, {openExternal : false})
+    var ref = window.open(link, '_blank', 'location=yes;closebuttoncaption=Done;toolbar=yes;EnableViewportScale=yes;allowInlineMediaPlayback=yes;');
+    ref.addEventListener('loadstop', function() {
+        ref.insertCSS({code: "body {" +
+            "zoom: 0.5;" +
+            "-moz-transform: scale(0.5);" +
+            "-moz-transform-origin: 0 0" +
+            "}"});
+    });
+    ref.addEventListener('exit',function(){
+        //WakeUp();
     });
 }
 

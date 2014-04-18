@@ -17,9 +17,6 @@
     <feature name="SocialMessage">
         <param name="android-package" value="uk.co.ilee.socialmessage.SocialMessage" />
     </feature>
-    <feature name="NetworkStatus">
-        <param name="android-package" value="org.apache.cordova.networkinformation.NetworkManager" />
-    </feature>
     <feature name="ValidEmail">
         <param name="android-package" value="ai.newsmute.ValidEmail" />
     </feature>
