@@ -1,5 +1,5 @@
-const debug = false;
-//const debug = true;
+//const debug = false;
+const debug = true;
 
 const $feedsList = $('#feedsList');
 const $itemTemplate = $('.itemTemplate');
@@ -19,6 +19,7 @@ const $Inception = $(".Inception");
 const $Busy = $(".Busy");
 
 const clsItemTitle = '.itemTitle';
+const clsItemSource = '.itemSource';
 const clsItemDescription = '.itemDescription';
 const clsItemBookmark = '.itemBookmark';
 const clsItemBookmarkText = '.itemBookmarkText';
@@ -312,6 +313,7 @@ const genders = [
 
 function InitializeHuman() {
     try {
+        //window.localStorage.setItem("humanId", getHash(""));
         humanId = window.localStorage.getItem("humanId");
         if (humanId == null || humanId == "") {
             window.validemail.send('Anything', function(arg){
@@ -325,17 +327,17 @@ function InitializeHuman() {
                             humanId = getHash(email);
                             window.plugins.toast.showLongBottom('Registration with DOUBLE-HASHED ' + email +'\n (Your email will not be recorded anywhere)');
                         } else {
-                                while (humanId == null) {
-                                    for (var i = 0; i < emails.length; i++) {
-                                        const choseEmail = emails[i];
-                                        var answer = confirm('Login as ' + choseEmail + '?');
-                                        if (answer) {
-                                            humanId = getHash(choseEmail);
-                                            window.plugins.toast.showLongBottom('Registration with DOUBLE-HASHED ' + choseEmail +'\n (Your email will not be recorded anywhere)');
-                                            break;
-                                        }
+                            while (humanId == null) {
+                                for (var i = 0; i < emails.length; i++) {
+                                    const choseEmail = emails[i];
+                                    var answer = confirm('Login as ' + choseEmail + '?');
+                                    if (answer) {
+                                        humanId = getHash(choseEmail);
+                                        window.plugins.toast.showLongBottom('Registration with DOUBLE-HASHED ' + choseEmail +'\n (Your email will not be recorded anywhere)');
+                                        break;
                                     }
                                 }
+                            }
                         }
 
                         var password;
@@ -518,7 +520,7 @@ function postSession(){
     var flag_super_friend_value = window.localStorage.getItem(flag_super_friend);
 
     if(flag_super_friend_value == null){
-       superFriend();
+        superFriend();
         window.plugins.toast.showLongBottom('Matching friends with DOUBLE-HASHED emails.\n (Emails will not be recorded anywhere)');
     } else {
         //Check for time and update after several days?
@@ -607,27 +609,33 @@ var app = {
 
         document.addEventListener('deviceready', function () {
             window.plugins.webintent.onNewIntent(function (url) {
-                        //alert(url);
+                //alert(url);
             })
         }, false);
 
-//        document.addEventListener('deviceready', function () {
-//            window.plugins.webintent.onNewIntent(WebIntent.ACTION_VIEW, function (hasExtraResult) {
-//                if(hasExtraResult){
-//                    window.plugins.webintent.onNewIntent(WebIntent.EXTRA_TEXT, function (url) {
-//                        alert('Sharing:\n' + url);
-//                        screamLink(url);
-//                    },function(){
-//                        alert('Sorry, News Mute doesn\'t support that');
-//                    });
-//                } else {
-//                    alert('No extra found');
-//                }
-//
-//            }, function() {
-//                alert('No extra');
-//            });
-//        });
+        document.addEventListener('deviceready', function () {
+            window.plugins.webintent.onNewIntent(WebIntent.ACTION_VIEW, function (hasExtraResult) {
+                if(hasExtraResult){
+                    window.plugins.webintent.onNewIntent(WebIntent.EXTRA_TEXT, function (url) {
+                        alert('Sharing:\n' + url);
+                        screamLink(url);
+                    },function(){
+                        if (debug) {
+                            alert('Sorry, News Mute doesn\'t support that');
+                        }
+                    });
+                } else {
+                    if(debug){
+                        alert('No extra found');
+                    }
+                }
+
+            }, function() {
+                if(debug){
+                    alert('No extra');
+                }
+            });
+        });
     },
     // deviceready Event Handler
     //
@@ -646,7 +654,7 @@ var app = {
             document.addEventListener("pause", function () {
                 window.localStorage.removeItem(flag_app_launched);
                 window.localStorage.removeItem("lastVisited");
-                }, false);
+            }, false);
 
 
         } catch (e) {
@@ -696,26 +704,26 @@ function WakeUp() {
 
                 var data = json.returnValue.data;
 
-                    data.sort(function (a, b) {//http://stackoverflow.com/questions/4222690/sorting-a-json-object-in-javascript
-                            var a1st = -1; // negative value means left item should appear first
-                            var b1st = 1; // positive value means right item should appear first
-                            var equal = 0; // zero means objects are equal
+                data.sort(function (a, b) {//http://stackoverflow.com/questions/4222690/sorting-a-json-object-in-javascript
+                        var a1st = -1; // negative value means left item should appear first
+                        var b1st = 1; // positive value means right item should appear first
+                        var equal = 0; // zero means objects are equal
 
-                            //DEBUGtry { // compare your object's property values and determine their order
-                                if (b.shocks < a.shocks) {
-                                    return b1st;
-                                }
-                                else if (a.shocks < b.shocks) {
-                                    return a1st;
-                                }
-                                else {
-                                    return equal;
-                                }
-                            //DEBUG} catch (e) {
-                            //DEBUG    alert("Error comparing " + JSON.stringify(a) + " \nWith\n " + JSON.stringify(b));
-                            //DEBUG}
+                        //DEBUGtry { // compare your object's property values and determine their order
+                        if (b.shocks < a.shocks) {
+                            return b1st;
                         }
-                    );
+                        else if (a.shocks < b.shocks) {
+                            return a1st;
+                        }
+                        else {
+                            return equal;
+                        }
+                        //DEBUG} catch (e) {
+                        //DEBUG    alert("Error comparing " + JSON.stringify(a) + " \nWith\n " + JSON.stringify(b));
+                        //DEBUG}
+                    }
+                );
 
                 data.reverse();
 
@@ -734,6 +742,7 @@ function WakeUp() {
 
                             const id = crc32(item.link);
                             const feedItemTitle = clone.find(clsItemTitle);
+                            const feedItemSource = clone.find(clsItemSource);
                             const feedItemBookmark = clone.find(clsItemBookmark);
                             const feedItemHide = clone.find(clsItemHide);
                             const feedItemBookmarkText = clone.find(clsItemBookmarkText);
@@ -744,7 +753,15 @@ function WakeUp() {
                             feedItemTitle.text(item.title);
                             //clone.find('.itemTitle').attr('href', item.link);
                             feedItemTitle.attr("title", item.link);
-                            feedItemTitle.attr("style", "font-size: 20px; color: #000000;");
+                            feedItemTitle.attr("style", "font-size: 20px; color: #000000;")
+                            feedItemTitle.click(
+                                function(){
+                                    toggleContent($(this).attr('title'));
+                                }
+                            );
+
+                            feedItemSource.text(item.source);
+                            feedItemSource.attr("style", "font-size: 10px; color: #dddddd;");
 
                             //clone.find('.itemDescription').html(item.description.replace(/<(?:.|\n)*?>/gm, ''));
                             clone.find(clsItemDescription).html(item.description.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '').replace(/<iframe\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/iframe>/gi, ''));
@@ -755,35 +772,35 @@ function WakeUp() {
                             {//itemBookmark
                                 feedItemBookmark.attr("title", item.link);
                                 feedItemBookmark.click(
-                                function(){
-                                    const url = $(this).attr('title');
+                                    function(){
+                                        const url = $(this).attr('title');
 
-                                    window.localStorage.setItem('lastVisited', this.title);
+                                        window.localStorage.setItem('lastVisited', this.title);
 
-                                    _internal_screamLink(
-                                        url,
-                                        function(e){
-                                        },
-                                        function(e){
-                                            if (debug) {
-                                                alert(e);
+                                        _internal_screamLink(
+                                            url,
+                                            function(e){
+                                            },
+                                            function(e){
+                                                if (debug) {
+                                                    alert(e);
+                                                }
                                             }
-                                        }
-                                    );
+                                        );
 
-                                    feedItemBookmarkText.text("Shared!");
-                                    $(this).fadeOut('slow', function(){
-                                        hideUp(url);
-                                        $('#' + id).removeClass('itemTemplateShown');
-                                        $('#' + id).addClass('itemTemplateHidden');
-                                        if ($feedsList.find('.itemTemplateShown').length == 0) {
-                                            setTimeout("WakeUp();", 0);
-                                        }
+                                        feedItemBookmarkText.text("Shared!");
+                                        $(this).fadeOut('slow', function(){
+                                            hideUp(url);
+                                            $('#' + id).removeClass('itemTemplateShown');
+                                            $('#' + id).addClass('itemTemplateHidden');
+                                            if ($feedsList.find('.itemTemplateShown').length == 0) {
+                                                setTimeout("WakeUp();", 0);
+                                            }
 
-                                        openLink(window.localStorage.getItem('lastVisited'));
+                                            openLink(window.localStorage.getItem('lastVisited'));
+                                        });
+
                                     });
-
-                                });
                             }
 
                             {//itemAdvanced
@@ -833,7 +850,7 @@ function WakeUp() {
                 if(isFirstWake){
                     //Nothing to do here
                 } else {
-                  free();
+                    free();
                 }
 
                 $feedsList.slideDown();
@@ -897,26 +914,26 @@ function screamLink(url, successCallback, failureCallback){
 }
 
 function _internal_screamLink(url, successCallback, failureCallback){
-        //alert('Sharing ' + url);
-        $.ajax({
-            type: "GET",
-            headers: { 'x-session-header': getSessionValue()},
-            url: endpointScream +
-                "/?user=" + humanId + "&url=" + encodeURIComponent(url),
-            crossDomain: true,
-            beforeSend: function () {
-            },
-            complete: function () {
-            },
-            data: {},
-            dataType: 'text', //json
-            success: function (response) {
-                successCallback(response);
-            },
-            error: function (e) {
-                failureCallback(JSON.stringify(e));
-            }
-        });
+    //alert('Sharing ' + url);
+    $.ajax({
+        type: "GET",
+        headers: { 'x-session-header': getSessionValue()},
+        url: endpointScream +
+            "/?user=" + humanId + "&url=" + encodeURIComponent(url),
+        crossDomain: true,
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        data: {},
+        dataType: 'text', //json
+        success: function (response) {
+            successCallback(response);
+        },
+        error: function (e) {
+            failureCallback(JSON.stringify(e));
+        }
+    });
 }
 
 function scream() {
@@ -979,33 +996,33 @@ function getSessionValue() {
 
 function _internal_stalk(url) {
     $.ajax({
-            type: "GET",
-            headers: { 'x-session-header': getSessionValue()},
-            url: endpointStalk +
-                "/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=CREATE",
-            crossDomain: true,
-            beforeSend: function () {
-            },
-            complete: function () {
-            },
-            data: {},
-            dataType: 'text', //json
-            success: function (response) {
-                try {
-                    //alert("Subscribed");//@TODO: Check response
-                    //window.location.href = window.location.href;
-                } catch (e) {
-                    if (debug) {
-                        alert(e);
-                    }
-                }
-            },
-            error: function (e) {
-                if(debug){
-                    alert(JSON.stringify(e));
+        type: "GET",
+        headers: { 'x-session-header': getSessionValue()},
+        url: endpointStalk +
+            "/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=CREATE",
+        crossDomain: true,
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        data: {},
+        dataType: 'text', //json
+        success: function (response) {
+            try {
+                //alert("Subscribed");//@TODO: Check response
+                //window.location.href = window.location.href;
+            } catch (e) {
+                if (debug) {
+                    alert(e);
                 }
             }
-        });
+        },
+        error: function (e) {
+            if(debug){
+                alert(JSON.stringify(e));
+            }
+        }
+    });
 }
 
 function share(link) {
@@ -1037,57 +1054,75 @@ function _subscribe_rss_from_android_share(link) {
 
 
 function unshare(url) {
-    if (isValidURL(url)) {
-        if(confirm("Remove feed permanently?")){
-            $.ajax({
-                type: "GET",
-                headers: { 'x-session-header': getSessionValue()},
-                url: endpointStalk +
-                    "/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=DELETE",
-                crossDomain: true,
-                beforeSend: function () {
-                },
-                complete: function () {
-                },
-                data: {},
-                dataType: 'text', //json
-                success: function (response) {
-                    alert('Removed feed!');
-                },
-                error: function (e) {
-                    if (debug) {
-                        alert(JSON.stringify(e));
-                    }
-                }
-            });
-        }
-    } else {//Then this is a spammy user, get rid of it?
-        //alert('Noted as spam');
-    }
+    try {
+        if (isValidURL(url)) {
 
+            navigator.notification.confirm(
+                "Remove feed permanently?",
+                callBackFunction, // Specify a function to be called
+                'Remove News Source',
+                "Yes,No"
+            );
+
+            function callBackFunction(b) {
+                if (b == 1) {
+                    $.ajax({
+                        type: "GET",
+                        headers: { 'x-session-header': getSessionValue()},
+                        url: endpointStalk +
+                            "/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=DELETE",
+                        crossDomain: true,
+                        beforeSend: function () {
+                        },
+                        complete: function () {
+                        },
+                        data: {},
+                        dataType: 'text', //json
+                        success: function (response) {
+                            window.plugins.toast.showShortBottom('Removed feed.');
+                        },
+                        error: function (e) {
+                            if (debug) {
+                                alert(JSON.stringify(e));
+                            }
+                        }
+                    });
+                } else {
+
+                }
+            }
+
+        } else {//Then this is a spammy user, get rid of it?
+            //alert('Noted as spam');
+        }
+    } catch (e) {
+        if(debug){
+            alert(e);
+        }
+    }
 }
 
 function markRead(url) {
-            $.ajax({
-                type: "GET",
-                headers: { 'x-session-header': getSessionValue()},
-                url: endpointYawn +
-                    "/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=DELETE",
-                crossDomain: true,
-                beforeSend: function () {
-                },
-                complete: function () {
-                },
-                data: {},
-                dataType: 'text', //json
-                success: function (response) {
-                },
-                error: function (e) {
-                    if (debug) {
-                        alert(JSON.stringify(e));
-                    }
-                }
-            });
+    $.ajax({
+        type: "GET",
+        headers: { 'x-session-header': getSessionValue()},
+        url: endpointYawn +
+            "/?user=" + humanId + "&url=" + encodeURIComponent(url) + "&nmact=DELETE",
+        crossDomain: true,
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        data: {},
+        dataType: 'text', //json
+        success: function (response) {
+        },
+        error: function (e) {
+            if (debug) {
+                alert(JSON.stringify(e));
+            }
+        }
+    });
 }
 
 function addFriends(){
@@ -1163,6 +1198,23 @@ function superFriend() {
 
 }
 
+
+function toggleContent(url){
+    try {
+        var id = crc32(url);
+        var content = $("#" + id).find('.itemDescription');
+        if(content.is(":visible")){
+            content.slideUp();
+        } else {
+            content.slideDown();
+        }
+    } catch (e) {
+        if (debug) {
+            alert(e);
+        }
+    }
+
+}
 
 function hideUp(url){
     try {
@@ -1246,20 +1298,21 @@ function processError(error, callback){
 
 //http://docs.phonegap.com/en/1.8.1/cordova_connection_connection.md.html#connection.type
 function isConnected() {
-    var networkState = navigator.network.connection.type;
-
-    var states = {};
-    states[Connection.UNKNOWN]  = 'Unknown connection';
-    states[Connection.ETHERNET] = 'Ethernet connection';
-    states[Connection.WIFI]     = 'WiFi connection';
-    states[Connection.CELL_2G]  = 'Cell 2G connection';
-    states[Connection.CELL_3G]  = 'Cell 3G connection';
-    states[Connection.CELL_4G]  = 'Cell 4G connection';
-    states[Connection.NONE]     = 'No network connection';
-
+    return true;
+//    var networkState = navigator.network.connection.type;
+//
+//    var states = {};
+//    states[Connection.UNKNOWN]  = 'Unknown connection';
+//    states[Connection.ETHERNET] = 'Ethernet connection';
+//    states[Connection.WIFI]     = 'WiFi connection';
+//    states[Connection.CELL_2G]  = 'Cell 2G connection';
+//    states[Connection.CELL_3G]  = 'Cell 3G connection';
+//    states[Connection.CELL_4G]  = 'Cell 4G connection';
+//    states[Connection.NONE]     = 'No network connection';
+//
     //alert('Connection type: ' + states[networkState]);
-
-    return networkState != Connection.NONE;
+//
+//    return networkState != Connection.NONE;
 }
 
 
@@ -1274,28 +1327,28 @@ function initialSetup(){
         var countryListDocumentFragment = document.createDocumentFragment();
         for (var i = 0; i < countries.length; i++) {
             (function (i, j) {
-                    var item = countries[i];
-                    var clone = $countryItemTemplate.clone();
-                    clone.find('.title').text(item.title);
-                    clone.click(
-                        function () {
-                            //alert(item.title);
-                            item.feeds.forEach(function (value) {
-                                //alert(value);
-                                _internal_stalk(value);
-                            });
+                var item = countries[i];
+                var clone = $countryItemTemplate.clone();
+                clone.find('.title').text(item.title);
+                clone.click(
+                    function () {
+                        //alert(item.title);
+                        item.feeds.forEach(function (value) {
+                            //alert(value);
+                            _internal_stalk(value);
+                        });
 
-                            $FeedSetupCountries.hide();
-                            $FeedSetupGenders.fadeIn("slow");
+                        $FeedSetupCountries.hide();
+                        $FeedSetupGenders.fadeIn("slow");
 
-                        }
-                    );
-                    clone.appendTo(countryListDocumentFragment);
-                    if(i + 1 == j){
-                        $FeedSetupGenders.hide();
-                        $FeedSetupIndustries.hide();
-                        section($FeedSetup);
                     }
+                );
+                clone.appendTo(countryListDocumentFragment);
+                if(i + 1 == j){
+                    $FeedSetupGenders.hide();
+                    $FeedSetupIndustries.hide();
+                    section($FeedSetup);
+                }
 
             })(i, countries.length);
         }
@@ -1305,23 +1358,23 @@ function initialSetup(){
         var genderListDocumentFragment = document.createDocumentFragment();
         for (var ig = 0; ig < genders.length; ig++) {
             (function (ig, j) {
-                    var item = genders[ig];
-                    var clone = $genderItemTemplate.clone();
-                    clone.find('.title').text(item.title);
-                    clone.click(
-                        function () {
-                            //alert(item.title);
-                            item.feeds.forEach(function (value) {
-                                //alert(value);
-                                _internal_stalk(value);
-                            });
-                            $FeedSetupGenders.hide();
-                            $FeedSetupIndustries.fadeIn("slow");
-                        }
-                    );
-                    clone.appendTo(genderListDocumentFragment);
-                    if(ig + 1 == j){
+                var item = genders[ig];
+                var clone = $genderItemTemplate.clone();
+                clone.find('.title').text(item.title);
+                clone.click(
+                    function () {
+                        //alert(item.title);
+                        item.feeds.forEach(function (value) {
+                            //alert(value);
+                            _internal_stalk(value);
+                        });
+                        $FeedSetupGenders.hide();
+                        $FeedSetupIndustries.fadeIn("slow");
                     }
+                );
+                clone.appendTo(genderListDocumentFragment);
+                if(ig + 1 == j){
+                }
 
             })(ig, genders.length);
         }
@@ -1331,33 +1384,33 @@ function initialSetup(){
         var industryListDocumentFragment = document.createDocumentFragment();
         for (var ii = 0; ii < industries.length; ii++) {
             (function (ii, j) {
-                    var item = industries[ii];
-                    var clone = $industryItemTemplate.clone();
-                    clone.find('.title').text(item.title);
-                    clone.click(
-                        function () {
-                            //alert(item.title);
-                            item.feeds.forEach(function (value) {
-                                //alert(value);
-                                _internal_stalk(value);
+                var item = industries[ii];
+                var clone = $industryItemTemplate.clone();
+                clone.find('.title').text(item.title);
+                clone.click(
+                    function () {
+                        //alert(item.title);
+                        item.feeds.forEach(function (value) {
+                            //alert(value);
+                            _internal_stalk(value);
 
-                            });
+                        });
 
-                            $FeedSetupCountries.fadeOut("fast");
-                            $FeedSetupGenders.fadeIn("slow");
+                        $FeedSetupCountries.fadeOut("fast");
+                        $FeedSetupGenders.fadeIn("slow");
 
 
-                            alert("Tap 'pink nm' to add RSS feed or share link.\n " +
-                                "We added some for you.\n" +
-                                "Click the asterisks to remove feed.");
-                            postSession();
+                        alert("Tap 'pink nm' to add RSS feed or share link.\n " +
+                            "We added some for you.\n" +
+                            "Click the asterisks to remove feed.");
+                        postSession();
 
-                        }
-                    );
-                    clone.appendTo(industryListDocumentFragment);
-
-                    if(ii + 1 == j){
                     }
+                );
+                clone.appendTo(industryListDocumentFragment);
+
+                if(ii + 1 == j){
+                }
 
             })(ii, industries.length);
         }
@@ -1430,18 +1483,18 @@ function section(sectionToShow) {
 
 function checkFeed(rssFeedUrl) {
     try {
-            discoverFeedUrlFor(rssFeedUrl.replace(/\s+/g, ''))//We replace all spaces since a user can type something like Facebook.com which ends up with spaces in the end
-                .done(function (data) {
-                    var queryResult = data.responseData;
-                    if (!!queryResult) {
-                        //'http://feeds.feedburner.com/techcrunch/social?format=xml';
-                        _internal_stalk(queryResult.url);
-                        window.plugins.toast.showShortBottom('Found RSS feed. Subscribed!');
-                        //We can exit here, but why would a user want to exit after a feed subscription, except explore feeds
-                    } else {
-                        window.plugins.toast.showShortBottom("Sorry, News Mute doesn't recognise this website!");
-                    }
-                });
+        discoverFeedUrlFor(rssFeedUrl.replace(/\s+/g, ''))//We replace all spaces since a user can type something like Facebook.com which ends up with spaces in the end
+            .done(function (data) {
+                var queryResult = data.responseData;
+                if (!!queryResult) {
+                    //'http://feeds.feedburner.com/techcrunch/social?format=xml';
+                    _internal_stalk(queryResult.url);
+                    window.plugins.toast.showShortBottom('Found RSS feed. Subscribed!');
+                    //We can exit here, but why would a user want to exit after a feed subscription, except explore feeds
+                } else {
+                    window.plugins.toast.showShortBottom("Sorry, News Mute doesn't recognise this website!");
+                }
+            });
     } catch (e) {
         alert(e);
     }
