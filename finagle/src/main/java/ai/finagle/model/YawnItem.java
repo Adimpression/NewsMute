@@ -7,11 +7,11 @@ package ai.finagle.model;
  * Time: 11:46 PM
  */
 public class YawnItem {
-    final String link;
-    final String title;
-    final String description;
+    final public String link;
+    final public String title;
+    final public String description;
     String shocks;
-    final String source;
+    final public String source;
 
     public YawnItem(final String link, final String title, final String description, final String source, final String shocks) {
         this.link = link;

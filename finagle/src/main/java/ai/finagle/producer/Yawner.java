@@ -23,6 +23,8 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -134,13 +136,24 @@ public class Yawner implements Runnable {
                 final ResultSet execute = connect.execute(String.format("select * from Yawn where humanId='%s' and mood='%c'", hashUser, MOOD.LIFE.ALIVE.state));
                 final List<Row> all = execute.all();
 
-                yawnItems = new YawnItem[all.size()];
+                final HashMap<String, YawnItem> mostPopularOfFeedSource = new HashMap<String, YawnItem>();
 
-                for (int i = 0; i < yawnItems.length; i++) {
-                    yawnItems[i] = new Gson().fromJson(all.get(i).getString("value"), YawnItem.class);
+                for (final Row row : all) {
+                    final YawnItem yawnItem = new Gson().fromJson(row.getString("value"), YawnItem.class);
+                    final int yawnItemShocks = Integer.parseInt(yawnItem.shocks());
+                    final YawnItem lastValue = mostPopularOfFeedSource.put(yawnItem.source, yawnItem);
+                    if (lastValue != null && yawnItemShocks > 0) {
+                        if (Integer.parseInt(lastValue.shocks()) > yawnItemShocks) {
+                            mostPopularOfFeedSource.put(row.getString("urlHash"), lastValue);//Replacing with last value since it is more popular
+                        }
+                    }
                 }
 
+                YawnItem[] temp = new YawnItem[mostPopularOfFeedSource.size()];
+                temp  = mostPopularOfFeedSource.values().toArray(temp );
+                yawnItems = temp;
             }
+
             break;
             case DELETE: {
                 yawnItems = new YawnItem[0];//@TODO: This is just to supply the return value, have to move things round
