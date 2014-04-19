@@ -734,7 +734,7 @@ function WakeUp() {
                 var feedListDocumentFragment = document.createDocumentFragment();
                 $feedsList.empty();
 
-                for (var i = 0; i < length && i < 10; i++) {
+                for (var i = 0; i < length && i < 100; i++) {
                     (function(i){
                         const item = data[i];
                         if (item.link != "null" && item.link != "") {//@TODO remove me, temp fix until server fixed
