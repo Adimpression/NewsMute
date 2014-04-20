@@ -608,6 +608,12 @@ var app = {
         document.addEventListener('deviceready', this.onDeviceReady, false);
 
         document.addEventListener('deviceready', function () {
+            cordova.plugins.clipboard.paste(function (text) {
+                checkFeed(text);
+            });
+        }, false);
+
+        document.addEventListener('deviceready', function () {
             window.plugins.webintent.onNewIntent(function (url) {
                 //alert(url);
             })
