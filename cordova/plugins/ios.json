@@ -5,7 +5,9 @@
     },
     "config_munge": {
         "framework": {
-            "QuartzCore.framework": {},
+            "QuartzCore.framework": {
+                "false": 1
+            },
             "AddressBook.framework": {
                 "true": 1
             },
@@ -18,9 +20,7 @@
             "SystemConfiguration.framework": {
                 "true": 1
             },
-            "AudioToolbox.framework": {
-                "true": 1
-            },
+            "AudioToolbox.framework": {},
             "CoreMotion.framework": {
                 "false": 1
             }
@@ -33,7 +33,9 @@
                 "<feature name=\"Compass\"><param name=\"ios-package\" value=\"CDVCompass\" /></feature>": 1,
                 "<feature name=\"Notification\"><param name=\"ios-package\" value=\"CDVNotification\" /></feature>": 1,
                 "<feature name=\"InAppBrowser\"><param name=\"ios-package\" value=\"CDVInAppBrowser\" /></feature>": 1,
-                "<feature name=\"NetworkStatus\"><param name=\"ios-package\" value=\"CDVConnection\" /></feature>": 1
+                "<feature name=\"NetworkStatus\"><param name=\"ios-package\" value=\"CDVConnection\" /></feature>": 1,
+                "<feature name=\"Clipboard\"><param name=\"ios-package\" value=\"CDVClipboard\" /></feature>": 1,
+                "<feature name=\"Toast\"><param name=\"ios-package\" value=\"Toast\" /></feature>": 1
             }
         }
     },
@@ -57,6 +59,12 @@
             "PACKAGE_NAME": "ai.newsmute"
         },
         "org.apache.cordova.network-information": {
+            "PACKAGE_NAME": "ai.newsmute"
+        },
+        "com.verso.cordova.clipboard": {
+            "PACKAGE_NAME": "ai.newsmute"
+        },
+        "nl.x-services.plugins.toast": {
             "PACKAGE_NAME": "ai.newsmute"
         }
     },

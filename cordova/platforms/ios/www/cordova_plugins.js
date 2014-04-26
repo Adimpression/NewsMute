@@ -147,6 +147,20 @@ module.exports = [
         "clobbers": [
             "Connection"
         ]
+    },
+    {
+        "file": "plugins/com.verso.cordova.clipboard/www/clipboard.js",
+        "id": "com.verso.cordova.clipboard.Clipboard",
+        "clobbers": [
+            "cordova.plugins.clipboard"
+        ]
+    },
+    {
+        "file": "plugins/nl.x-services.plugins.toast/www/Toast.js",
+        "id": "nl.x-services.plugins.toast.Toast",
+        "clobbers": [
+            "window.plugins.toast"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -158,7 +172,9 @@ module.exports.metadata =
     "org.apache.cordova.device-orientation": "0.3.6",
     "org.apache.cordova.dialogs": "0.2.7",
     "org.apache.cordova.inappbrowser": "0.4.0",
-    "org.apache.cordova.network-information": "0.2.8"
+    "org.apache.cordova.network-information": "0.2.8",
+    "com.verso.cordova.clipboard": "0.1.0",
+    "nl.x-services.plugins.toast": "2.0"
 }
 // BOTTOM OF METADATA
 });
