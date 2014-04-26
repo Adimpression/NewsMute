@@ -622,9 +622,15 @@ var app = {
         document.addEventListener('deviceready', this.onDeviceReady, false);
 
         document.addEventListener('deviceready', function () {
-            cordova.plugins.clipboard.paste(function (text) {
-                checkFeed(text);
-            });
+            try {
+                cordova.plugins.clipboard.paste(function (text) {
+                    checkFeed(text);
+                });
+            } catch (e) {
+                if(debug){
+                    alert(e);
+                }
+            }
         }, false);
 
         document.addEventListener('deviceready', function () {
