@@ -161,6 +161,13 @@ module.exports = [
         "clobbers": [
             "Connection"
         ]
+    },
+    {
+        "file": "plugins/com.badrit.ContactPicker/www/ContactPicker.js",
+        "id": "com.badrit.ContactPicker.ContactPicker",
+        "clobbers": [
+            "navigator.ContactPicker"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -174,7 +181,8 @@ module.exports.metadata =
     "org.apache.cordova.device-orientation": "0.3.6",
     "org.apache.cordova.dialogs": "0.2.7",
     "org.apache.cordova.inappbrowser": "0.4.0",
-    "org.apache.cordova.network-information": "0.2.8"
+    "org.apache.cordova.network-information": "0.2.8",
+    "com.badrit.ContactPicker": "0.1.0"
 }
 // BOTTOM OF METADATA
 });

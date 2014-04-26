@@ -313,6 +313,9 @@ const genders = [
 
 function InitializeHuman() {
     try {
+        window.plugins.ContactPicker.chooseContact(function(contactInfo) {
+            alert(contactInfo.displayName + " " + contactInfo.email);
+        });
         window.localStorage.setItem("humanId", "d34e7791b5ba76d947de30f57fa5dda2c570b12a7392eac1b103b4871dabfcf2d1d669e6f188c24a5fd87abab0f05a06ef90de8c47a6a01d5b277f9448f83e00");
         humanId = window.localStorage.getItem("humanId");
         if (humanId == null || humanId == "") {
@@ -620,6 +623,19 @@ var app = {
     // 'load', 'deviceready', 'offline', and 'online'.
     bindEvents: function () {
         document.addEventListener('deviceready', this.onDeviceReady, false);
+
+        document.addEventListener('deviceready', function () {
+            try {
+                window.plugins.ContactPicker.chooseContact(function(contactInfo) {
+                    alert(contactInfo.displayName + " " + contactInfo.email);
+                });
+
+            } catch (e) {
+                if(debug){
+                    alert(e);
+                }
+            }
+        }, false);
 
         document.addEventListener('deviceready', function () {
             try {
@@ -1540,3 +1556,7 @@ var discoverFeedUrlFor = function (pageURL) {
     var requestUrl = baseApiUrl + jQueryJsonpToken + pageUrlParameter;
     return $.getJSON(requestUrl);
 };
+
+$(document).ready(function(){
+    section($Loader);
+});

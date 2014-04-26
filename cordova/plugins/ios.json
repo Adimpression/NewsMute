@@ -14,7 +14,8 @@
                 "<feature name=\"Compass\"><param name=\"ios-package\" value=\"CDVCompass\" /></feature>": 1,
                 "<feature name=\"Notification\"><param name=\"ios-package\" value=\"CDVNotification\" /></feature>": 1,
                 "<feature name=\"InAppBrowser\"><param name=\"ios-package\" value=\"CDVInAppBrowser\" /></feature>": 1,
-                "<feature name=\"NetworkStatus\"><param name=\"ios-package\" value=\"CDVConnection\" /></feature>": 1
+                "<feature name=\"NetworkStatus\"><param name=\"ios-package\" value=\"CDVConnection\" /></feature>": 1,
+                "<feature name=\"ContactPicker\"><param name=\"ios-package\" value=\"ContactPicker\" /></feature>": 1
             }
         },
         "framework": {
@@ -22,10 +23,12 @@
                 "false": 1
             },
             "AddressBook.framework": {
-                "true": 1
+                "true": 1,
+                "false": 1
             },
             "AddressBookUI.framework": {
-                "true": 1
+                "true": 1,
+                "false": 1
             },
             "CoreGraphics.framework": {
                 "false": 2
@@ -67,6 +70,9 @@
             "PACKAGE_NAME": "ai.newsmute"
         },
         "org.apache.cordova.network-information": {
+            "PACKAGE_NAME": "ai.newsmute"
+        },
+        "com.badrit.ContactPicker": {
             "PACKAGE_NAME": "ai.newsmute"
         }
     },

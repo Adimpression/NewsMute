@@ -46,6 +46,9 @@
     <feature name="NetworkStatus">
         <param name="ios-package" value="CDVConnection" />
     </feature>
+    <feature name="ContactPicker">
+        <param name="ios-package" value="ContactPicker" />
+    </feature>
     <name>News Mute</name>
     <description>
         News Mute, BREAKING NEWS by Friends - The Smart News Updates Reader
