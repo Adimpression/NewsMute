@@ -5,6 +5,7 @@ import ai.finagle.db.DBScripts;
 import ai.finagle.model.Return;
 import ai.finagle.model.ReturnValueSuperFriend;
 import ai.finagle.model.SuperFriendValue;
+import ai.finagle.util.Printer;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
 import com.twitter.finagle.Service;
@@ -43,6 +44,8 @@ public class SuperFriender implements Runnable {
 
     private Cluster cluster;
 
+    private Session threadSafeSession;
+
     public SuperFriender(final String bindIp, final String port, final String databaseIp) {
         this.bindIp = bindIp;
         this.port = port;
@@ -58,7 +61,6 @@ public class SuperFriender implements Runnable {
 
         final Session connect = cluster.connect("NewsMute");
         try {
-            //connect.execute("drop table SuperFriend;");
             connect.execute(DBScripts.CREATE_SUPERFRIEND);
 
         } catch (final Exception e) {//Table already exists
@@ -101,8 +103,6 @@ public class SuperFriender implements Runnable {
     }
 
     private String blocking(HttpRequest request) {
-        final Session connect = cluster.connect("NewsMute");
-
         final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
         final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
 
@@ -123,7 +123,7 @@ public class SuperFriender implements Runnable {
                 for (final String contact : newContacts) {
                     if (contact != null && !contact.isEmpty()) {
                         final String superFriendHash = BCrypt.hashpw(contact, new String(GLOBAL_SALT));
-                        connect.execute(String.format("insert into SuperFriend(humanId, humanSuperFriend, value) values('%s','%s','%s');",
+                        threadSafeSession.execute(String.format("insert into SuperFriend(humanId, humanSuperFriend, value) values('%s','%s','%s');",
                                 hasheduser,
                                 superFriendHash,
                                 new Gson().toJson(new SuperFriendValue(hasheduser, new String[]{superFriendHash}))));//Yet to hash the urlHash value
@@ -142,21 +142,13 @@ public class SuperFriender implements Runnable {
         return returnVal;
     }
 
-    public String open(String node) {
+    public void open(String node) {
         cluster = Cluster.builder()
                 .addContactPoint(node)
                 .build();
         cluster.connect();
-        Metadata metadata = cluster.getMetadata();
-        System.out.printf("Connected to cluster: %s\n",
-                metadata.getClusterName());
-        StringBuilder stringBuilder = new StringBuilder("");
-        for (Host host : metadata.getAllHosts()) {
-            System.out.printf("Datacenter: %s; Host: %s; Rack: %s\n",
-                    host.getDatacenter(), host.getAddress(), host.getRack());
-            stringBuilder.append("Datacenter: ").append(host.getDatacenter()).append("; Host: ").append(host.getAddress()).append("; Rack: ").append(host.getRack());
-        }
-        return stringBuilder.toString();
+        threadSafeSession = cluster.connect("NewsMute");
+        Printer.printClusterMetadata(cluster);
     }
 
     public void close() {
