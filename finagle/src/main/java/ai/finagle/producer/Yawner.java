@@ -4,9 +4,9 @@ import ai.finagle.auth.Gatekeeper;
 import ai.finagle.db.DBScripts;
 import ai.finagle.db.MOOD;
 import ai.finagle.model.*;
+import ai.finagle.util.Printer;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.twitter.finagle.Service;
 import com.twitter.finagle.builder.ServerBuilder;
 import com.twitter.finagle.http.Http;
@@ -16,14 +16,10 @@ import com.twitter.util.Future;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.http.*;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +46,8 @@ public class Yawner implements Runnable {
 
     private Cluster cluster;
 
+    private Session threadSafeSession;
+
     public Yawner(final String bindIp, final String port, final String databaseIp) {
         this.bindIp = bindIp;
         this.port = port;
@@ -66,7 +64,6 @@ public class Yawner implements Runnable {
         final Session connect = cluster.connect("NewsMute");
 
         try {
-            //connect.execute("drop table Yawn;");
             connect.execute(DBScripts.CREATE_YAWN);
 
         } catch (final Exception e) {//Table already exists
@@ -115,8 +112,6 @@ public class Yawner implements Runnable {
     }
 
     private String blocking(HttpRequest request) {
-        final Session connect = cluster.connect("NewsMute");
-
         final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
         final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
 
@@ -133,7 +128,7 @@ public class Yawner implements Runnable {
         switch (YawnerAction.to(action.toUpperCase())) {
             case READ:{
                 System.out.println("Values in table as follows");
-                final ResultSet execute = connect.execute(String.format("select * from Yawn where humanId='%s' and mood='%c'", hashUser, MOOD.LIFE.ALIVE.state));
+                final ResultSet execute = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' and mood='%c'", hashUser, MOOD.LIFE.ALIVE.state));
                 final List<Row> all = execute.all();
 
                 final HashMap<String, YawnItem> mostPopularOfFeedSource = new HashMap<String, YawnItem>();
@@ -158,8 +153,8 @@ public class Yawner implements Runnable {
             case DELETE: {
                 yawnItems = new YawnItem[0];//@TODO: This is just to supply the return value, have to move things round
                 try {
-                    connect.execute(String.format("delete from Yawn where humanId='%s' and mood='%c' and urlHash='%s';", hashUser, MOOD.LIFE.ALIVE.state, url));//Yet to hash the urlHash value
-                    connect.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','') USING TTL %d;", hashUser, MOOD.LIFE.DEAD.state, url, DBScripts.YAWN_READED_TTL));
+                    threadSafeSession.execute(String.format("delete from Yawn where humanId='%s' and mood='%c' and urlHash='%s';", hashUser, MOOD.LIFE.ALIVE.state, url));//Yet to hash the urlHash value
+                    threadSafeSession.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','') USING TTL %d;", hashUser, MOOD.LIFE.DEAD.state, url, DBScripts.YAWN_READED_TTL));
                 } catch (Exception e) {
                     e.printStackTrace(System.err);
                 }
@@ -177,21 +172,14 @@ public class Yawner implements Runnable {
         return new Gson().toJson(new Return<ReturnValueYawn>(new ReturnValueYawn(yawnItems), "No Error", "OK"));
     }
 
-    public String open(String node) {
+    public void open(String node) {
         cluster = Cluster.builder()
                 .addContactPoint(node)
                 .build();
         cluster.connect();
-        Metadata metadata = cluster.getMetadata();
-        System.out.printf("Connected to cluster: %s\n",
-                metadata.getClusterName());
-        StringBuilder stringBuilder = new StringBuilder("");
-        for (Host host : metadata.getAllHosts()) {
-            System.out.printf("Datatacenter: %s; Host: %s; Rack: %s\n",
-                    host.getDatacenter(), host.getAddress(), host.getRack());
-            stringBuilder.append("Datatacenter: " + host.getDatacenter() + "; Host: " + host.getAddress() + "; Rack: " + host.getRack());
-        }
-        return stringBuilder.toString();
+        threadSafeSession = cluster.connect("NewsMute");
+
+        Printer.printClusterMetadata(cluster);
     }
 
     public void close() {
