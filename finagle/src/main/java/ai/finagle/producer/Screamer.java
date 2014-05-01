@@ -48,6 +48,8 @@ public class Screamer implements Runnable {
 
     private Cluster cluster;
 
+    private Session threadSafeSession;
+
     public Screamer(final String bindIp, final String port, final String databaseIp) {
         this.bindIp = bindIp;
         this.port = port;
@@ -102,7 +104,6 @@ public class Screamer implements Runnable {
 
     private String blocking(HttpRequest request) {
         try {
-            final Session connect = cluster.connect("NewsMute");
 
             final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
             final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
@@ -119,7 +120,7 @@ public class Screamer implements Runnable {
                         final String hashedUser = BCrypt.hashpw(unhashedUser, SuperFriender.GLOBAL_SALT);
                         System.out.println("hashed user:" + hashedUser);
 
-                        final List<Row> screamRowsCounselled = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashedUser, MOOD.LIFE.DEAD.state, s)).all();
+                        final List<Row> screamRowsCounselled = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashedUser, MOOD.LIFE.DEAD.state, s)).all();
                         if(screamRowsCounselled.isEmpty()){
                             try {
                                 final Document document = Jsoup.parse(new URL(s).openStream(), "UTF-8", s);
@@ -134,10 +135,10 @@ public class Screamer implements Runnable {
                                     }
                                 }
                                 System.out.println("description:" + description);
-                                connect.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", hashedUser, MOOD.LIFE.ALIVE.state, s, new Gson().toJson(new YawnItem(s, title, description, hashedUser, "0")), DBScripts.YAWN_COUNSEL));//Yet to hash the urlHash value
+                                threadSafeSession.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", hashedUser, MOOD.LIFE.ALIVE.state, s, new Gson().toJson(new YawnItem(s, title, description, hashedUser, "0")), DBScripts.YAWN_COUNSEL));//Yet to hash the urlHash value
                             } catch (final Throwable e) {//Leave the insert here alone. Works as a default if the internet connectivity decides to break. We discovered this when application was running on a non www accessible server
                                 e.printStackTrace(System.out);
-                                connect.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", hashedUser, MOOD.LIFE.ALIVE.state, s, new Gson().toJson(new YawnItem(s, s, s, hashedUser, "0")), DBScripts.YAWN_COUNSEL));//Yet to hash the urlHash value
+                                threadSafeSession.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", hashedUser, MOOD.LIFE.ALIVE.state, s, new Gson().toJson(new YawnItem(s, s, s, hashedUser, "0")), DBScripts.YAWN_COUNSEL));//Yet to hash the urlHash value
                             }
                         } else{
                             System.out.println("Ignoring already screamed item for humanId:" + hashedUser + " for url:" + s);
@@ -161,6 +162,7 @@ public class Screamer implements Runnable {
                 .addContactPoint(node)
                 .build();
         cluster.connect();
+        this.threadSafeSession = cluster.connect("NewsMute");
         Printer.printClusterMetadata(cluster);
     }
 
