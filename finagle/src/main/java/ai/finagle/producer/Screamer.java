@@ -64,9 +64,7 @@ public class Screamer implements Runnable {
 
         final Session connect = cluster.connect("NewsMute");
         try {
-            //connect.execute("drop table Scream;");
             connect.execute(DBScripts.CREATE_SCREAM);
-
         } catch (final Exception e) {//Table already exists
             System.out.println(e.getMessage());
         }
