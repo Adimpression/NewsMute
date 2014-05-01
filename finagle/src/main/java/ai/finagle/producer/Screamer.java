@@ -6,6 +6,7 @@ import ai.finagle.db.MOOD;
 import ai.finagle.model.Return;
 import ai.finagle.model.ReturnValueScream;
 import ai.finagle.model.YawnItem;
+import ai.finagle.util.Headers;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
 import com.twitter.finagle.Service;
@@ -81,10 +82,7 @@ public class Screamer implements Runnable {
                     public HttpResponse apply() {
                         final String result = blocking(request);
                         final HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_0,HttpResponseStatus.OK);
-                        final List<Map.Entry<String, String>> headers = request.getHeaders();
-                        for (Map.Entry<String, String> header : headers) {
-                            System.out.println("Header:" + header.getKey() + " value:" + header.getValue());
-                        }
+                        Headers.printHeaders(request);
                         final byte[] resultBytes = result.getBytes();
                         final ChannelBuffer buffer = ChannelBuffers.buffer(resultBytes.length);
                         buffer.writeBytes(resultBytes);
