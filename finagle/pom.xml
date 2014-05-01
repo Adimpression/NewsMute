@@ -86,6 +86,19 @@
         </dependency>
         <!--End of Hazelcast Dependencies -->
 
+        <!--Jersey  Dependencies -->
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>1.18.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-core</artifactId>
+            <version>1.18.1</version>
+        </dependency>
+        <!--End of Jersey Dependencies -->
+
     </dependencies>
 
 
