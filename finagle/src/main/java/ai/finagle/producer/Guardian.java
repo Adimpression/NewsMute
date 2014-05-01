@@ -94,7 +94,6 @@ public class Guardian implements Runnable {
     public void run() {
         this.open(databaseIp);
 
-
         final Session connect = cluster.connect("NewsMute");
         try {
             connect.execute(DBScripts.CREATE_GUARDIAN);
