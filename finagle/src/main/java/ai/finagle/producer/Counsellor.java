@@ -3,6 +3,7 @@ package ai.finagle.producer;
 import ai.finagle.db.DBScripts;
 import ai.finagle.db.MOOD;
 import ai.finagle.model.YawnItem;
+import ai.finagle.util.Printer;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
 
@@ -21,6 +22,8 @@ public class Counsellor implements Runnable {
 
     private Cluster cluster;
 
+    private Session threadSafeSession;
+
     public Counsellor(final String databaseIp) {
         this.databaseIp = databaseIp;
     }
@@ -38,17 +41,15 @@ public class Counsellor implements Runnable {
 
                     System.out.printf("Counselling started at %s...", new SimpleDateFormat("MM-dd HH:mm:ss").format(startTime));
 
-                    final Session connect = cluster.connect("NewsMute");
+                    /**
+                     * This operation is not heavy, Cassandra handles paging(via cursors) transparently
+                     */
+                    final List<Row> allScreams = threadSafeSession.execute("select * from Scream;").all();
 
                     /**
                      * This operation is not heavy, Cassandra handles paging(via cursors) transparently
                      */
-                    final List<Row> allScreams = connect.execute("select * from Scream;").all();
-
-                    /**
-                     * This operation is not heavy, Cassandra handles paging(via cursors) transparently
-                     */
-                    final List<Row> allYawns = connect.execute("select * from Yawn;").all();
+                    final List<Row> allYawns = threadSafeSession.execute("select * from Yawn;").all();
 
                     System.out.println("Counselling " + allScreams.size() + " screams");
                     System.out.println("Counselling " + allYawns.size() + " yawns");
@@ -57,7 +58,7 @@ public class Counsellor implements Runnable {
 
                     for (final Row screamRow : allScreams) {
                         //@FIXME: Duplicate fetches. Can we fetch by partition? For, humanId on one partition will be the same
-                        final List<Row> allSuperFriends = connect.execute(String.format("select * from SuperFriend where humanId='%s'", screamRow.getString(0))).all();
+                        final List<Row> allSuperFriends = threadSafeSession.execute(String.format("select * from SuperFriend where humanId='%s'", screamRow.getString(0))).all();
 
                         for (final Row friendRow : allSuperFriends) {//Ideally, all screams are not friends of this person, but we do so for now for testing
                             final String humanId = friendRow.getString("humanId");
@@ -68,26 +69,26 @@ public class Counsellor implements Runnable {
                                 final String urlHash = screamRow.getString("urlHash");
                                 final String value = screamRow.getString("value");
 
-                                final List<Row> yawnRowsNotRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", friend, MOOD.LIFE.ALIVE.state, urlHash)).all();
-                                final List<Row> yawnRowsRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", friend, MOOD.LIFE.DEAD.state, urlHash)).all();
+                                final List<Row> yawnRowsNotRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", friend, MOOD.LIFE.ALIVE.state, urlHash)).all();
+                                final List<Row> yawnRowsRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", friend, MOOD.LIFE.DEAD.state, urlHash)).all();
 
                                 if (yawnRowsNotRead.size() == 0 && yawnRowsRead.size() == 0) {
-                                    connect.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", friend, MOOD.LIFE.ALIVE.state, urlHash, value, DBScripts.YAWN_COUNSELLED_TTL));
+                                    threadSafeSession.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", friend, MOOD.LIFE.ALIVE.state, urlHash, value, DBScripts.YAWN_COUNSELLED_TTL));
                                 } else if (yawnRowsNotRead.size() != 0) {
                                     final Row yawnRow = yawnRowsNotRead.get(0);
                                     final YawnItem yawnFeedItem = new Gson().fromJson(yawnRow.getString("value"), YawnItem.class);
                                     System.out.println("Fetched:" + yawnFeedItem.toString());
                                     yawnFeedItem.shock();
                                     System.out.println("Inserting:" + yawnFeedItem.toString());
-                                    connect.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", friend, MOOD.LIFE.ALIVE.state, yawnRow.getString("urlHash"), new Gson().toJson(yawnFeedItem), DBScripts.YAWN_COUNSELLED_TTL));
+                                    threadSafeSession.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", friend, MOOD.LIFE.ALIVE.state, yawnRow.getString("urlHash"), new Gson().toJson(yawnFeedItem), DBScripts.YAWN_COUNSELLED_TTL));
                                 }
 
                                 //Removing scream record as alive
-                                connect.execute(String.format("delete from Scream where humanId='%s' and mood='%c' and urlHash='%s';",
+                                threadSafeSession.execute(String.format("delete from Scream where humanId='%s' and mood='%c' and urlHash='%s';",
                                         humanId, MOOD.LIFE.ALIVE.state, urlHash));//Yet to hash the urlHash value
 
                                 //Inserting scream record as dead
-                                connect.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;",
+                                threadSafeSession.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;",
                                         humanId, MOOD.LIFE.DEAD.state, urlHash, value, DBScripts.YAWN_TTL));
 
 
@@ -112,21 +113,13 @@ public class Counsellor implements Runnable {
         timer.scheduleAtFixedRate(task, 0, DBScripts.YAWN_COUNSELLOR_REINCARNATION);
     }
 
-    public String open(String node) {
+    public void open(String node) {
         cluster = Cluster.builder()
                 .addContactPoint(node)
                 .build();
         cluster.connect();
-        Metadata metadata = cluster.getMetadata();
-        System.out.printf("Connected to cluster: %s\n",
-                metadata.getClusterName());
-        StringBuilder stringBuilder = new StringBuilder("");
-        for (Host host : metadata.getAllHosts()) {
-            System.out.printf("Datacenter: %s; Host: %s; Rack: %s\n",
-                    host.getDatacenter(), host.getAddress(), host.getRack());
-            stringBuilder.append("Datacenter: ").append(host.getDatacenter()).append("; Host: ").append(host.getAddress()).append("; Rack: ").append(host.getRack());
-        }
-        return stringBuilder.toString();
+        threadSafeSession = cluster.connect("NewsMute");
+        Printer.printClusterMetadata(cluster);
     }
 
     public void close() {
