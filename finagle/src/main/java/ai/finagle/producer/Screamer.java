@@ -6,7 +6,7 @@ import ai.finagle.db.MOOD;
 import ai.finagle.model.Return;
 import ai.finagle.model.ReturnValueScream;
 import ai.finagle.model.YawnItem;
-import ai.finagle.util.Headers;
+import ai.finagle.util.Printer;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
 import com.twitter.finagle.Service;
@@ -82,7 +82,7 @@ public class Screamer implements Runnable {
                     public HttpResponse apply() {
                         final String result = blocking(request);
                         final HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_0,HttpResponseStatus.OK);
-                        Headers.printHeaders(request);
+                        Printer.printHeaders(request);
                         final byte[] resultBytes = result.getBytes();
                         final ChannelBuffer buffer = ChannelBuffers.buffer(resultBytes.length);
                         buffer.writeBytes(resultBytes);
@@ -158,22 +158,14 @@ public class Screamer implements Runnable {
         }
     }
 
-    public String open(String node) {
+    public void open(String node) {
         cluster = Cluster.builder()
                 .addContactPoint(node)
                 .build();
         cluster.connect();
-        Metadata metadata = cluster.getMetadata();
-        System.out.printf("Connected to cluster: %s\n",
-                metadata.getClusterName());
-        StringBuilder stringBuilder = new StringBuilder("");
-        for (Host host : metadata.getAllHosts()) {
-            System.out.printf("Datacenter: %s; Host: %s; Rack: %s\n",
-                    host.getDatacenter(), host.getAddress(), host.getRack());
-            stringBuilder.append("Datacenter: ").append(host.getDatacenter()).append("; Host: ").append(host.getAddress()).append("; Rack: ").append(host.getRack());
-        }
-        return stringBuilder.toString();
+        Printer.printClusterMetadata(cluster);
     }
+
 
     public void close() {
         cluster.shutdown();
