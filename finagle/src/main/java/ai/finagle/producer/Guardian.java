@@ -4,8 +4,8 @@ import ai.finagle.db.DBScripts;
 import ai.finagle.model.GuardianItem;
 import ai.finagle.model.Return;
 import ai.finagle.model.ReturnValueGuardian;
+import ai.finagle.util.Printer;
 import com.datastax.driver.core.*;
-import com.google.common.net.*;
 import com.google.gson.Gson;
 import com.twitter.finagle.Service;
 import com.twitter.finagle.builder.ServerBuilder;
@@ -79,6 +79,8 @@ public class Guardian implements Runnable {
 
     private Cluster cluster;
 
+    private Session threadSafeSession;
+
     public Guardian(final String bindIp, final String port, final String databaseIp) {
         this.bindIp = bindIp;
         this.port = port;
@@ -95,14 +97,13 @@ public class Guardian implements Runnable {
 
         final Session connect = cluster.connect("NewsMute");
         try {
-            //connect.execute("drop table Guardian;");
             connect.execute(DBScripts.CREATE_GUARDIAN);
         } catch (final Exception e) {//Table already exists
             System.out.println(e.getMessage());
         }
         //Don't merge up and down try/catches, we need to see the failure upon consecutive runs
         try {
-            //connect.execute("drop table Guardian;");
+            //threadSafeSession.execute("drop table Guardian;");
             connect.execute(DBScripts.CREATE_SESSION);
         } catch (final Exception e) {//Table already exists
             System.out.println(e.getMessage());
@@ -258,8 +259,6 @@ public class Guardian implements Runnable {
     }
 
     private Return<ReturnValueGuardian> blocking(final HttpRequest request) {
-        final Session connect = cluster.connect("NewsMute");
-
         final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
         final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
 
@@ -275,11 +274,11 @@ public class Guardian implements Runnable {
 
         switch (guardianAction) {
             case CREATE: {
-                connect.execute(String.format("insert into Guardian(humanId, value) values('%s','%s');", hashUser, BCrypt.hashpw(token, BCrypt.gensalt(12))));
+                threadSafeSession.execute(String.format("insert into Guardian(humanId, value) values('%s','%s');", hashUser, BCrypt.hashpw(token, BCrypt.gensalt(12))));
                 new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.OK)}), "Create", "OK");
             }
             case READ: {
-                final ResultSet execute = connect.execute(String.format("select * from Guardian where humanId='%s'", hashUser));
+                final ResultSet execute = threadSafeSession.execute(String.format("select * from Guardian where humanId='%s'", hashUser));
                 final List<Row> all = execute.all();
                 if (!all.isEmpty()) {
                     final Row row = all.get(0);
@@ -317,21 +316,14 @@ public class Guardian implements Runnable {
         connect.execute(String.format("insert into Session(sessionId, value) values('%s','%s') USING TTL %d;", sessionId, humanId, DBScripts.SESSION_TTL));
     }
 
-    public String open(String node) {
+    public void open(String node) {
         cluster = Cluster.builder()
                 .addContactPoint(node)
                 .build();
         cluster.connect();
         Metadata metadata = cluster.getMetadata();
-        System.out.printf("Connected to cluster: %s\n",
-                metadata.getClusterName());
-        StringBuilder stringBuilder = new StringBuilder("");
-        for (Host host : metadata.getAllHosts()) {
-            System.out.printf("Datacenter: %s; Host: %s; Rack: %s\n",
-                    host.getDatacenter(), host.getAddress(), host.getRack());
-            stringBuilder.append("Datacenter: ").append(host.getDatacenter()).append("; Host: ").append(host.getAddress()).append("; Rack: ").append(host.getRack());
-        }
-        return stringBuilder.toString();
+        threadSafeSession = cluster.connect("NewsMute");
+        Printer.printClusterMetadata(cluster);
     }
 
     public void close() {
