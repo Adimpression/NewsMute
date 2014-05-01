@@ -4,6 +4,7 @@ import ai.finagle.db.DBScripts;
 import ai.finagle.db.MOOD;
 import ai.finagle.model.StalkItem;
 import ai.finagle.model.YawnItem;
+import ai.finagle.util.Printer;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
 import org.jsoup.Jsoup;
@@ -28,6 +29,8 @@ public class Harvester implements Runnable {
 
     private Cluster cluster;
 
+    private Session threadSafeSession;
+
     public Harvester(final String databaseIp) {
         this.databaseIp = databaseIp;
     }
@@ -44,9 +47,7 @@ public class Harvester implements Runnable {
                     final Date startTime = Calendar.getInstance().getTime();
                     System.out.println(String.format("Harvesting started at %s...", new SimpleDateFormat("MM-dd HH:mm:ss").format(startTime)));
 
-                    final Session connect = cluster.connect("NewsMute");
-
-                    final ResultSet executeStalkFetch = connect.execute("select * from Stalk;");
+                    final ResultSet executeStalkFetch = threadSafeSession.execute("select * from Stalk;");
 
                     final List<Row> allStalks = executeStalkFetch.all();
 
@@ -78,13 +79,13 @@ public class Harvester implements Runnable {
                                 final String feedItemDescription = feedItem.getElementsByTag("description").first().text();
                                 //System.out.println("description:" + feedItemDescription);
 
-                                final ResultSet yawnRowsNotRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", stalk.getString(0), MOOD.LIFE.ALIVE.state, feedItemLink));
-                                final ResultSet yawnRowsDidRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", stalk.getString(0), MOOD.LIFE.DEAD.state, feedItemLink));
+                                final ResultSet yawnRowsNotRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", stalk.getString(0), MOOD.LIFE.ALIVE.state, feedItemLink));
+                                final ResultSet yawnRowsDidRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", stalk.getString(0), MOOD.LIFE.DEAD.state, feedItemLink));
 
                                 final boolean feedItemLinkMissing = yawnRowsNotRead.all().isEmpty() && yawnRowsDidRead.all().isEmpty();
 
                                 if(feedItemLinkMissing){
-                                    connect.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %s;", stalk.getString(0), MOOD.LIFE.ALIVE.state, feedItemLink, new Gson().toJson(new YawnItem(feedItemLink, feedItemTitle, feedItemDescription, feedLink, "0")), DBScripts.HARVESTED_YAWN_TTL));//Yet to hash the urlHash value
+                                    threadSafeSession.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %s;", stalk.getString(0), MOOD.LIFE.ALIVE.state, feedItemLink, new Gson().toJson(new YawnItem(feedItemLink, feedItemTitle, feedItemDescription, feedLink, "0")), DBScripts.HARVESTED_YAWN_TTL));//Yet to hash the urlHash value
                                     totalInsertions++;
                                 } else {
                                     //Ignoring insert
@@ -113,21 +114,13 @@ public class Harvester implements Runnable {
         timer.scheduleAtFixedRate(task, 0, DBScripts.STALK_HARVESTER_REINCARNATION);//Every ten minutes
     }
 
-    public String open(String node) {
+    public void open(String node) {
         cluster = Cluster.builder()
                 .addContactPoint(node)
                 .build();
         cluster.connect();
-        Metadata metadata = cluster.getMetadata();
-        System.out.printf("Connected to cluster: %s\n",
-                metadata.getClusterName());
-        StringBuilder stringBuilder = new StringBuilder("");
-        for (Host host : metadata.getAllHosts()) {
-            System.out.printf("Datacenter: %s; Host: %s; Rack: %s\n",
-                    host.getDatacenter(), host.getAddress(), host.getRack());
-            stringBuilder.append("Datacenter: ").append(host.getDatacenter()).append("; Host: ").append(host.getAddress()).append("; Rack: ").append(host.getRack());
-        }
-        return stringBuilder.toString();
+        threadSafeSession = cluster.connect("NewsMute");
+        Printer.printClusterMetadata(cluster);
     }
 
     public void close() {
