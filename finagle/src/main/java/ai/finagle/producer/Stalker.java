@@ -7,9 +7,9 @@ import ai.finagle.model.Return;
 import ai.finagle.model.ReturnValueStalk;
 import ai.finagle.model.StalkItem;
 import ai.finagle.model.YawnItem;
+import ai.finagle.util.Printer;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.twitter.finagle.Service;
 import com.twitter.finagle.builder.ServerBuilder;
 import com.twitter.finagle.http.Http;
@@ -73,6 +73,8 @@ public class Stalker implements Runnable {
 
     private Cluster cluster;
 
+    private Session threadSafeSession;
+
     public Stalker(final String bindIp, final String port, final String databaseIp) {
         this.bindIp = bindIp;
         this.port = port;
@@ -88,7 +90,6 @@ public class Stalker implements Runnable {
 
         final Session connect = cluster.connect("NewsMute");
         try {
-            //connect.execute("drop table Scream;");
             connect.execute(DBScripts.CREATE_STALK);
 
         } catch (final Exception e) {//Table already exists
@@ -130,7 +131,6 @@ public class Stalker implements Runnable {
     }
 
     private String blocking(HttpRequest request) {
-        final Session connect = cluster.connect("NewsMute");
 
         final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
         final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
@@ -156,7 +156,7 @@ public class Stalker implements Runnable {
                         final String description = document.getElementsByTag("title").first().text();
                         System.out.println("description:" + description);
 
-                        connect.execute(String.format("insert into Stalk(humanId, mood, urlHash, value) values('%s','%c','%s','%s');", hashUser, MOOD.LIFE.ALIVE.state, url, new Gson().toJson(new StalkItem(url, title, description))));//Yet to hash the urlHash value
+                        threadSafeSession.execute(String.format("insert into Stalk(humanId, mood, urlHash, value) values('%s','%c','%s','%s');", hashUser, MOOD.LIFE.ALIVE.state, url, new Gson().toJson(new StalkItem(url, title, description))));//Yet to hash the urlHash value
 
                         try {//Please match this with Harvester first time feed setup
                             final Document feedDocument = Jsoup.parse(new URL(url).openStream(), "UTF-8", url, Parser.xmlParser());
@@ -176,13 +176,13 @@ public class Stalker implements Runnable {
                                 final String feedItemDescription = feedItem.getElementsByTag("description").first().text();
                                 System.out.println("description:" + feedItemDescription);
 
-                                final ResultSet yawnRowsNotRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashUser,  MOOD.LIFE.ALIVE.state, feedItemLink));
-                                final ResultSet yawnRowsDidRead = connect.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashUser, MOOD.LIFE.DEAD.state, feedItemLink));
+                                final ResultSet yawnRowsNotRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashUser,  MOOD.LIFE.ALIVE.state, feedItemLink));
+                                final ResultSet yawnRowsDidRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashUser, MOOD.LIFE.DEAD.state, feedItemLink));
 
                                 final boolean feedItemLinkMissing = yawnRowsNotRead.all().isEmpty() && yawnRowsDidRead.all().isEmpty();
 
                                 if(feedItemLinkMissing){
-                                    connect.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %s;", hashUser, MOOD.LIFE.ALIVE.state, feedItemLink, new Gson().toJson(new YawnItem(feedItemLink, feedItemTitle, feedItemDescription, url, "0")), DBScripts.INITIAL_INSERT_TTL));//Yet to hash the urlHash value
+                                    threadSafeSession.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %s;", hashUser, MOOD.LIFE.ALIVE.state, feedItemLink, new Gson().toJson(new YawnItem(feedItemLink, feedItemTitle, feedItemDescription, url, "0")), DBScripts.INITIAL_INSERT_TTL));//Yet to hash the urlHash value
                                 } else {
                                     //Ignoring insert
                                 }
@@ -200,7 +200,7 @@ public class Stalker implements Runnable {
                 break;
                 case READ: {
                     System.out.println("Values in table as follows");
-                    final ResultSet execute = connect.execute(String.format("select * from Stalk where humanId='%s'", hashUser));
+                    final ResultSet execute = threadSafeSession.execute(String.format("select * from Stalk where humanId='%s'", hashUser));
                     final List<Row> all = execute.all();
 
                     stalkItems = new StalkItem[all.size()];
@@ -215,7 +215,7 @@ public class Stalker implements Runnable {
                         System.out.println(stalkerAction.toString());
                         final String s = urlParameter.get(0);
                         System.out.println("url:" + s);
-                        connect.execute(String.format("delete from Stalk where humanId='%s' and mood='%c' and urlHash='%s';", hashUser, MOOD.LIFE.ALIVE.state, s));//Yet to hash the urlHash value
+                        threadSafeSession.execute(String.format("delete from Stalk where humanId='%s' and mood='%c' and urlHash='%s';", hashUser, MOOD.LIFE.ALIVE.state, s));//Yet to hash the urlHash value
                     } catch (Exception e) {
                         e.printStackTrace(System.err);
                     }
@@ -230,21 +230,13 @@ public class Stalker implements Runnable {
         return new Gson().toJson(new Return<ReturnValueStalk>(new ReturnValueStalk(stalkItems), "", "OK"));
     }
 
-    public String open(String node) {
+    public void open(String node) {
         cluster = Cluster.builder()
                 .addContactPoint(node)
                 .build();
         cluster.connect();
-        Metadata metadata = cluster.getMetadata();
-        System.out.printf("Connected to cluster: %s\n",
-                metadata.getClusterName());
-        StringBuilder stringBuilder = new StringBuilder("");
-        for (Host host : metadata.getAllHosts()) {
-            System.out.printf("Datacenter: %s; Host: %s; Rack: %s\n",
-                    host.getDatacenter(), host.getAddress(), host.getRack());
-            stringBuilder.append("Datacenter: ").append(host.getDatacenter()).append("; Host: ").append(host.getAddress()).append("; Rack: ").append(host.getRack());
-        }
-        return stringBuilder.toString();
+        threadSafeSession = cluster.connect("NewsMute");
+        Printer.printClusterMetadata(cluster);
     }
 
     public void close() {
