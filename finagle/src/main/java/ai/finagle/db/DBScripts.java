@@ -25,6 +25,7 @@ public class DBScripts {
     public static final int YAWN_COUNSELLOR_REINCARNATION = 60000;//millis
     public static final int YAWN_READED_TTL = 86400 * 14;//Fourteen days //(Please take into account Cassandra tombstone limitations on queue like implementations)
     public static final int SESSION_TTL = 86400 * 14;//Fourteen days//Don't go higher, in case a software update makes sessions inconsistent we can atleast recover in two weeks //(Please take into account Cassandra tombstone limitations on queue like implementations)
+    public static final int EMAIL_VALIDATION_SESSION_TTL = 86400 * 1;//One day, just to be safe
 
     public static final int STALK_HARVESTER_REINCARNATION = 600000;
 
