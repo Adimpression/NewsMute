@@ -4,6 +4,7 @@ import ai.finagle.db.DBScripts;
 import ai.finagle.model.GuardianItem;
 import ai.finagle.model.Return;
 import ai.finagle.model.ReturnValueGuardian;
+import ai.finagle.util.Email;
 import ai.finagle.util.Printer;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
@@ -55,12 +56,45 @@ import java.util.concurrent.Executors;
  *
  * http://netty.io/4.0/api/io/netty/handler/codec/http/Cookie.html
  *
+ * Following are the thinking lines for validating the user's email.
  *
- * Just logging a few things noticed on the server, to be fixed:
+ * <ol>
+ *     <li>
+ *         A malicious user B is using A's email a@example.com to validate himself (B) into our system, with some chosen password.<br/>
+ *         This can even be a password reset by A. <br/>
+ *         Or a new and ordinary signup by A.      <br/>
+ *     </li>
+ *     <li>
+ *         We store the password + salt has in the session table along with the email hash
+ *     </li>
+ *     <li>
+ *         A or B, now (after clicking on the valid link) is sent to login.
+ *     </li>
+ *     <li>
+ *         By the time A and B login, A should be able to login and B should fail.
+ *     </li>
+ * </ol>
  *
- * If the session isn't present:
+ * <ol>
+ *     <li>
+ *         When A or B, sends in a sign up or reset request, we just store the password hash (key) and the email hash (value) in the session table.
+ *     </li>
+ *     <li>
+ *         Once A clicks the validation link, which will point to the password hash, we take the email hash, and store it in the user table as key, and the password hash as value
+ *     </li>
+ *     <li>
+ *         Next time A logs in, it will work because the password set is now the updated value in the table.
+ *     </li>
+ *     <li>
+ *         If B tries a reset on A's account, it won't take effect until the link is clicked from the email sent to A.
+ *         A still can login.
+ *     </li>
+ *     <li>
+ *         Though this is a different kind of session put in the session table, is it safe? Will it conflict with existing sessions?
  *
- * No such session (humanIdHash is null), UNAUTHORIZED
+ *     </li>
+ * </ol>
+ *
  * <p/>
  * Created with IntelliJ IDEA Ultimate.
  * User: http://www.NewsMute.com
@@ -277,10 +311,8 @@ public class Guardian implements Runnable {
                 new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.OK)}), "Create", "OK");
             }
             case READ: {
-                final ResultSet execute = threadSafeSession.execute(String.format("select * from Guardian where humanId='%s'", hashUser));
-                final List<Row> all = execute.all();
-                if (!all.isEmpty()) {
-                    final Row row = all.get(0);
+                final Row row = blockingReadGuardianEntry(hashUser);
+                if (row != null) {
                     final String tokenHash = row.getString("value");
                     if (BCrypt.checkpw(token, tokenHash)) {
                         return new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, tokenHash, GuardianItem.OK)}), "Password correct", "OK");
@@ -292,10 +324,21 @@ public class Guardian implements Runnable {
                     return new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.NO_ACCOUNT)}), "Not yet signed up", "OK");
                 }
             }
-            case ERROR:
+            case ERROR:{
                 return new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.ERROR)}), "Unknown action", "ERROR");
+            }
         }
         return new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.ERROR)}), "Unhandled operation", "ERROR");
+    }
+
+    private Row blockingReadGuardianEntry(final String hashUser) {
+        final ResultSet execute = threadSafeSession.execute(String.format("select * from Guardian where humanId='%s'", hashUser));
+        final List<Row> all = execute.all();
+        if(all.isEmpty()){
+            return null;
+        } else {
+            return all.get(0);
+        }
     }
 
     private String blockingSessionRead(final String sessionId) {
@@ -311,8 +354,7 @@ public class Guardian implements Runnable {
     }
 
     private void  blockingSessionWrite(final String sessionId, final String humanId) {
-        final Session connect = cluster.connect("NewsMute");
-        connect.execute(String.format("insert into Session(sessionId, value) values('%s','%s') USING TTL %d;", sessionId, humanId, DBScripts.SESSION_TTL));
+        threadSafeSession.execute(String.format("insert into Session(sessionId, value) values('%s','%s') USING TTL %d;", sessionId, humanId, DBScripts.SESSION_TTL));
     }
 
     public void open(String node) {
