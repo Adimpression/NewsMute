@@ -9,6 +9,7 @@ enum WHAT_TO_RUN {
     HARVESTER,
     SUPER_FRIENDER,
     GUARDIAN,
+    GOD_FATHER,
     CONFIG,
     WEB_APP
 }
@@ -19,6 +20,7 @@ enum FINAGLE_SERVICE {
     STALKER,
     SUPER_FRIENDER,
     GUARDIAN,
+    GOD_FATHER,
 }
 
 /**
@@ -39,6 +41,9 @@ enum FINAGLE_SERVICE {
  *
  *
  * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.2 screamer,30000 yawner,40000 stalker,16158 super_friender,20000 guardian,31600 counsellor harvester web_app,SCREAMER-30200-23.253.36.42:30000#YAWNER-40200-23.253.36.42:40000#STALKER-16285-23.253.36.42:16185#SUPER_FRIENDER-20200-23.253.36.42:20000#GUARDIAN-50200-23.253.36.42:31600
+ *
+ *
+ * java -cp Finagle.jar run config,23.253.36.42,23.253.36.42,192.168.3.4 web_app,SCREAMER-30200-192.168.3.1:30000+192.168.3.5:30000+192.168.3.4:30000#YAWNER-40200-192.168.3.1:40000+192.168.3.3:40000+192.168.3.4:40000#STALKER-16285-23.253.36.42:16185#SUPER_FRIENDER-20200-192.168.3.1:20000+192.168.3.3:20000+192.168.3.4:20000#GUARDIAN-50200-192.168.3.1:31600+192.168.3.3:31600+192.168.3.4:31600#GOD_FATHER-40700-192.168.3.5:40500
  * <p/>
  * We are a bit confused what to do next. So here's the deal:
  * <p/>
@@ -118,9 +123,10 @@ public class run {
                     case GUARDIAN:
                         StartThreadSafely(new Thread(new Guardian(privateInterfaceIp, arg.split(",")[1], databaseIp)));
                         break;
+                    case GOD_FATHER:
+                        StartThreadSafely(new Thread(new GodFather(privateInterfaceIp, arg.split(",")[1], databaseIp)));
+                        break;
                     case WEB_APP:
-                        final String binds = arg.split(",")[1];
-
                         String exposeOnPortScreamer = null;
                         String hookUpWithScreamers = null;
 
@@ -133,8 +139,13 @@ public class run {
                         String exposeOnPortGuardian = null;
                         String hookUpWithGuardians = null;
 
+                        String exposeOnPortGodFather = null;
+                        String hookUpWithGodFather = null;
+
                         String exposeOnPortSuperFriender = null;
                         String hookUpWithSuperFrienders = null;
+
+                        final String binds = arg.split(",")[1];
 
                         for (final String bind : binds.split("#")) {
                             final String[] type_port_hosts = bind.split("-");
@@ -160,6 +171,10 @@ public class run {
                                     exposeOnPortGuardian = type_port_hosts[1];
                                     hookUpWithGuardians =  type_port_hosts[2];
                                     break;
+                                case GOD_FATHER:
+                                    exposeOnPortGodFather = type_port_hosts[1];
+                                    hookUpWithGodFather =  type_port_hosts[2];
+                                    break;
                             }
                         }
 
@@ -178,13 +193,17 @@ public class run {
                         if (exposeOnPortGuardian == null) {
                             throw new IllegalStateException("Guardian service bind port not given to use with Web");
                         }
+                        if (exposeOnPortGodFather == null) {
+                            throw new IllegalStateException("God Father service bind port not given to use with Web");
+                        }
 
                         StartThreadSafely(new Thread(new Web(
                                 new ServiceClientHookupConfigScreamer(publicInterfaceIp, Integer.parseInt(exposeOnPortScreamer), new HostsWithPorts(hookUpWithScreamers.split("[+]"))),
                                 new ServiceClientHookupConfigYawner(publicInterfaceIp, Integer.parseInt(exposeOnPortYawner), new HostsWithPorts(hookUpWithYawners.split("[+]"))),
                                 new ServiceClientHookupConfigStalker(publicInterfaceIp, Integer.parseInt(exposeOnPortStalker), new HostsWithPorts(hookUpWithStalkers.split("[+]"))),
                                 new ServiceClientHookupConfigSuperFriender(publicInterfaceIp, Integer.parseInt(exposeOnPortSuperFriender), new HostsWithPorts(hookUpWithSuperFrienders.split("[+]"))),
-                                new ServiceClientHookupConfigGuardian(publicInterfaceIp, Integer.parseInt(exposeOnPortGuardian), new HostsWithPorts(hookUpWithGuardians.split("[+]")))
+                                new ServiceClientHookupConfigGuardian(publicInterfaceIp, Integer.parseInt(exposeOnPortGuardian), new HostsWithPorts(hookUpWithGuardians.split("[+]"))),
+                                new ServiceClientHookupConfigGodFather(publicInterfaceIp, Integer.parseInt(exposeOnPortGodFather), new HostsWithPorts(hookUpWithGodFather.split("[+]")))
                         )));
                         break;
                     case CONFIG:
