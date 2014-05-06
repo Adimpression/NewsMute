@@ -3,6 +3,7 @@ package ai.finagle.util;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Host;
 import org.jboss.netty.handler.codec.http.HttpRequest;
+import org.jboss.netty.handler.codec.http.HttpResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,14 @@ public class Printer {
     public static void printHeaders(final HttpRequest request) {
         final List<Map.Entry<String, String>> headers = request.getHeaders();
         for (Map.Entry<String, String> header : headers) {
-            System.out.println("Header:" + header.getKey() + " value:" + header.getValue());
+            System.out.println("Request Header:" + header.getKey() + " value:" + header.getValue());
+        }
+    }
+
+    public static void printHeaders(final HttpResponse response) {
+        final List<Map.Entry<String, String>> headers = response.getHeaders();
+        for (Map.Entry<String, String> header : headers) {
+            System.out.println("Response Header:" + header.getKey() + " value:" + header.getValue());
         }
     }
 
@@ -32,5 +40,6 @@ public class Printer {
         }
         return stringBuilder;
     }
+
 
 }

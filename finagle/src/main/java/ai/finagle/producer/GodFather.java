@@ -92,7 +92,7 @@ public class GodFather implements Runnable {
             }
         };
 
-        ServerBuilder.safeBuild(new Gatekeeper().andThen(service), ServerBuilder.get()
+        ServerBuilder.safeBuild(service, ServerBuilder.get()
                 .codec(Http.get())
                 .name("HttpServer")
                 .bindTo(new InetSocketAddress(bindIp, Integer.parseInt(port))));
