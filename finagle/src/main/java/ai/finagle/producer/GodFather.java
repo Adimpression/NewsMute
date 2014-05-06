@@ -107,7 +107,7 @@ public class GodFather implements Runnable {
         final String user = getParameter(parameters.get("user"));
         System.out.println("user:" +user);
         final List<String> emailParameter = parameters.get("email");
-        final String email = (!emailParameter.isEmpty()) ? emailParameter.get(0) : null;
+        final String email = (emailParameter != null && !emailParameter.isEmpty()) ? emailParameter.get(0) : null;
         System.out.println("email:" + email);
         final List<String> tokenParameter = parameters.get("token");
         final String token = tokenParameter.get(0);
