@@ -192,10 +192,16 @@ public class Guardian implements Runnable {
                             result = blocking(request);
 
                             final GuardianItem guardianItem = result.returnValue.data[0];
-                            if (result.returnStatus.equals("OK") && guardianItem.status.equals(GuardianItem.OK)) {
-                                final String randomUnique = guardianItem.tokenHash + System.currentTimeMillis();
-                                blockingSessionWrite(randomUnique, guardianItem.humanIdHash);
-                                httpResponse.setHeader(X_SESSION_HEADER, randomUnique);
+                            if (result.returnStatus.equals("OK")) {
+                                if (guardianItem.status.equals(GuardianItem.OK)) {
+                                    final String randomUnique = guardianItem.tokenHash + System.currentTimeMillis();
+                                    blockingSessionWrite(randomUnique, guardianItem.humanIdHash);
+                                    httpResponse.setHeader(X_SESSION_HEADER, randomUnique);
+                                } else if (guardianItem.status.equals(GuardianItem.ERROR)) {
+                                    System.out.println(result.returnMessage);
+                                } else {
+                                    System.out.println("UNIDENTIFIED ERROR");
+                                }
                             } else {
                                 System.out.println("UNIDENTIFIED ERROR");
                             }

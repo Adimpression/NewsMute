@@ -121,9 +121,9 @@ public class GodFather implements Runnable {
 
         switch (GodFatherAction.to(action.toUpperCase())) {
             case CREATE: {
-                final String emailValidationSessionId = hashUser + System.currentTimeMillis();
-                blockingEmailValidationSessionWrite(emailValidationSessionId, token);
-                Email.sendText("News Mute <emailcheck@mutenews.com>", email, "Verify Email", String.format("Click on this link http://yawn.newsmute.com:40700/?user=%s&token=%s&nmact=VERIFIED&email=%s", user, emailValidationSessionId,email));
+                final String verifyToken = hashUser + System.currentTimeMillis();
+                blockingEmailValidationSessionWrite(verifyToken, token);
+                Email.sendText("News Mute <emailcheck@mutenews.com>", email, "Verify Email", String.format("Click on this link http://yawn.newsmute.com:40700/?user=%s&token=%s&nmact=VERIFIED&email=%s", user, verifyToken, email));
                 return new Gson().toJson(new Return<ReturnValueGodFather>(new ReturnValueGodFather(new GodFatherItem[]{new GodFatherItem(email)}), "No Error", "OK"));
             }
             case VERIFIED: {
@@ -138,15 +138,16 @@ public class GodFather implements Runnable {
     }
 
 
-    private void  blockingEmailValidationSessionWrite(final String sessionId, final String humanId) {
-        threadSafeSession.execute(String.format("insert into Session(sessionId, value) values('%s','%s') USING TTL %d;", sessionId, humanId, DBScripts.EMAIL_VALIDATION_SESSION_TTL ));
+    private void  blockingEmailValidationSessionWrite(final String verifyToken, final String hash1Password) {
+        threadSafeSession.execute(String.format("insert into Session(sessionId, value) values('%s','%s') USING TTL %d;", verifyToken, hash1Password, DBScripts.EMAIL_VALIDATION_SESSION_TTL ));
     }
 
     private boolean blockingValidatedEmailBasedCreate(final String hashUser, final String token) {
-        final String hashPassword = blockingSessionRead(token);
+        final String has1hPassword = blockingSessionRead(token);
         final boolean returnVal;
-        if(hashPassword != null) {
-            threadSafeSession.execute(String.format("insert into Guardian(humanId, value) values('%s','%s');", hashUser, BCrypt.hashpw(token, BCrypt.gensalt(12))));
+        if(has1hPassword != null) {
+            final String hash2Password = BCrypt.hashpw(has1hPassword, BCrypt.gensalt(12));
+            threadSafeSession.execute(String.format("insert into Guardian(humanId, value) values('%s','%s');", hashUser, hash2Password));
             returnVal = true;
         }else{
             System.out.println("No such email validation session:" + token);
