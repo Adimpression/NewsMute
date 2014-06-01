@@ -123,7 +123,7 @@ public class GodFather implements Runnable {
             case CREATE: {
                 final String verifyToken = hashUser + System.currentTimeMillis();
                 blockingEmailValidationSessionWrite(verifyToken, token);
-                Email.sendText("News Mute <emailcheck@mutenews.com>", email, "Verify Email", String.format("Click on this link http://yawn.newsmute.com:40700/?user=%s&token=%s&nmact=VERIFIED&email=%s", user, verifyToken, email));
+                Email.sendHtml("News Mute <emailcheck@mutenews.com>", email, "Verify Email", String.format("Click <a href='http://yawn.newsmute.com:40700/?user=%s&token=%s&nmact=VERIFIED&email=%s'>here</a> to verify your email address.", user, verifyToken, email));
                 return new Gson().toJson(new Return<ReturnValueGodFather>(new ReturnValueGodFather(new GodFatherItem[]{new GodFatherItem(email)}), "No Error", "OK"));
             }
             case VERIFIED: {

@@ -3,6 +3,10 @@ package ai.finagle.producer;
 public enum YawnerAction {
     READ,
     DELETE,
+    /**
+     * Read most popular entry from a given source
+     */
+    READ_ONE,
 
     /**
      * Error is used to specify all invalid states. This helps in switch statements

@@ -150,6 +150,35 @@ public class Yawner implements Runnable {
             }
 
             break;
+            case READ_ONE:{
+                System.out.println("Values in table as follows");
+                final ResultSet execute = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' and mood='%c'", hashUser, MOOD.LIFE.ALIVE.state));
+                final List<Row> all = execute.all();
+
+                final HashMap<String, YawnItem> mostPopularOfFeedSource = new HashMap<String, YawnItem>();
+
+                for (final Row row : all) {
+                    final YawnItem yawnItem = new Gson().fromJson(row.getString("value"), YawnItem.class);
+                    final int yawnItemShocks = Integer.parseInt(yawnItem.shocks());
+                    final YawnItem lastValue = mostPopularOfFeedSource.put(yawnItem.source, yawnItem);
+                    if (lastValue != null && yawnItemShocks > 0) {
+                        if (Integer.parseInt(lastValue.shocks()) > yawnItemShocks) {
+                            mostPopularOfFeedSource.put(row.getString("urlHash"), lastValue);//Replacing with last value since it is more popular
+                        }
+                    }
+                }
+
+                final YawnItem popularEntryForSource = mostPopularOfFeedSource.get(url);
+
+                if(popularEntryForSource != null){
+                    yawnItems = new YawnItem[]{popularEntryForSource};
+                } else {
+                    yawnItems = new YawnItem[]{};
+                }
+
+            }
+
+            break;
             case DELETE: {
                 yawnItems = new YawnItem[0];//@TODO: This is just to supply the return value, have to move things round
                 try {
