@@ -28,6 +28,8 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import java.net.InetSocketAddress;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -213,9 +215,21 @@ public class Stalker implements Runnable {
                 case DELETE: {
                     try {
                         System.out.println(stalkerAction.toString());
-                        final String s = urlParameter.get(0);
-                        System.out.println("url:" + s);
-                        threadSafeSession.execute(String.format("delete from Stalk where humanId='%s' and mood='%c' and urlHash='%s';", hashUser, MOOD.LIFE.ALIVE.state, s));//Yet to hash the urlHash value
+                        final String source = urlParameter.get(0);
+                        System.out.println("url:" + source);
+                        threadSafeSession.execute(String.format("delete from Stalk where humanId='%s' and mood='%c' and urlHash='%s';", hashUser, MOOD.LIFE.ALIVE.state, source));//Yet to hash the urlHash value
+
+
+                        final ResultSet execute = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' and mood='%c'", hashUser, MOOD.LIFE.ALIVE.state));
+                        final List<Row> all = execute.all();
+
+                        for (final Row row : all) {
+                            final YawnItem yawnItem = new Gson().fromJson(row.getString("value"), YawnItem.class);
+
+                            if (yawnItem.source.equals(source)) {
+                                threadSafeSession.execute(String.format("delete from Yawn where humanId='%s' and mood='%c' and urlHash='%s';", hashUser, MOOD.LIFE.ALIVE.state, yawnItem.link));
+                            }
+                        }
                     } catch (Exception e) {
                         e.printStackTrace(System.err);
                     }
