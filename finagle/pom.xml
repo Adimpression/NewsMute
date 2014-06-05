@@ -62,13 +62,20 @@
         </dependency>
         <!--End of Gson Dependencies-->
 
-        <!--Jsoup Dependencies-->
+        <!--Jsoup/ROME Dependencies-->
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
             <version>1.7.2</version>
         </dependency>
-        <!--End of Jsoup Dependencies-->
+
+        <dependency>
+            <groupId>rome</groupId>
+            <artifactId>rome</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <!--End of Jsoup/ROME Dependencies-->
 
         <!--BCrypt Dependencies -->
         <dependency>

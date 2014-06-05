@@ -7,6 +7,7 @@ import ai.finagle.model.Return;
 import ai.finagle.model.ReturnValueStalk;
 import ai.finagle.model.StalkItem;
 import ai.finagle.model.YawnItem;
+import ai.finagle.util.Feed;
 import ai.finagle.util.Printer;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
@@ -161,21 +162,16 @@ public class Stalker implements Runnable {
                         threadSafeSession.execute(String.format("insert into Stalk(humanId, mood, urlHash, value) values('%s','%c','%s','%s');", hashUser, MOOD.LIFE.ALIVE.state, url, new Gson().toJson(new StalkItem(url, title, description))));//Yet to hash the urlHash value
 
                         try {//Please match this with Harvester first time feed setup
-                            final Document feedDocument = Jsoup.parse(new URL(url).openStream(), "UTF-8", url, Parser.xmlParser());
 
-                            final Elements itemElements = feedDocument.getElementsByTag("item");
-                            Element[]  feedItems = new Element[itemElements.size()];
-                            feedItems =  itemElements.toArray(feedItems);
+                            for (final StalkItem feedItem : Feed.getFeedEntries(url)) {
 
-                            for (final Element feedItem : feedItems) {
-
-                                final String feedItemTitle = feedItem.getElementsByTag("title").first().text();
+                                final String feedItemTitle = feedItem.title;
                                 System.out.println("title:" + feedItemTitle);
 
-                                final String feedItemLink = feedItem.getElementsByTag("link").first().text();
+                                final String feedItemLink = feedItem.link;
                                 System.out.println("link:" + feedItemLink);
 
-                                final String feedItemDescription = feedItem.getElementsByTag("description").first().text();
+                                final String feedItemDescription = feedItem.description;
                                 System.out.println("description:" + feedItemDescription);
 
                                 final ResultSet yawnRowsNotRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashUser,  MOOD.LIFE.ALIVE.state, feedItemLink));
