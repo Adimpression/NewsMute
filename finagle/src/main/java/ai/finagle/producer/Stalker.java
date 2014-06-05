@@ -9,8 +9,12 @@ import ai.finagle.model.StalkItem;
 import ai.finagle.model.YawnItem;
 import ai.finagle.util.Feed;
 import ai.finagle.util.Printer;
-import com.datastax.driver.core.*;
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.core.Row;
+import com.datastax.driver.core.Session;
 import com.google.gson.Gson;
+import com.sun.syndication.feed.synd.SyndFeed;
 import com.twitter.finagle.Service;
 import com.twitter.finagle.builder.ServerBuilder;
 import com.twitter.finagle.http.Http;
@@ -20,17 +24,9 @@ import com.twitter.util.Future;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.http.*;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.parser.Parser;
-import org.jsoup.select.Elements;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.net.InetSocketAddress;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -153,10 +149,10 @@ public class Stalker implements Runnable {
                         System.out.println(stalkerAction.toString());
                         final String url = urlParameter.get(0);
                         System.out.println("url:" + url);
-                        final Document document = Jsoup.parse(new URL(url).openStream(), "UTF-8", url);
-                        final String title = document.getElementsByTag("title").first().text();
+                        final SyndFeed document = Feed.getFeed(url);
+                        final String title = document.getTitle();
                         System.out.println("title:" + title);
-                        final String description = document.getElementsByTag("title").first().text();
+                        final String description = document.getDescription();
                         System.out.println("description:" + description);
 
                         threadSafeSession.execute(String.format("insert into Stalk(humanId, mood, urlHash, value) values('%s','%c','%s','%s');", hashUser, MOOD.LIFE.ALIVE.state, url, new Gson().toJson(new StalkItem(url, title, description))));//Yet to hash the urlHash value
@@ -174,12 +170,12 @@ public class Stalker implements Runnable {
                                 final String feedItemDescription = feedItem.description;
                                 System.out.println("description:" + feedItemDescription);
 
-                                final ResultSet yawnRowsNotRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashUser,  MOOD.LIFE.ALIVE.state, feedItemLink));
+                                final ResultSet yawnRowsNotRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashUser, MOOD.LIFE.ALIVE.state, feedItemLink));
                                 final ResultSet yawnRowsDidRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashUser, MOOD.LIFE.DEAD.state, feedItemLink));
 
                                 final boolean feedItemLinkMissing = yawnRowsNotRead.all().isEmpty() && yawnRowsDidRead.all().isEmpty();
 
-                                if(feedItemLinkMissing){
+                                if (feedItemLinkMissing) {
                                     threadSafeSession.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %s;", hashUser, MOOD.LIFE.ALIVE.state, feedItemLink, new Gson().toJson(new YawnItem(feedItemLink, feedItemTitle, feedItemDescription, url, "0")), DBScripts.INITIAL_INSERT_TTL));//Yet to hash the urlHash value
                                 } else {
                                     //Ignoring insert

@@ -1,22 +1,12 @@
-import ai.finagle.producer.StalkerAction;
-import ai.finagle.producer.YawnerAction;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.parser.Parser;
-import org.jsoup.select.Elements;
-import org.mindrot.jbcrypt.BCrypt;
+import ai.finagle.model.StalkItem;
+import ai.finagle.util.Feed;
+import com.sun.syndication.io.FeedException;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.net.URL;
 
 /**
- *
  * "java -cp . Finagle.jar test" //See test class
- *
+ * <p/>
  * Created with IntelliJ IDEA Ultimate.
  * User: http://NewsMute.com
  * Date: 3/11/13
@@ -50,48 +40,19 @@ public class test {
 //        }
     }
 
-    private static void testFeed(final String feedUrl) throws IOException {
-        Document document = Jsoup.parse(new URL(feedUrl).openStream(), "UTF-8", feedUrl, Parser.xmlParser());
+    private static void testFeed(final String feedUrl) throws IOException, FeedException, Feed.GetFeedEntriesException {
 
-        System.out.println("Document:" + document.toString());
 
-        final Elements itemElements = document.getElementsByTag("item");
-        Element[]  items = new Element[itemElements.size()];
-        items =  itemElements.toArray(items);
+        for (final StalkItem item : Feed.getFeedEntries(feedUrl)) {
 
-        for (final Element item : items) {
+            System.out.println("title:" + item.title);
 
-            final String title = item.getElementsByTag("title").first().text();
-            System.out.println("title:" + title);
+            System.out.println("link:" + item.link);
 
-            final String link = item.getElementsByTag("link").first().text();
-            System.out.println("link:" + link);
-
-            final String description = item.getElementsByTag("description").first().text();
-            System.out.println("description:" + description);
+            System.out.println("description:" + item.description);
 
         }
 
-    }
-
-    private static void getLinkInfo(final String url) throws IOException {
-        final Document document = Jsoup.parse(new URL(url).openStream(), "UTF-8", url);
-        final String title = document.getElementsByTag("title").first().text();
-        System.out.println("title:" + title);
-        String description = title;
-        for (final Element meta : document.getElementsByTag("meta")) {
-            if (meta.attr("name").equals("description")) {
-                description = meta.attr("content");
-                break;
-            }
-        }
-        System.out.println("description:" + description);
-        final File file = new File("/tmp/" + System.currentTimeMillis() + ".enc");
-        FileOutputStream fileOutputStream = new FileOutputStream(file);
-        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
-        outputStreamWriter.write(title + " - " + description);
-        outputStreamWriter.close();
-        fileOutputStream.close();
     }
 
 }

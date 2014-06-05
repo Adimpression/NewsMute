@@ -2,6 +2,7 @@ package ai.finagle.util;
 
 import ai.finagle.model.StalkItem;
 import com.sun.syndication.feed.synd.SyndEntry;
+import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.XmlReader;
@@ -45,8 +46,27 @@ public class Feed {
             throw new GetFeedEntriesException(e);
         }
     }
+    public static SyndFeed getFeed(final String feedLink) throws IOException, FeedException, GetFeedEntriesException {
 
-    private static class GetFeedEntriesException extends Exception {
+        try {
+            final URLConnection urlConnection = new URL(feedLink).openConnection();
+            urlConnection.setConnectTimeout(1000);
+            urlConnection.setReadTimeout(1000);
+
+            final List<StalkItem> returnVal = new ArrayList<StalkItem>();
+
+            return new SyndFeedInput().build(new XmlReader(urlConnection));
+
+        } catch (IOException e) {
+            throw new GetFeedEntriesException(e);
+        } catch (IllegalArgumentException e) {
+            throw new GetFeedEntriesException(e);
+        } catch (FeedException e) {
+            throw new GetFeedEntriesException(e);
+        }
+    }
+
+    public static class GetFeedEntriesException extends Exception {
         public GetFeedEntriesException(final Throwable t) {
             super(t);
         }
