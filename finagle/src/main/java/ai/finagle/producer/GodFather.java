@@ -146,6 +146,7 @@ public class GodFather implements Runnable {
         final String has1hPassword = blockingSessionRead(token);
         final boolean returnVal;
         if(has1hPassword != null) {
+            blockingSessionDelete(token);
             final String hash2Password = BCrypt.hashpw(has1hPassword, BCrypt.gensalt(12));
             threadSafeSession.execute(String.format("insert into Guardian(humanId, value) values('%s','%s');", hashUser, hash2Password));
             returnVal = true;
@@ -169,8 +170,7 @@ public class GodFather implements Runnable {
     }
 
     private String blockingSessionRead(final String sessionId) {
-        final Session connect = cluster.connect("NewsMute");
-        final ResultSet execute = connect.execute(String.format("select * from Session where sessionId='%s'", sessionId));
+        final ResultSet execute = threadSafeSession.execute(String.format("select * from Session where sessionId='%s'", sessionId));
         for (final Row row : execute.all()) {
             final String aStoredSessionId = row.getString("sessionId");
             if(aStoredSessionId.equals(sessionId)){
@@ -180,11 +180,14 @@ public class GodFather implements Runnable {
         return null;
     }
 
+    private void blockingSessionDelete(final String sessionId) {
+        threadSafeSession.execute(String.format("delete from Session where sessionId='%s'", sessionId));
+    }
+
     public void open(String node) {
         cluster = Cluster.builder()
                 .addContactPoint(node)
                 .build();
-        cluster.connect();
         threadSafeSession = cluster.connect("NewsMute");
 
         Printer.printClusterMetadata(cluster);
