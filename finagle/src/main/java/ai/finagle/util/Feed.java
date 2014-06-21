@@ -25,8 +25,8 @@ public class Feed {
 
         try {
             final URLConnection urlConnection = new URL(feedLink).openConnection();
-            urlConnection.setConnectTimeout(1000);
-            urlConnection.setReadTimeout(1000);
+            urlConnection.setConnectTimeout(10000);
+            urlConnection.setReadTimeout(10000);
 
             final List<StalkItem> returnVal = new ArrayList<StalkItem>();
 
