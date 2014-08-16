@@ -43,7 +43,7 @@ public class Web implements Runnable {
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
 
-            private final ExecutorServiceFuturePool executorServiceFuturePool = new ExecutorServiceFuturePool(Executors.newFixedThreadPool(100)); // Pool to process blockng requests so server thread doesn't
+            private final ExecutorServiceFuturePool executorServiceFuturePool = new ExecutorServiceFuturePool(Executors.newFixedThreadPool(100)); // Pool to process blocking requests so server thread doesn't
 
             private final Service<HttpRequest, HttpResponse> client = ClientBuilder
                     .safeBuild(ClientBuilder.get().codec(Http.get())
