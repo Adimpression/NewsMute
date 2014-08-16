@@ -101,7 +101,7 @@ public class Counsellor implements Runnable {
 
                     final Date endTime = Calendar.getInstance().getTime();
                     System.out.printf("Counselling finished at %s counselling %d sessions", new SimpleDateFormat("MM-dd HH:mm:ss").format(endTime), totalInsertions);
-                    System.out.println("Counselling took %d" + new Long(endTime.getTime() - startTime.getTime()) + "  milliseconds");
+                    System.out.println("Counselling took %d" + (endTime.getTime() - startTime.getTime()) + "  milliseconds");
 
                 } catch (final Exception e) {
                     e.printStackTrace(System.err);
