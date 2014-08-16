@@ -53,8 +53,6 @@ public class Feed {
             urlConnection.setConnectTimeout(1000);
             urlConnection.setReadTimeout(1000);
 
-            final List<StalkItem> returnVal = new ArrayList<StalkItem>();
-
             return new SyndFeedInput().build(new XmlReader(urlConnection));
 
         } catch (IOException e) {
