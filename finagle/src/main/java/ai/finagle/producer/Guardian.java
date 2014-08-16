@@ -308,7 +308,6 @@ public class Guardian implements Runnable {
                 .addContactPoint(node)
                 .build();
         cluster.connect();
-        Metadata metadata = cluster.getMetadata();
         threadSafeSession = cluster.connect("NewsMute");
         Printer.printClusterMetadata(cluster);
     }
