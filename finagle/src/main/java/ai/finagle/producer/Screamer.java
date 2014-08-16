@@ -74,7 +74,7 @@ public class Screamer implements Runnable {
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
 
-            final ExecutorServiceFuturePool executorServiceFuturePool = new ExecutorServiceFuturePool(Executors.newFixedThreadPool(100)); // Pool to process blockng requests so server thread doesn't
+            final ExecutorServiceFuturePool executorServiceFuturePool = new ExecutorServiceFuturePool(Executors.newFixedThreadPool(100)); // Pool to process blocking requests so server thread doesn't
 
             public Future<HttpResponse> apply(final HttpRequest request) {
                 return executorServiceFuturePool.apply(new Function0<HttpResponse>() {
