@@ -201,7 +201,7 @@ public class Yawner implements Runnable {
         return new Gson().toJson(new Return<ReturnValueYawn>(new ReturnValueYawn(yawnItems), "No Error", "OK"));
     }
 
-    public void open(String node) {
+    void open(String node) {
         cluster = Cluster.builder()
                 .addContactPoint(node)
                 .build();
@@ -215,7 +215,7 @@ public class Yawner implements Runnable {
         cluster.shutdown();
     }
 
-    public static String getParameter(final List<String> urlParameter){
+    private static String getParameter(final List<String> urlParameter){
         final String returnVal;
         if (urlParameter != null){
             returnVal = urlParameter.get(0);

@@ -303,7 +303,7 @@ public class Guardian implements Runnable {
         threadSafeSession.execute(String.format("insert into Session(sessionId, value) values('%s','%s') USING TTL %d;", sessionId, humanId, DBScripts.SESSION_TTL));
     }
 
-    public void open(String node) {
+    void open(String node) {
         cluster = Cluster.builder()
                 .addContactPoint(node)
                 .build();

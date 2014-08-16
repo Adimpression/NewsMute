@@ -157,7 +157,7 @@ public class Screamer implements Runnable {
         }
     }
 
-    public void open(String node) {
+    void open(String node) {
         cluster = Cluster.builder()
                 .addContactPoint(node)
                 .build();

@@ -99,7 +99,7 @@ public class Harvester implements Runnable {
         timer.scheduleAtFixedRate(task, 0, DBScripts.STALK_HARVESTER_REINCARNATION);//Every ten minutes
     }
 
-    public void open(String node) {
+    void open(String node) {
         cluster = Cluster.builder()
                 .addContactPoint(node)
                 .build();

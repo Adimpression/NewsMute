@@ -236,7 +236,7 @@ public class Stalker implements Runnable {
         return new Gson().toJson(new Return<ReturnValueStalk>(new ReturnValueStalk(stalkItems), "", "OK"));
     }
 
-    public void open(String node) {
+    void open(String node) {
         cluster = Cluster.builder()
                 .addContactPoint(node)
                 .build();

@@ -11,7 +11,7 @@ import java.util.Arrays;
 public class ReturnValue<T> {
     public final T[] data;
 
-    public ReturnValue(final T[] data) {
+    ReturnValue(final T[] data) {
         this.data = data;
     }
 

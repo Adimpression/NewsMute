@@ -15,7 +15,7 @@ public class ServiceClientHookupConfig {
     final private String[] bindToHosts;
 
 
-    public ServiceClientHookupConfig(final String exposeOnIp, final int exposeOnPort, final HostsWithPorts bindToHosts) {
+    ServiceClientHookupConfig(final String exposeOnIp, final int exposeOnPort, final HostsWithPorts bindToHosts) {
         this.bindToHosts = bindToHosts.getHostsWithPorts();
         this.exposeOnPort = exposeOnPort;
         this.exposeOnIp = exposeOnIp;

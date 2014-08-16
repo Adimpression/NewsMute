@@ -10,7 +10,7 @@ public class MOOD {
 
     public final LIFE life;
 
-    public MOOD(final LIFE life) {
+    private MOOD(final LIFE life) {
         this.life = life;
     }
 
@@ -48,7 +48,7 @@ public class MOOD {
 
     }
 
-    public enum FAME{
+    private enum FAME{
 
     }
 }

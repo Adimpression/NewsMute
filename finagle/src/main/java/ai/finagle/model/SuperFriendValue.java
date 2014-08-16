@@ -9,8 +9,8 @@ import java.util.List;
  * Time: 1:40 PM
  */
 public class SuperFriendValue {
-    final public String humanId;
-    final public String[] superFriends;
+    private final String humanId;
+    private final String[] superFriends;
 
     public SuperFriendValue(final String humanId, final String[] superFriends) {
         this.humanId = humanId;

@@ -8,7 +8,7 @@ package ai.finagle.model;
  */
 public class GodFatherItem {
 
-    public final String humanId;
+    private final String humanId;
 
     public GodFatherItem(final String humanId) {
         this.humanId = humanId;

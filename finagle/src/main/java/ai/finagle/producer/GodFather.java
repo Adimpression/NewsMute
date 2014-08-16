@@ -38,7 +38,7 @@ import java.util.concurrent.Executors;
  */
 public class GodFather implements Runnable {
 
-    public static final String ACTION = "nmact";
+    private static final String ACTION = "nmact";
 
     private final String port;
 
@@ -184,7 +184,7 @@ public class GodFather implements Runnable {
         threadSafeSession.execute(String.format("delete from Session where sessionId='%s'", sessionId));
     }
 
-    public void open(String node) {
+    void open(String node) {
         cluster = Cluster.builder()
                 .addContactPoint(node)
                 .build();
@@ -197,7 +197,7 @@ public class GodFather implements Runnable {
         cluster.shutdown();
     }
 
-    public static String getParameter(final List<String> urlParameter){
+    private static String getParameter(final List<String> urlParameter){
         final String returnVal;
         if (urlParameter != null){
             returnVal = urlParameter.get(0);

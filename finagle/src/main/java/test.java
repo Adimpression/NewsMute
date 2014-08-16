@@ -12,7 +12,7 @@ import java.io.IOException;
  * Date: 3/11/13
  * Time: 7:51 PM
  */
-public class test {
+class test {
     public static void main(final String[] args) throws IOException {
         //getLinkInfo("http://mobile.bbc.co.uk/arabic/middleeast/2013/11/131103_kerry_egypt");
         //getLinkInfo("http://www.worldjournal.com/view/full_Anews/23970448/article-%E7%8E%8B%E6%AF%85-%E6%8E%A8%E5%8B%95%E5%85%8D%E7%B0%BD-%E6%8F%90%E9%AB%98%E8%AD%B7%E7%85%A7%E5%90%AB%E9%87%91%E9%87%8F?instance=noon1");
