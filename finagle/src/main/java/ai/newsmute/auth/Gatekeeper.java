@@ -1,6 +1,7 @@
 package ai.newsmute.auth;
 
 import ai.newsmute.service.Guardian;
+import ai.newsmute.util.Printer;
 import com.twitter.finagle.Filter;
 import com.twitter.finagle.Service;
 import com.twitter.util.Future;
@@ -42,16 +43,7 @@ public class Gatekeeper extends Filter<HttpRequest, HttpResponse, HttpRequest, H
         if (cookieValue != null) {
             return httpRequestHttpResponseService.apply(httpRequest);
         } else {
-            final List<Map.Entry<String, String>> headers = httpRequest.getHeaders();
-            if (!headers.isEmpty()) {
-                for (Map.Entry<String, String> header : headers) {
-                    System.out.println("Header:" + header.getKey() + " value:" + header.getValue());
-                }
-            } else {
-                System.out.println("NO HTTP HEADERS!");
-            }
-
-            //return httpRequestHttpResponseService.apply(httpRequest);
+            Printer.printHeaders(httpRequest);
             return Future.value(unauthorized);
         }
     }
