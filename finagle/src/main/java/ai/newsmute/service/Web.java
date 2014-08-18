@@ -9,6 +9,7 @@ import com.twitter.util.Duration;
 import com.twitter.util.ExecutorServiceFuturePool;
 import com.twitter.util.Function0;
 import com.twitter.util.Future;
+import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import scala.actors.threadpool.TimeUnit;
@@ -55,7 +56,9 @@ public class Web implements Runnable {
                 return executorServiceFuturePool.apply(new Function0<HttpResponse>() {
                     @Override
                     public HttpResponse apply() {
-                        return client.apply(request).apply(new Duration(TimeUnit.SECONDS.toNanos(30)));
+                        final HttpResponse response = client.apply(request).apply(new Duration(TimeUnit.SECONDS.toNanos(30)));
+                        response.setHeader(HttpHeaders.Names.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+                        return response;
                     }
                 });
 
