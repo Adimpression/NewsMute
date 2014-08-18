@@ -1,6 +1,6 @@
 package ai.newsmute.auth;
 
-import ai.newsmute.producer.Guardian;
+import ai.newsmute.service.Guardian;
 import com.twitter.finagle.Filter;
 import com.twitter.finagle.Service;
 import com.twitter.util.Future;

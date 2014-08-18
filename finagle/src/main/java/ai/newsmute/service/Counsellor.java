@@ -1,4 +1,4 @@
-package ai.newsmute.producer;
+package ai.newsmute.service;
 
 import ai.newsmute.db.DBScripts;
 import ai.newsmute.db.MOOD;

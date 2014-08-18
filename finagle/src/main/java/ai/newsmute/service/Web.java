@@ -1,4 +1,4 @@
-package ai.newsmute.producer;
+package ai.newsmute.service;
 
 import ai.newsmute.model.ServiceClientHookupConfig;
 import com.twitter.finagle.Service;

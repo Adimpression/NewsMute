@@ -1,5 +1,5 @@
 import ai.newsmute.model.*;
-import ai.newsmute.producer.*;
+import ai.newsmute.service.*;
 
 enum WHAT_TO_RUN {
     SCREAMER,

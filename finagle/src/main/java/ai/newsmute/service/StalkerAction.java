@@ -1,4 +1,4 @@
-package ai.newsmute.producer;
+package ai.newsmute.service;
 
 public enum StalkerAction {
     CREATE,
