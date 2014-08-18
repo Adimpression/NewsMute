@@ -1,5 +1,5 @@
-import ai.finagle.model.*;
-import ai.finagle.producer.*;
+import ai.newsmute.model.*;
+import ai.newsmute.producer.*;
 
 enum WHAT_TO_RUN {
     SCREAMER,

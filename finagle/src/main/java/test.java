@@ -1,5 +1,5 @@
-import ai.finagle.model.StalkItem;
-import ai.finagle.util.Feed;
+import ai.newsmute.model.StalkItem;
+import ai.newsmute.util.Feed;
 import com.sun.syndication.io.FeedException;
 
 import java.io.IOException;
