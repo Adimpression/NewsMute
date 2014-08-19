@@ -57,6 +57,8 @@ public class Web implements Runnable {
                     @Override
                     public HttpResponse apply() {
                         final HttpResponse response = client.apply(request).apply(new Duration(TimeUnit.SECONDS.toNanos(30)));
+                        response.setHeader(HttpHeaders.Names.ACCESS_CONTROL_ALLOW_HEADERS, "x-session-header");
+                        response.setHeader(HttpHeaders.Names.ACCESS_CONTROL_ALLOW_METHODS, "GET, POST, PUT, DELETE");
                         response.setHeader(HttpHeaders.Names.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
                         return response;
                     }
