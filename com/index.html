@@ -18,13 +18,18 @@
 </head>
 <body>
 <div class="container">
-    <div class="row padded">
-        <div class="two thirds">
-            hi
-        </div>
-        <div class="one third" id="header">
-            {{message}}
-        </div>
+    <a href="#home">home</a>
+    <a href="#page1">page1</a>
+
+    <div class="none" id="header">
+        <ul>
+            <li v-repeat="routes">
+                <a href="#!/{{$value}}" v-class="current:currentView == $value">Visit {{$value}}</a>
+            </li>
+        </ul>
+
+        <div class="row padded" v-view="currentView"></div>
+
     </div>
 </div>
 <script type="text/javascript" src="js/libs/jquery-1.10.2.min.js"></script>
