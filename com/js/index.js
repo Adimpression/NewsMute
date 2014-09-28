@@ -1,55 +1,49 @@
-Vue.config('debug', true);
+$(document).ready(function ($) {
+
+    Vue.config('debug', true);
 
 
-Vue.component('home', {
-    template: '<h1>Home</h1><div class="content"><content/></div>',
-    created: function () {
-        console.log('Created Home');
-    }
-});
+    var home = Vue.extend({
+        template: '<h1>Home</h1><div class="content"><content/></div>',
+        created: function () {
+            console.log('Created Home');
+        }
+    });
 
-Vue.component('page1', {
-    template: '<h1>Page1</h1><div class="content"><content/></div>',
-    created: function () {
-        console.log('Created Page1');
-    }
-});
+    var Oh404 = Vue.extend({
+        template: '<h1>404 oh!</h1>',
+        created: function () {
+            console.log('Created 404');
+        }
+    });
 
-Vue.component('Oh404', {
-    template: '<h1>404 oh!</h1>',
-    created: function () {
-        console.log('Created 404');
-    }
-});
+    Vue.component('home', home);
+    Vue.component('Oh404', Oh404);
 
-//    Vue.component('home', home);
-//    Vue.component('page1', page1);
-//
-//    $.getScript("content/newspapers-part-daily-life.js", function (data, textStatus, jqxhr) {
-//        alert('loaded');
-//        page1.template = data;
-//    });
+    $.getScript("content/newspapers-part-daily-life.js", function (data, textStatus, jqxhr) {
+    });
 
 
 // simple routing
-var routes = ['home', 'page1', 'Oh404'];
+    var routes = ['home', 'page1', 'Oh404'];
 
-var app = new Vue({
-    el: '#header',
-    data: {
-        routes: routes,
-        currentView: getRoute()
+    var app = new Vue({
+        el: '#header',
+        data: {
+            routes: routes,
+            currentView: getRoute()
+        }
+    });
+
+    function getRoute() {
+        var path = location.hash.replace(/^#!\/?/, '') || 'home';
+        return routes.indexOf(path) > -1
+            ? path
+            : 'Oh404'
     }
-});
 
-function getRoute() {
-    var path = location.hash.replace(/^#!\/?/, '') || 'home';
-    return routes.indexOf(path) > -1
-        ? path
-        : 'Oh404'
-}
-
-window.addEventListener('hashchange', function () {
-    app.currentView = getRoute();
+    window.addEventListener('hashchange', function () {
+        app.currentView = getRoute();
+    });
 });
 
