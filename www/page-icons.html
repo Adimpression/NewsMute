@@ -1,0 +1,1167 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Mr Goose - Responsive AJAX HTML Template</title>
+
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        
+        <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic|PT+Sans+Narrow:400,700|Economica|Anonymous+Pro|Source+Sans+Pro:300,400|Nothing+You+Could+Do" />
+        <link rel="stylesheet" type="text/css" href="assets/gui/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="assets/gui/css/style-social-icons.css" />
+        <link rel="stylesheet" type="text/css" href="assets/gui/css/style-icons.css" />
+        <link rel="stylesheet" type="text/css" href="libraries/css/reset.css" />
+        <link rel="stylesheet" type="text/css" href="libraries/css/colorpicker.css" />
+        <link rel="stylesheet" type="text/css" href="libraries/css/jquery.jscrollpane.css" />
+        <link rel="stylesheet" type="text/css" href="libraries/css/jquery.isotope.css" />
+        <link rel="stylesheet" type="text/css" href="libraries/css/jquery.dop.WallGridGallery.css" />
+        <link rel="stylesheet" type="text/css" href="libraries/css/jquery.dop.ThumbnailGallery.css" />
+        <link rel="stylesheet" type="text/css" href="libraries/css/jquery.dop.ThumbnailScroller.css" />
+        <link rel="stylesheet" type="text/css" href="assets/gui/css/jquery.dop.Panel.css" />
+        <link rel="stylesheet" type="text/css" href="assets/gui/css/style-general.css" />
+        <link rel="stylesheet" type="text/css" href="assets/gui/css/style-background.css" />
+        <link rel="stylesheet" type="text/css" href="assets/gui/css/style-navigation.css" />
+        <link rel="stylesheet" type="text/css" href="assets/gui/css/style-header.css" />
+        <link rel="stylesheet" type="text/css" href="assets/gui/css/style-content.css" />
+        <link rel="stylesheet" type="text/css" href="assets/gui/css/style-blog.css" />
+        <link rel="stylesheet" type="text/css" href="assets/gui/css/style-footer.css" />
+        <link rel="shortcut icon" href="assets/gui/images/icon.png" />
+
+        <script type="text/JavaScript" src="assets/js/config.js"></script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAzLSyccySIGiJXk3Ni4Czwgc9MEvdeU8&amp;sensor=false"></script>
+        <script type="text/JavaScript" src="http://code.jquery.com/jquery-latest.js"></script>
+        <script type="text/JavaScript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
+        <script type="text/JavaScript" src="libraries/js/three.js"></script>
+        <script type="text/JavaScript" src="libraries/js/css3-mediaqueries.js"></script>
+        <script type="text/JavaScript" src="libraries/js/colorpicker.js"></script>
+        <script type="text/JavaScript" src="libraries/js/jquery.tweet.js"></script>
+        <script type="text/JavaScript" src="libraries/js/jquery.countdown.min.js"></script>
+        <script type="text/JavaScript" src="libraries/js/jquery.jscrollpane.min.js"></script>
+        <script type="text/JavaScript" src="libraries/js/jquery.mousewheel.js"></script>
+        <script type="text/JavaScript" src="libraries/js/jquery.isotope.min.js"></script>
+        <script type="text/JavaScript" src="libraries/js/jquery.dop.ImageLoader.js"></script>
+        <script type="text/JavaScript" src="libraries/js/jquery.dop.WallGridGallery.js"></script>
+        <script type="text/JavaScript" src="libraries/js/jquery.dop.ThumbnailGallery.js"></script>
+        <script type="text/JavaScript" src="libraries/js/jquery.dop.ThumbnailScroller.js"></script>
+        <script type="text/JavaScript" src="assets/js/jquery.dop.Panel.js"></script>
+        <script type="text/JavaScript" src="assets/js/jquery.dop.Birds.js"></script>
+        <script type="text/JavaScript" src="assets/js/main.js"></script>
+    </head>
+    <body>
+        <div id="wrapper" class="left">
+<!-- Begin Background -->
+            <div id="background-wrapper">
+                <div class="pattern pattern-7"></div>
+                <div class="landscape">
+                    <div class="background"></div>
+                    <div class="light"></div>
+                    <div class="birds"></div>
+                    <div class="foreground"></div>
+                </div>    
+            </div>
+<!-- End Background -->
+<!-- Begin Panel -->
+            <div id="panel">
+                <a href="javascript:void(0)" class="toggle-button icon-73"></a>
+                <div class="general">
+                    <h3 class="open">General Settings</h3>
+                    <a href="javascript:void(0)" class="general-settings-toggle options-toggle icon-67"></a>
+                    <div class="general-list">
+                        <label for="panel_website_type">Website Type</label>
+                        <select name="panel_website_type" id="panel_website_type">
+                            <option value="ajax">AJAX</option>
+                            <option value="html" selected="selected">HTML</option>
+                        </select>
+                        <br class="clear" />                       
+<!--                        <label for="panel_content_position">Menu Position</label>
+                        <select name="panel_content_position" id="panel_content_position">
+                            <option value="left">Left</option>
+                            <option value="right" selected="selected">Right</option>
+                        </select>
+                        <br class="clear" />-->
+                        <label for="panel_main_color">Main Color</label>
+                        <input type="text" name="panel_main_color" id="panel_main_color" value="af3425" />
+                        <br class="clear" />
+                    </div>
+                </div>
+                <div class="patterns">
+                    <h3 class="open">Patterns</h3>  
+                    <a href="javascript:void(0)" class="patterns-toggle options-toggle icon-67"></a>
+                    <ul class="patterns-list">
+                        <li><a href="javascript:void(0)" id="pattern-1"></a></li>
+                        <li><a href="javascript:void(0)" id="pattern-2"></a></li>
+                        <li><a href="javascript:void(0)" id="pattern-3"></a></li>
+                        <li><a href="javascript:void(0)" id="pattern-4"></a></li>
+                        <li><a href="javascript:void(0)" id="pattern-5"></a></li>
+                        <li class="last"><a href="javascript:void(0)" id="pattern-6"></a></li>
+                        <li><a href="javascript:void(0)" id="pattern-7"></a></li>
+                        <li><a href="javascript:void(0)" id="pattern-8"></a></li>
+                        <li><a href="javascript:void(0)" id="pattern-9"></a></li>
+                        <li><a href="javascript:void(0)" id="pattern-10"></a></li>
+                        <li><a href="javascript:void(0)" id="pattern-11"></a></li>
+                    </ul>
+                </div>
+                <div class="background">  
+                    <h3 class="open">Background Settings</h3>
+                    <a href="javascript:void(0)" class="background-settings-toggle options-toggle icon-67"></a>
+                    <div class="background-list"> 
+                        <label for="panel_background_image">Select Image</label>
+                        <select name="panel_background_image" id="panel_background_image">
+                            <option value="bridge">Bridge</option>
+                            <option value="church">Church</option>
+                            <option value="city">City</option>
+                            <option value="forest">Forest</option>
+                            <option value="ship">Ship</option>
+                            <option value="train">Train</option>
+                            <option value="windmill">Windmill</option>
+                            <option value="wolf" selected="selected">Wolf</option>
+                        </select>
+                        <br class="clear" />
+                        <label for="panel_birds_fly_from">Birds fly from</label>
+                        <select name="panel_birds_fly_from" id="panel_birds_fly_from">
+                            <option value="top">Top</option>
+                            <option value="top-right">Top-Right</option>
+                            <option value="right">Right</option>
+                            <option value="bottom-right">Bottom-Right</option>
+                            <option value="bottom">Bottom</option>
+                            <option value="bottom-left">Bottom-Left</option>
+                            <option value="left">Left</option>
+                            <option value="top-left" selected="selected">Top-Left</option>
+                        </select>
+                        <br class="clear" />
+                        <label for="panel_no_birds">Number of Birds</label>
+                        <select name="panel_no_birds" id="panel_no_birds">
+                            <option value="12">12 birds</option>
+                            <option value="24">24 birds</option>
+                            <option value="48">48 birds</option>
+                            <option value="72">72 birds</option>
+                            <option value="120" selected="selected">96 birds</option>
+                        </select>
+                        <br class="clear" />
+                    </div>
+                </div>
+            </div>
+<!-- End Panel -->
+            <div id="content-wrapper">
+<!-- Begin Navigation -->
+                <div id="navigation-wrapper">
+                    <!-- Logo -->
+                    <div id="logo">
+                        <a href="" class="ajax-link">
+                            <h1>MR GOOSE</h1>
+                            <img src="assets/gui/images/logo.png" alt="Mr Goose - Responsive AJAX HTML Template" />
+                        </a>
+                    </div>
+                    
+                    <div class="loader"></div>
+                    
+                    <form action="#" method="get" id="searchform" role="search" onsubmit="return false;">
+                        <label for="s">Search for:</label>
+                        <input type="submit" id="searchsubmit" value="" />
+                        <input type="text" name="s" id="s" onfocus="this.value = ''" onblur="this.value = 'Type and hit enter...'" value="Type and hit enter..." />
+                        <br class="clear" />
+                    </form>
+                    
+                    <ul id="menu">
+                        <li>
+                            <a href="javascript:void(0)">
+                                <span class="icon">
+                                    <span class="glyph icon-159"></span>
+                                    <span class="glyph-hover icon-159"></span>
+                                </span>
+                                PAGES
+                                <span class="more">
+                                    <span class="square square1"></span>
+                                    <span class="square square2"></span>
+                                    <span class="square square3"></span>
+                                </span>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a href="page-about-us.html" class="ajax-link">About us</a>
+                                </li>
+                                <li>
+                                    <a href="page-services.html" class="ajax-link">Services</a>
+                                </li>
+                                <li>
+                                    <a href="page-our-team.html" class="ajax-link">Our team</a>
+                                </li>
+                                <li>
+                                    <a href="page-404.html" class="ajax-link">404 page</a>
+                                </li>
+                                <li>
+                                    <a href="page-coming-soon.html" class="ajax-link">Coming soon page</a>
+                                </li>
+                            </ul>
+                        </li><li>
+                            <a href="javascript:void(0)">
+                                <span class="icon">
+                                    <span class="glyph icon-219"></span>
+                                    <span class="glyph-hover icon-219"></span>
+                                </span>
+                                PORTFOLIO
+                                <span class="more">
+                                    <span class="square square1"></span>
+                                    <span class="square square2"></span>
+                                    <span class="square square3"></span>
+                                </span>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a href="portfolio-grid-with-label.html" class="ajax-link">Grid - with label</a>
+                                </li>
+                                <li>
+                                    <a href="portfolio-grid-no-spaces.html" class="ajax-link">Grid - no spaces</a>
+                                </li>
+                                <li>
+                                    <a href="portfolio-gallery-bottom.html" class="ajax-link">Gallery - Bottom</a>
+                                </li>
+                                <li>
+                                    <a href="portfolio-gallery-right.html" class="ajax-link">Gallery - Right</a>
+                                </li>
+                                <li>
+                                    <a href="portfolio-project-wide.html" class="ajax-link">Project wide</a>
+                                </li>
+                                <li>
+                                    <a href="portfolio-project-half.html" class="ajax-link">Project half</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <span class="icon">
+                                    <span class="glyph icon-190"></span>
+                                    <span class="glyph-hover icon-190"></span>
+                                </span>
+                                ELEMENTS
+                                <span class="more">
+                                    <span class="square square1"></span>
+                                    <span class="square square2"></span>
+                                    <span class="square square3"></span>
+                                </span>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a href="javascript:void(0)">
+                                        2nd level item
+                                        <span class="more">
+                                            <span class="square square1"></span>
+                                            <span class="square square2"></span>
+                                            <span class="square square3"></span>
+                                        </span>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="javascript:void(0)">
+                                                3rd level item
+                                                <span class="more">
+                                                    <span class="square square1"></span>
+                                                    <span class="square square2"></span>
+                                                    <span class="square square3"></span>
+                                                </span>
+                                            </a>
+                                            <ul>
+                                                <li>
+                                                    <a href="javascript:void(0)">
+                                                        4th level item
+                                                        <span class="more">
+                                                            <span class="square square1"></span>
+                                                            <span class="square square2"></span>
+                                                            <span class="square square3"></span>
+                                                        </span>
+                                                    </a>
+                                                    <ul>
+                                                        <li>
+                                                            <a href="javascript:void(0)">"N" Level Items</a>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="page-typography.html" class="ajax-link">Typography</a>
+                                </li>
+                                <li>
+                                    <a href="page-grid.html" class="ajax-link">Grid</a>
+                                </li>
+                                <li>
+                                    <a href="page-icons.html" class="ajax-link">Icons</a>
+                                </li>
+                                <li>
+                                    <a href="page-interactive-elements.html" class="ajax-link">Interactive elements</a>
+                                </li>
+                                <li>
+                                    <a href="page-tables.html" class="ajax-link">Tables</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <span class="icon">
+                                    <span class="glyph icon-249"></span>
+                                    <span class="glyph-hover icon-249"></span>
+                                </span>
+                                BLOG
+                                <span class="more">
+                                    <span class="square square1"></span>
+                                    <span class="square square2"></span>
+                                    <span class="square square3"></span>
+                                </span>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a href="blog-masonry.html" class="ajax-link">Blog Masonry</a>
+                                </li>
+                                <li>
+                                    <a href="blog-list.html" class="ajax-link">Blog List</a>
+                                </li>
+                                <li>
+                                    <a href="blog-classic.html" class="ajax-link">Blog Classic</a>
+                                </li>
+                                <li>
+                                    <a href="blog-post.html" class="ajax-link">Blog Post</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="contact.html" class="ajax-link">
+                                <span class="icon">
+                                    <span class="glyph icon-274"></span>
+                                    <span class="glyph-hover icon-274"></span>
+                                </span>
+                                CONTACT
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <ul id="mobile-menu">
+                        <li>
+                            <a href="javascript:void(0)">
+                                <span class="icon">
+                                    <span class="row"></span>
+                                    <span class="row"></span>
+                                    <span class="row"></span>
+                                    <span class="row"></span>
+                                </span>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a href="javascript:void(0)">
+                                        <span class="icon">
+                                            <span class="glyph icon-159"></span>
+                                            <span class="glyph-hover icon-159"></span>
+                                        </span>
+                                        PAGES
+                                        <span class="more">
+                                            <span class="square square1"></span>
+                                            <span class="square square2"></span>
+                                            <span class="square square3"></span>
+                                        </span>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="page-about-us.html" class="ajax-link">About us</a>
+                                        </li>
+                                        <li>
+                                            <a href="page-services.html" class="ajax-link">Services</a>
+                                        </li>
+                                        <li>
+                                            <a href="page-our-team.html" class="ajax-link">Our team</a>
+                                        </li>
+                                        <li>
+                                            <a href="page-404.html" class="ajax-link">404 page</a>
+                                        </li>
+                                        <li>
+                                            <a href="page-coming-soon.html" class="ajax-link">Coming soon page</a>
+                                        </li>
+                                    </ul>
+                                </li><li>
+                                    <a href="javascript:void(0)">
+                                        <span class="icon">
+                                            <span class="glyph icon-219"></span>
+                                            <span class="glyph-hover icon-219"></span>
+                                        </span>
+                                        PORTFOLIO
+                                        <span class="more">
+                                            <span class="square square1"></span>
+                                            <span class="square square2"></span>
+                                            <span class="square square3"></span>
+                                        </span>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="portfolio-grid-with-label.html" class="ajax-link">Grid - with label</a>
+                                        </li>
+                                        <li>
+                                            <a href="portfolio-grid-no-spaces.html" class="ajax-link">Grid - no spaces</a>
+                                        </li>
+                                        <li>
+                                            <a href="portfolio-gallery-bottom.html" class="ajax-link">Gallery - Bottom</a>
+                                        </li>
+                                        <li>
+                                            <a href="portfolio-gallery-right.html" class="ajax-link">Gallery - Right</a>
+                                        </li>
+                                        <li>
+                                            <a href="portfolio-project-wide.html" class="ajax-link">Project wide</a>
+                                        </li>
+                                        <li>
+                                            <a href="portfolio-project-half.html" class="ajax-link">Project half</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)">
+                                        <span class="icon">
+                                            <span class="glyph icon-190"></span>
+                                            <span class="glyph-hover icon-190"></span>
+                                        </span>
+                                        ELEMENTS
+                                        <span class="more">
+                                            <span class="square square1"></span>
+                                            <span class="square square2"></span>
+                                            <span class="square square3"></span>
+                                        </span>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="javascript:void(0)">
+                                                2nd level item
+                                                <span class="more">
+                                                    <span class="square square1"></span>
+                                                    <span class="square square2"></span>
+                                                    <span class="square square3"></span>
+                                                </span>
+                                            </a>
+                                            <ul>
+                                                <li>
+                                                    <a href="javascript:void(0)">
+                                                        3rd level item
+                                                        <span class="more">
+                                                            <span class="square square1"></span>
+                                                            <span class="square square2"></span>
+                                                            <span class="square square3"></span>
+                                                        </span>
+                                                    </a>
+                                                    <ul>
+                                                        <li>
+                                                            <a href="javascript:void(0)">
+                                                                4th level item
+                                                                <span class="more">
+                                                                    <span class="square square1"></span>
+                                                                    <span class="square square2"></span>
+                                                                    <span class="square square3"></span>
+                                                                </span>
+                                                            </a>
+                                                            <ul>
+                                                                <li>
+                                                                    <a href="javascript:void(0)">"N" Level Items</a>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="page-typography.html" class="ajax-link">Typography</a>
+                                        </li>
+                                        <li>
+                                            <a href="page-grid.html" class="ajax-link">Grid</a>
+                                        </li>
+                                        <li>
+                                            <a href="page-icons.html" class="ajax-link">Icons</a>
+                                        </li>
+                                        <li>
+                                            <a href="page-interactive-elements.html" class="ajax-link">Interactive elements</a>
+                                        </li>
+                                        <li>
+                                            <a href="page-tables.html" class="ajax-link">Tables</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)">
+                                        <span class="icon">
+                                            <span class="glyph icon-249"></span>
+                                            <span class="glyph-hover icon-249"></span>
+                                        </span>
+                                        BLOG
+                                        <span class="more">
+                                            <span class="square square1"></span>
+                                            <span class="square square2"></span>
+                                            <span class="square square3"></span>
+                                        </span>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="blog-masonry.html" class="ajax-link">Blog Masonry</a>
+                                        </li>
+                                        <li>
+                                            <a href="blog-list.html" class="ajax-link">Blog List</a>
+                                        </li>
+                                        <li>
+                                            <a href="blog-classic.html" class="ajax-link">Blog Classic</a>
+                                        </li>
+                                        <li>
+                                            <a href="blog-post.html" class="ajax-link">Blog Post</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="contact.html" class="ajax-link">
+                                        <span class="icon">
+                                            <span class="glyph icon-274"></span>
+                                            <span class="glyph-hover icon-274"></span>
+                                        </span>
+                                        CONTACT
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>    
+                </div>
+<!-- End Navigation -->
+                <div id="header">
+
+                    <ul id="filters">
+                        <li>
+                            <a href="javasxcript:void(0)" data-filter="*">
+                                <span class="icon">
+                                    <span class="glyph icon-35"></span>
+                                    <span class="glyph-hover icon-35"></span>
+                                </span>
+                                <span class="text">all</span>
+                                <br class="clear" />
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javasxcript:void(0)" data-filter=".category-article">
+                                <span class="icon">
+                                    <span class="glyph icon-245"></span>
+                                    <span class="glyph-hover icon-245"></span>
+                                </span>
+                                <span class="text">articles</span>
+                                <br class="clear" />
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javasxcript:void(0)" data-filter=".category-audio">
+                                <span class="icon">
+                                    <span class="glyph icon-277"></span>
+                                    <span class="glyph-hover icon-277"></span>
+                                </span>
+                                <span class="text">audio</span>
+                                <br class="clear" />
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javasxcript:void(0)" data-filter=".category-gallery">
+                                <span class="icon">
+                                    <span class="glyph icon-82"></span>
+                                    <span class="glyph-hover icon-82"></span>
+                                </span>
+                                <span class="text">galleries</span>
+                                <br class="clear" />
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javasxcript:void(0)" data-filter=".category-image">
+                                <span class="icon">
+                                    <span class="glyph icon-81"></span>
+                                    <span class="glyph-hover icon-81"></span>
+                                </span>
+                                <span class="text">images</span>
+                                <br class="clear" />
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javasxcript:void(0)" data-filter=".category-link">
+                                <span class="icon">
+                                    <span class="glyph icon-25"></span>
+                                    <span class="glyph-hover icon-25"></span>
+                                </span>
+                                <span class="text">links</span>
+                                <br class="clear" />
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javasxcript:void(0)" data-filter=".category-quote">
+                                <span class="icon">
+                                    <span class="glyph icon-22"></span>
+                                    <span class="glyph-hover icon-22"></span>
+                                </span>
+                                <span class="text">quotes</span>
+                                <br class="clear" />
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javasxcript:void(0)" data-filter=".category-video">
+                                <span class="icon">
+                                    <span class="glyph icon-45"></span>
+                                    <span class="glyph-hover icon-45"></span>
+                                </span>
+                                <span class="text">videos</span>
+                                <br class="clear" />
+                            </a>
+                        </li>
+                    </ul>
+                    <a href="" class="ajax-link" id="close"></a>
+                    <a href="javascript:void(0)" id="gotop"></a>
+                    <br class="clear" />
+                </div>
+
+                <div id="main">                
+                    <div class="content"> 
+                        <h2>Icons</h2>
+                        <hr />
+                        <article>
+                            <h3>Web Icons</h3>
+                            <p>
+                                <span class="web-icon icon-1"></span>
+                                <span class="web-icon icon-2"></span>
+                                <span class="web-icon icon-3"></span>
+                                <span class="web-icon icon-4"></span>
+                                <span class="web-icon icon-5"></span>
+                                <span class="web-icon icon-6"></span>
+                                <span class="web-icon icon-7"></span>
+                                <span class="web-icon icon-8"></span>
+                                <span class="web-icon icon-9"></span>
+                                <span class="web-icon icon-10"></span>
+                                <span class="web-icon icon-11"></span>
+                                <span class="web-icon icon-12"></span>
+                                <span class="web-icon icon-13"></span>
+                                <span class="web-icon icon-14"></span>
+                                <span class="web-icon icon-15"></span>
+                                <span class="web-icon icon-16"></span>
+                                <span class="web-icon icon-17"></span>
+                                <span class="web-icon icon-18"></span>
+                                <span class="web-icon icon-19"></span>
+                                <span class="web-icon icon-20"></span>
+                                <span class="web-icon icon-21"></span>
+                                <span class="web-icon icon-22"></span>
+                                <span class="web-icon icon-23"></span>
+                                <span class="web-icon icon-24"></span>
+                                <span class="web-icon icon-25"></span>
+                                <span class="web-icon icon-26"></span>
+                                <span class="web-icon icon-27"></span>
+                                <span class="web-icon icon-28"></span>
+                                <span class="web-icon icon-29"></span>
+                                <span class="web-icon icon-30"></span>
+                                <span class="web-icon icon-31"></span>
+                                <span class="web-icon icon-32"></span>
+                                <span class="web-icon icon-33"></span>
+                                <span class="web-icon icon-34"></span>
+                                <span class="web-icon icon-35"></span>
+                                <span class="web-icon icon-36"></span>
+                                <span class="web-icon icon-37"></span>
+                                <span class="web-icon icon-38"></span>
+                                <span class="web-icon icon-39"></span>
+                                <span class="web-icon icon-40"></span>
+                                <span class="web-icon icon-41"></span>
+                                <span class="web-icon icon-42"></span>
+                                <span class="web-icon icon-43"></span>
+                                <span class="web-icon icon-44"></span>
+                                <span class="web-icon icon-45"></span>
+                                <span class="web-icon icon-46"></span>
+                                <span class="web-icon icon-47"></span>
+                                <span class="web-icon icon-48"></span>
+                                <span class="web-icon icon-49"></span>
+                                <span class="web-icon icon-50"></span>
+                                <span class="web-icon icon-51"></span>
+                                <span class="web-icon icon-52"></span>
+                                <span class="web-icon icon-53"></span>
+                                <span class="web-icon icon-54"></span>
+                                <span class="web-icon icon-55"></span>
+                                <span class="web-icon icon-56"></span>
+                                <span class="web-icon icon-57"></span>
+                                <span class="web-icon icon-58"></span>
+                                <span class="web-icon icon-59"></span>
+                                <span class="web-icon icon-60"></span>
+                                <span class="web-icon icon-61"></span>
+                                <span class="web-icon icon-62"></span>
+                                <span class="web-icon icon-63"></span>
+                                <span class="web-icon icon-64"></span>
+                                <span class="web-icon icon-65"></span>
+                                <span class="web-icon icon-66"></span>
+                                <span class="web-icon icon-67"></span>
+                                <span class="web-icon icon-68"></span>
+                                <span class="web-icon icon-69"></span>
+                                <span class="web-icon icon-70"></span>
+                                <span class="web-icon icon-71"></span>
+                                <span class="web-icon icon-72"></span>
+                                <span class="web-icon icon-73"></span>
+                                <span class="web-icon icon-74"></span>
+                                <span class="web-icon icon-75"></span>
+                                <span class="web-icon icon-76"></span>
+                                <span class="web-icon icon-77"></span>
+                                <span class="web-icon icon-78"></span>
+                                <span class="web-icon icon-79"></span>
+                                <span class="web-icon icon-80"></span>
+                                <span class="web-icon icon-81"></span>
+                                <span class="web-icon icon-82"></span>
+                                <span class="web-icon icon-83"></span>
+                                <span class="web-icon icon-84"></span>
+                                <span class="web-icon icon-85"></span>
+                                <span class="web-icon icon-86"></span>
+                                <span class="web-icon icon-87"></span>
+                                <span class="web-icon icon-88"></span>
+                                <span class="web-icon icon-89"></span>
+                                <span class="web-icon icon-90"></span>
+                                <span class="web-icon icon-91"></span>
+                                <span class="web-icon icon-92"></span>
+                                <span class="web-icon icon-93"></span>
+                                <span class="web-icon icon-94"></span>
+                                <span class="web-icon icon-95"></span>
+                                <span class="web-icon icon-96"></span>
+                                <span class="web-icon icon-97"></span>
+                                <span class="web-icon icon-98"></span>
+                                <span class="web-icon icon-99"></span>
+                                <span class="web-icon icon-100"></span>
+                                <span class="web-icon icon-101"></span>
+                                <span class="web-icon icon-102"></span>
+                                <span class="web-icon icon-103"></span>
+                                <span class="web-icon icon-104"></span>
+                                <span class="web-icon icon-105"></span>
+                                <span class="web-icon icon-106"></span>
+                                <span class="web-icon icon-107"></span>
+                                <span class="web-icon icon-108"></span>
+                                <span class="web-icon icon-109"></span>
+                                <span class="web-icon icon-110"></span>
+                                <span class="web-icon icon-111"></span>
+                                <span class="web-icon icon-112"></span>
+                                <span class="web-icon icon-113"></span>
+                                <span class="web-icon icon-114"></span>
+                                <span class="web-icon icon-115"></span>
+                                <span class="web-icon icon-116"></span>
+                                <span class="web-icon icon-117"></span>
+                                <span class="web-icon icon-118"></span>
+                                <span class="web-icon icon-119"></span>
+                                <span class="web-icon icon-120"></span>
+                                <span class="web-icon icon-121"></span>
+                                <span class="web-icon icon-122"></span>
+                                <span class="web-icon icon-123"></span>
+                                <span class="web-icon icon-124"></span>
+                                <span class="web-icon icon-125"></span>
+                                <span class="web-icon icon-126"></span>
+                                <span class="web-icon icon-127"></span>
+                                <span class="web-icon icon-128"></span>
+                                <span class="web-icon icon-129"></span>
+                                <span class="web-icon icon-130"></span>
+                                <span class="web-icon icon-131"></span>
+                                <span class="web-icon icon-132"></span>
+                                <span class="web-icon icon-133"></span>
+                                <span class="web-icon icon-134"></span>
+                                <span class="web-icon icon-135"></span>
+                                <span class="web-icon icon-136"></span>
+                                <span class="web-icon icon-137"></span>
+                                <span class="web-icon icon-138"></span>
+                                <span class="web-icon icon-139"></span>
+                                <span class="web-icon icon-140"></span>
+                                <span class="web-icon icon-141"></span>
+                                <span class="web-icon icon-142"></span>
+                                <span class="web-icon icon-143"></span>
+                                <span class="web-icon icon-144"></span>
+                                <span class="web-icon icon-145"></span>
+                                <span class="web-icon icon-146"></span>
+                                <span class="web-icon icon-147"></span>
+                                <span class="web-icon icon-148"></span>
+                                <span class="web-icon icon-149"></span>
+                                <span class="web-icon icon-150"></span>
+                                <span class="web-icon icon-151"></span>
+                                <span class="web-icon icon-152"></span>
+                                <span class="web-icon icon-153"></span>
+                                <span class="web-icon icon-154"></span>
+                                <span class="web-icon icon-155"></span>
+                                <span class="web-icon icon-156"></span>
+                                <span class="web-icon icon-157"></span>
+                                <span class="web-icon icon-158"></span>
+                                <span class="web-icon icon-159"></span>
+                                <span class="web-icon icon-160"></span>
+                                <span class="web-icon icon-161"></span>
+                                <span class="web-icon icon-162"></span>
+                                <span class="web-icon icon-163"></span>
+                                <span class="web-icon icon-164"></span>
+                                <span class="web-icon icon-165"></span>
+                                <span class="web-icon icon-166"></span>
+                                <span class="web-icon icon-167"></span>
+                                <span class="web-icon icon-168"></span>
+                                <span class="web-icon icon-169"></span>
+                                <span class="web-icon icon-170"></span>
+                                <span class="web-icon icon-171"></span>
+                                <span class="web-icon icon-172"></span>
+                                <span class="web-icon icon-173"></span>
+                                <span class="web-icon icon-174"></span>
+                                <span class="web-icon icon-175"></span>
+                                <span class="web-icon icon-176"></span>
+                                <span class="web-icon icon-177"></span>
+                                <span class="web-icon icon-178"></span>
+                                <span class="web-icon icon-179"></span>
+                                <span class="web-icon icon-180"></span>
+                                <span class="web-icon icon-181"></span>
+                                <span class="web-icon icon-182"></span>
+                                <span class="web-icon icon-183"></span>
+                                <span class="web-icon icon-184"></span>
+                                <span class="web-icon icon-185"></span>
+                                <span class="web-icon icon-186"></span>
+                                <span class="web-icon icon-187"></span>
+                                <span class="web-icon icon-188"></span>
+                                <span class="web-icon icon-189"></span>
+                                <span class="web-icon icon-190"></span>
+                                <span class="web-icon icon-191"></span>
+                                <span class="web-icon icon-192"></span>
+                                <span class="web-icon icon-193"></span>
+                                <span class="web-icon icon-194"></span>
+                                <span class="web-icon icon-195"></span>
+                                <span class="web-icon icon-196"></span>
+                                <span class="web-icon icon-197"></span>
+                                <span class="web-icon icon-198"></span>
+                                <span class="web-icon icon-199"></span>
+                                <span class="web-icon icon-200"></span>
+                                <span class="web-icon icon-201"></span>
+                                <span class="web-icon icon-202"></span>
+                                <span class="web-icon icon-203"></span>
+                                <span class="web-icon icon-204"></span>
+                                <span class="web-icon icon-205"></span>
+                                <span class="web-icon icon-206"></span>
+                                <span class="web-icon icon-207"></span>
+                                <span class="web-icon icon-208"></span>
+                                <span class="web-icon icon-209"></span>
+                                <span class="web-icon icon-210"></span>
+                                <span class="web-icon icon-211"></span>
+                                <span class="web-icon icon-212"></span>
+                                <span class="web-icon icon-213"></span>
+                                <span class="web-icon icon-214"></span>
+                                <span class="web-icon icon-215"></span>
+                                <span class="web-icon icon-216"></span>
+                                <span class="web-icon icon-217"></span>
+                                <span class="web-icon icon-218"></span>
+                                <span class="web-icon icon-219"></span>
+                                <span class="web-icon icon-220"></span>
+                                <span class="web-icon icon-221"></span>
+                                <span class="web-icon icon-222"></span>
+                                <span class="web-icon icon-223"></span>
+                                <span class="web-icon icon-224"></span>
+                                <span class="web-icon icon-225"></span>
+                                <span class="web-icon icon-226"></span>
+                                <span class="web-icon icon-227"></span>
+                                <span class="web-icon icon-228"></span>
+                                <span class="web-icon icon-229"></span>
+                                <span class="web-icon icon-230"></span>
+                                <span class="web-icon icon-231"></span>
+                                <span class="web-icon icon-232"></span>
+                                <span class="web-icon icon-233"></span>
+                                <span class="web-icon icon-234"></span>
+                                <span class="web-icon icon-235"></span>
+                                <span class="web-icon icon-236"></span>
+                                <span class="web-icon icon-237"></span>
+                                <span class="web-icon icon-238"></span>
+                                <span class="web-icon icon-239"></span>
+                                <span class="web-icon icon-240"></span>
+                                <span class="web-icon icon-241"></span>
+                                <span class="web-icon icon-242"></span>
+                                <span class="web-icon icon-243"></span>
+                                <span class="web-icon icon-244"></span>
+                                <span class="web-icon icon-245"></span>
+                                <span class="web-icon icon-246"></span>
+                                <span class="web-icon icon-247"></span>
+                                <span class="web-icon icon-248"></span>
+                                <span class="web-icon icon-249"></span>
+                                <span class="web-icon icon-250"></span>
+                                <span class="web-icon icon-251"></span>
+                                <span class="web-icon icon-252"></span>
+                                <span class="web-icon icon-253"></span>
+                                <span class="web-icon icon-254"></span>
+                                <span class="web-icon icon-255"></span>
+                                <span class="web-icon icon-256"></span>
+                                <span class="web-icon icon-257"></span>
+                                <span class="web-icon icon-258"></span>
+                                <span class="web-icon icon-259"></span>
+                                <span class="web-icon icon-260"></span>
+                                <span class="web-icon icon-261"></span>
+                                <span class="web-icon icon-262"></span>
+                                <span class="web-icon icon-263"></span>
+                                <span class="web-icon icon-264"></span>
+                                <span class="web-icon icon-265"></span>
+                                <span class="web-icon icon-266"></span>
+                                <span class="web-icon icon-267"></span>
+                                <span class="web-icon icon-268"></span>
+                                <span class="web-icon icon-269"></span>
+                                <span class="web-icon icon-270"></span>
+                                <span class="web-icon icon-271"></span>
+                                <span class="web-icon icon-272"></span>
+                                <span class="web-icon icon-273"></span>
+                                <span class="web-icon icon-274"></span>
+                                <span class="web-icon icon-275"></span>
+                                <span class="web-icon icon-276"></span>
+                                <span class="web-icon icon-277"></span>
+                                <span class="web-icon icon-278"></span>
+                                <span class="web-icon icon-279"></span>
+                                <span class="web-icon icon-280"></span>
+                                <span class="web-icon icon-281"></span>
+                                <span class="web-icon icon-282"></span>
+                                <span class="web-icon icon-283"></span>
+                                <span class="web-icon icon-284"></span>
+                                <span class="web-icon icon-285"></span>
+                                <span class="web-icon icon-286"></span>
+                                <span class="web-icon icon-287"></span>
+                                <span class="web-icon icon-288"></span>
+                                <span class="web-icon icon-289"></span>
+                                <span class="web-icon icon-290"></span>
+                                <span class="web-icon icon-291"></span>
+                                <span class="web-icon icon-292"></span>
+                                <span class="web-icon icon-293"></span>
+                                <span class="web-icon icon-294"></span>
+                                <span class="web-icon icon-295"></span>
+                                <span class="web-icon icon-296"></span>
+                                <span class="web-icon icon-297"></span>
+                                <span class="web-icon icon-298"></span>
+                                <span class="web-icon icon-299"></span>
+                                <span class="web-icon icon-300"></span>
+                                <span class="web-icon icon-301"></span>
+                                <span class="web-icon icon-302"></span>
+                                <span class="web-icon icon-303"></span>
+                                <span class="web-icon icon-304"></span>
+                                <span class="web-icon icon-305"></span>
+                                <span class="web-icon icon-306"></span>
+                                <span class="web-icon icon-307"></span>
+                                <span class="web-icon icon-308"></span>
+                                <span class="web-icon icon-309"></span>
+                                <span class="web-icon icon-310"></span>
+                                <span class="web-icon icon-311"></span>
+                                <span class="web-icon icon-312"></span>
+                                <span class="web-icon icon-313"></span>
+                                <span class="web-icon icon-314"></span>
+                                <span class="web-icon icon-315"></span>
+                                <span class="web-icon icon-316"></span>
+                                <span class="web-icon icon-317"></span>
+                                <span class="web-icon icon-318"></span>
+                                <span class="web-icon icon-319"></span>
+                                <span class="web-icon icon-320"></span>
+                                <span class="web-icon icon-321"></span>
+                                <span class="web-icon icon-322"></span>
+                                <span class="web-icon icon-323"></span>
+                                <span class="web-icon icon-324"></span>
+                                <span class="web-icon icon-325"></span>
+                                <span class="web-icon icon-326"></span>
+                                <span class="web-icon icon-327"></span>
+                                <span class="web-icon icon-328"></span>
+                                <span class="web-icon icon-329"></span>
+                                <span class="web-icon icon-330"></span>
+                                <span class="web-icon icon-331"></span>
+                                <span class="web-icon icon-332"></span>
+                                <span class="web-icon icon-333"></span>
+                                <span class="web-icon icon-334"></span>
+                                <span class="web-icon icon-335"></span>
+                                <span class="web-icon icon-336"></span>
+                                <span class="web-icon icon-337"></span>
+                                <span class="web-icon icon-338"></span>
+                                <span class="web-icon icon-339"></span>
+                                <span class="web-icon icon-340"></span>
+                                <span class="web-icon icon-341"></span>
+                                <span class="web-icon icon-342"></span>
+                                <span class="web-icon icon-343"></span>
+                                <span class="web-icon icon-344"></span>
+                                <span class="web-icon icon-345"></span>
+                                <span class="web-icon icon-346"></span>
+                                <span class="web-icon icon-347"></span>
+                                <span class="web-icon icon-348"></span>
+                                <span class="web-icon icon-349"></span>
+                                <span class="web-icon icon-350"></span>
+                                <br class="clear" />
+                            </p>
+                            
+                            <h3>Social Icons</h3>
+                            <p class="social">
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-aim"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-aim-alt"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-amazon"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-app-store"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-apple"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-arto"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-aws"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-baidu"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-basecamp"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-bebo"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-behance"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-bing"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-blip"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-blogger"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-bnter"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-brightkite"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-cinch"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-cloudapp"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-coroflot"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-creative-commons"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-dailybooth"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-delicious"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-designbump"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-designfloat"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-designmoo"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-deviantart"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-digg"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-digg-alt"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-diigo"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-dribbble"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-dropbox"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-drupal"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-dzone"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-ebay"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-ember"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-etsy"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-evernote"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-facebook"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-facebook-alt"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-facebook-places"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-factome"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-feedburner"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-flickr"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-folkd"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-formspring"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-forrst"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-foursquare"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-friendfeed"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-friendster"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-gdgt"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-github"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-github-alt"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-goodreads"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-google"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-google-buzz"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-google-talk"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-gowalla"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-gowalla-alt"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-grooveshark"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-hacker-news"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-hi5"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-hype-machine"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-hyves"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-icq"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-identica"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-instapaper"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-itunes"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-kik"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-krop"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-lastfm"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-linkedin"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-linkedin-alt"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-livejournal"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-lovedsgn"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-meetup"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-metacafe"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-ming"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-mister-wong"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-mixx"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-mixx-alt"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-mobileme"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-msn-messenger"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-myspace"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-myspace-alt"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-newsvine"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-officialfm"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-openid"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-orkut"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-pandora"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-path"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-paypal"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-photobucket"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-picasa"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-pinboardin"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-ping"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-pingchat"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-playstation"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-plixi"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-plurk"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-podcast"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-posterous"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-qik"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-quik"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-quora"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-rdio"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-readernaut"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-reddit"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-retweet"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-roboto"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-rss"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-scribd"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-sharethis"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-simplenote"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-skype"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-slashdot"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-slideshare"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-smugmug"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-soundcloud"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-spotify"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-squarespace"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-squidoo"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-steam"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-stumbleupon"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-technorati"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-threewordsme"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-tribenet"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-tripit"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-tumblr"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-twitter"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-twitter-alt"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-vcard"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-viddler"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-vimeo"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-virb"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-w3"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-whatsapp"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-wikipedia"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-windows"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-wists"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-wordpress"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-wordpress-alt"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-xing"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-yahoo"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-yahoo-buzz"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-yahoo-messenger"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-yelp"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-youtube"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-youtube-alt"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-zerply"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-zootool"></a>
+                                <a href="javascript:void(0)" target="_blank" class="social-link social-icon-zynga"></a>
+                                <br class="clear" />
+                            </p>
+                        </article>
+                    </div> 
+                </div>
+                
+<!-- Begin Footer -->            
+                <div id="footer">
+                    <div class="copyright">
+                        Copyright MR GOOSE &copy; 2013
+                    </div>
+                    <div class="icons">
+                        <a href="http://www.twitter.com" target="_blank" class="social-link social-icon-twitter">
+                            <span class="tooltip">Twitter <span class="tooltip-arrow"></span></span>
+                        </a>
+                        <a href="http://www.rss.com" target="_blank" class="social-link social-icon-rss">
+                            <span class="tooltip">RSS <span class="tooltip-arrow"></span></span>
+                        </a>
+                        <a href="http://www.googleplus.com" target="_blank" class="social-link social-icon-google">
+                            <span class="tooltip">Google+ <span class="tooltip-arrow"></span></span>
+                        </a>
+                        <a href="http://www.flickr.com" target="_blank" class="social-link social-icon-flickr">
+                            <span class="tooltip">Flickr <span class="tooltip-arrow"></span></span>
+                        </a>
+                        <a href="http://www.facebook.com" target="_blank" class="social-link social-icon-facebook">
+                            <span class="tooltip">Facebook <span class="tooltip-arrow"></span></span>
+                        </a>
+                        <a href="http://www.dribbble.com" target="_blank" class="social-link social-icon-dribbble">
+                            <span class="tooltip">Dribbble <span class="tooltip-arrow"></span></span>
+                        </a>
+                    </div>
+                    <br class="clear" />
+                </div>
+            </div>
+<!-- End Footer -->            
+        </div>
+    </body>
+</html>

@@ -1,0 +1,176 @@
+@charset "utf-8";
+
+body{
+    font: 300 16px/24px 'Source Sans Pro', Helvetica, Arial, SansSerif;
+}
+
+.clear{
+    clear: both;
+}
+
+.center{
+    text-align: center !important;
+}
+
+em{
+    font-style: italic;
+}
+
+strong{
+    font-weight: bold;
+}
+
+#wrapper{
+    width: 100%;
+}
+
+#wrapper #content-wrapper{
+    display: none;
+}
+
+#wrapper.left #content-wrapper{
+    left: 0px;
+}
+
+#wrapper.right #content-wrapper{
+    right: 0px;
+}
+
+/********************************************************* Begin Web Icons */
+
+.web-icon{
+    background-color: #111111;
+    border: none !important;
+    color: #ffffff !important;
+    cursor: pointer;
+    display: block;
+    float: left;
+    font: 18px/36px 'Icons';
+    height: 36px;
+    margin: 0 10px 12px 0;
+    text-align: center;
+    width: 36px;
+    -webkit-transition: background-color 200ms ease-in;
+    -moz-transition: background-color 200ms ease-in;
+    -ms-transition: background-color 200ms ease-in;
+    -o-transition: background-color 200ms ease-in;
+    transition: background-color 200ms ease-in;
+}
+
+.web-icon:hover{
+    background-color: #af3425;
+    -webkit-transition: background-color 200ms ease-in;
+    -moz-transition: background-color 200ms ease-in;
+    -ms-transition: background-color 200ms ease-in;
+    -o-transition: background-color 200ms ease-in;
+    transition: background-color 200ms ease-in;
+}
+
+/********************************************************* End Web Icons */
+
+/********************************************************* Begin Social Icons */
+
+.social-link{
+    background-color: #111111;
+    border: none !important;
+    color: #ffffff !important;
+    display: block;
+    font-family: 'Social Icons';
+    text-align: center;
+    -webkit-transition: background-color 200ms ease-in;
+    -moz-transition: background-color 200ms ease-in;
+    -ms-transition: background-color 200ms ease-in;
+    -o-transition: background-color 200ms ease-in;
+    transition: background-color 200ms ease-in;
+}
+
+.social-link .tooltip{
+    background: #af3425;
+    color: #e2e2e2 !important;
+    font-size: 11px;
+    font-weight: normal;
+    margin: -24px 0 0 -37px;
+    line-height: 18px;
+    opacity: 0;
+    position: absolute;
+    text-align: center;
+    text-transform:none;
+    visibility: hidden;
+    width: 58px;
+    z-index:300;
+}
+
+.social-link .tooltip .tooltip-arrow{
+    border-color: #af3425 transparent transparent transparent;
+    border-style: solid;
+    border-width: 5px;
+    bottom: -9px;
+    height: 0;
+    left: 23px;
+    position: absolute;
+    width: 0;
+}
+
+.social-link:hover{
+    background-color: #af3425;
+    -webkit-transition: background-color 200ms ease-in;
+    -moz-transition: background-color 200ms ease-in;
+    -ms-transition: background-color 200ms ease-in;
+    -o-transition: background-color 200ms ease-in;
+    transition: background-color 200ms ease-in;
+}
+
+.social-link:hover .tooltip{
+    opacity: 1;
+    -webkit-transition: opacity 800ms ease-in;
+    -moz-transition: opacity 800ms ease-in;
+    -ms-transition: opacity 800ms ease-in;
+    -o-transition: opacity 800ms ease-in;
+    transition: opacity 800ms ease-in;
+    visibility: visible;
+}
+
+/*********************************************************** End Social Icons */
+
+/* ----- Begin Navigation Responsive ----- */
+
+@media screen and (min-width: 1340px){
+    #wrapper #content-wrapper{
+        position: absolute;
+        width: 1320px;
+    }
+
+    #wrapper.left #content-wrapper{
+        left: 0px;
+    }
+
+    #wrapper.right #content-wrapper{
+        right: 0px;
+    }
+}
+
+@media screen and (min-width: 1001px) and (max-width: 1339px){
+    #wrapper #content-wrapper{
+        margin: auto;
+        width: 1000px;
+    }
+}
+
+@media screen and (min-width: 764px) and (max-width: 1000px){
+    #wrapper #content-wrapper{
+        margin: auto;
+        width: 760px;
+    }
+}
+
+@media screen and (max-width: 763px){ 
+    #wrapper #content-wrapper{
+        width: 100%;
+    }
+    
+    .hide-on-mobile{
+        display: none;
+    }
+}
+
+/* ----- End Navigation Responsive ----- */

@@ -1,0 +1,495 @@
+@font-face {
+	font-family: 'Social Icons';
+	src:url('../fonts/SocialIcons.eot');
+	src:url('../fonts/SocialIcons.eot?#iefix') format('embedded-opentype'),
+		url('../fonts/SocialIcons.woff') format('woff'),
+		url('../fonts/SocialIcons.ttf') format('truetype'),
+		url('../fonts/SocialIcons.svg#SocialIcons') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+/* Use the following CSS code if you want to use data attributes for inserting your icons */
+[data-icon]:before {
+	font-family: 'Social Icons';
+	content: attr(data-icon);
+	speak: none;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+}
+
+/* Use the following CSS code if you want to have a class per icon */
+/*
+Instead of a list of all class selectors,
+you can use the generic selector below, but it's slower:
+[class*="social-icon-"] {
+*/
+.social-icon-zynga, .social-icon-zootool, .social-icon-zerply, .social-icon-youtube, .social-icon-youtube-alt, .social-icon-yelp, .social-icon-yahoo, .social-icon-yahoo-messenger, .social-icon-yahoo-buzz, .social-icon-xing, .social-icon-wordpress, .social-icon-wordpress-alt, .social-icon-wists, .social-icon-windows, .social-icon-wikipedia, .social-icon-whatsapp, .social-icon-w3, .social-icon-virb, .social-icon-vimeo, .social-icon-viddler, .social-icon-vcard, .social-icon-twitter, .social-icon-twitter-alt, .social-icon-tumblr, .social-icon-tripit, .social-icon-tribenet, .social-icon-threewordsme, .social-icon-technorati, .social-icon-stumbleupon, .social-icon-steam, .social-icon-squidoo, .social-icon-squarespace, .social-icon-spotify, .social-icon-soundcloud, .social-icon-smugmug, .social-icon-slideshare, .social-icon-slashdot, .social-icon-skype, .social-icon-simplenote, .social-icon-sharethis, .social-icon-scribd, .social-icon-rss, .social-icon-roboto, .social-icon-retweet, .social-icon-reddit, .social-icon-readernaut, .social-icon-rdio, .social-icon-quora, .social-icon-quik, .social-icon-qik, .social-icon-posterous, .social-icon-podcast, .social-icon-plurk, .social-icon-plixi, .social-icon-playstation, .social-icon-pingchat, .social-icon-ping, .social-icon-pinboardin, .social-icon-picassa, .social-icon-picasa, .social-icon-photobucket, .social-icon-paypal, .social-icon-path, .social-icon-pandora, .social-icon-orkut, .social-icon-openid, .social-icon-officialfm, .social-icon-newsvine, .social-icon-myspace, .social-icon-myspace-alt, .social-icon-msn-messenger, .social-icon-mobileme, .social-icon-mixx, .social-icon-mixx-alt, .social-icon-mister-wong, .social-icon-ming, .social-icon-metacafe, .social-icon-meetup, .social-icon-lovedsgn, .social-icon-livejournal, .social-icon-linkedin, .social-icon-linkedin-alt, .social-icon-lastfm, .social-icon-krop, .social-icon-kik, .social-icon-itunes, .social-icon-instapaper, .social-icon-identica, .social-icon-icq, .social-icon-hyves, .social-icon-hype-machine, .social-icon-hi5, .social-icon-hacker-news, .social-icon-grooveshark, .social-icon-gowalla, .social-icon-gowalla-alt, .social-icon-google, .social-icon-google-talk, .social-icon-google-buzz, .social-icon-goodreads, .social-icon-github, .social-icon-github-alt, .social-icon-gdgt, .social-icon-friendster, .social-icon-friendfeed, .social-icon-foursquare, .social-icon-forrst, .social-icon-formspring, .social-icon-folkd, .social-icon-flickr, .social-icon-feedburner, .social-icon-factome, .social-icon-facebook, .social-icon-facebook-places, .social-icon-facebook-alt, .social-icon-evernote, .social-icon-etsy, .social-icon-ember, .social-icon-ebay, .social-icon-dzone, .social-icon-drupal, .social-icon-dropbox, .social-icon-dribbble, .social-icon-diigo, .social-icon-digg, .social-icon-digg-alt, .social-icon-deviantart, .social-icon-designmoo, .social-icon-designfloat, .social-icon-designbump, .social-icon-delicious, .social-icon-dailybooth, .social-icon-creative-commons, .social-icon-coroflot, .social-icon-cloudapp, .social-icon-cinch, .social-icon-brightkite, .social-icon-bnter, .social-icon-blogger, .social-icon-blip, .social-icon-bing, .social-icon-behance, .social-icon-bebo, .social-icon-basecamp, .social-icon-baidu, .social-icon-aws, .social-icon-arto, .social-icon-apple, .social-icon-app-store, .social-icon-amazon, .social-icon-aim, .social-icon-aim-alt {
+	font-family: 'SocialIcons';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+}
+.social-icon-zynga:before {
+	content: "\e000";
+}
+.social-icon-zootool:before {
+	content: "\e001";
+}
+.social-icon-zerply:before {
+	content: "\e002";
+}
+.social-icon-youtube:before {
+	content: "\e003";
+}
+.social-icon-youtube-alt:before {
+	content: "\e004";
+}
+.social-icon-yelp:before {
+	content: "\e005";
+}
+.social-icon-yahoo:before {
+	content: "\e006";
+}
+.social-icon-yahoo-messenger:before {
+	content: "\e007";
+}
+.social-icon-yahoo-buzz:before {
+	content: "\e008";
+}
+.social-icon-xing:before {
+	content: "\e009";
+}
+.social-icon-wordpress:before {
+	content: "\e00a";
+}
+.social-icon-wordpress-alt:before {
+	content: "\e00b";
+}
+.social-icon-wists:before {
+	content: "\e00c";
+}
+.social-icon-windows:before {
+	content: "\e00d";
+}
+.social-icon-wikipedia:before {
+	content: "\e00e";
+}
+.social-icon-whatsapp:before {
+	content: "\e00f";
+}
+.social-icon-w3:before {
+	content: "\e010";
+}
+.social-icon-virb:before {
+	content: "\e011";
+}
+.social-icon-vimeo:before {
+	content: "\e012";
+}
+.social-icon-viddler:before {
+	content: "\e013";
+}
+.social-icon-vcard:before {
+	content: "\e014";
+}
+.social-icon-twitter:before {
+	content: "\e015";
+}
+.social-icon-twitter-alt:before {
+	content: "\e016";
+}
+.social-icon-tumblr:before {
+	content: "\e017";
+}
+.social-icon-tripit:before {
+	content: "\e018";
+}
+.social-icon-tribenet:before {
+	content: "\e019";
+}
+.social-icon-threewordsme:before {
+	content: "\e01a";
+}
+.social-icon-technorati:before {
+	content: "\e01b";
+}
+.social-icon-stumbleupon:before {
+	content: "\e01c";
+}
+.social-icon-steam:before {
+	content: "\e01d";
+}
+.social-icon-squidoo:before {
+	content: "\e01e";
+}
+.social-icon-squarespace:before {
+	content: "\e01f";
+}
+.social-icon-spotify:before {
+	content: "\e020";
+}
+.social-icon-soundcloud:before {
+	content: "\e021";
+}
+.social-icon-smugmug:before {
+	content: "\e022";
+}
+.social-icon-slideshare:before {
+	content: "\e023";
+}
+.social-icon-slashdot:before {
+	content: "\e024";
+}
+.social-icon-skype:before {
+	content: "\e025";
+}
+.social-icon-simplenote:before {
+	content: "\e026";
+}
+.social-icon-sharethis:before {
+	content: "\e027";
+}
+.social-icon-scribd:before {
+	content: "\e028";
+}
+.social-icon-rss:before {
+	content: "\e029";
+}
+.social-icon-roboto:before {
+	content: "\e02a";
+}
+.social-icon-retweet:before {
+	content: "\e02b";
+}
+.social-icon-reddit:before {
+	content: "\e02c";
+}
+.social-icon-readernaut:before {
+	content: "\e02d";
+}
+.social-icon-rdio:before {
+	content: "\e02e";
+}
+.social-icon-quora:before {
+	content: "\e02f";
+}
+.social-icon-quik:before {
+	content: "\e030";
+}
+.social-icon-qik:before {
+	content: "\e031";
+}
+.social-icon-posterous:before {
+	content: "\e032";
+}
+.social-icon-podcast:before {
+	content: "\e033";
+}
+.social-icon-plurk:before {
+	content: "\e034";
+}
+.social-icon-plixi:before {
+	content: "\e035";
+}
+.social-icon-playstation:before {
+	content: "\e036";
+}
+.social-icon-pingchat:before {
+	content: "\e037";
+}
+.social-icon-ping:before {
+	content: "\e038";
+}
+.social-icon-pinboardin:before {
+	content: "\e039";
+}
+.social-icon-picassa:before {
+	content: "\e03a";
+}
+.social-icon-picasa:before {
+	content: "\e03b";
+}
+.social-icon-photobucket:before {
+	content: "\e03c";
+}
+.social-icon-paypal:before {
+	content: "\e03d";
+}
+.social-icon-path:before {
+	content: "\e03e";
+}
+.social-icon-pandora:before {
+	content: "\e03f";
+}
+.social-icon-orkut:before {
+	content: "\e040";
+}
+.social-icon-openid:before {
+	content: "\e041";
+}
+.social-icon-officialfm:before {
+	content: "\e042";
+}
+.social-icon-newsvine:before {
+	content: "\e043";
+}
+.social-icon-myspace:before {
+	content: "\e044";
+}
+.social-icon-myspace-alt:before {
+	content: "\e045";
+}
+.social-icon-msn-messenger:before {
+	content: "\e046";
+}
+.social-icon-mobileme:before {
+	content: "\e047";
+}
+.social-icon-mixx:before {
+	content: "\e048";
+}
+.social-icon-mixx-alt:before {
+	content: "\e049";
+}
+.social-icon-mister-wong:before {
+	content: "\e04a";
+}
+.social-icon-ming:before {
+	content: "\e04b";
+}
+.social-icon-metacafe:before {
+	content: "\e04c";
+}
+.social-icon-meetup:before {
+	content: "\e04d";
+}
+.social-icon-lovedsgn:before {
+	content: "\e04e";
+}
+.social-icon-livejournal:before {
+	content: "\e04f";
+}
+.social-icon-linkedin:before {
+	content: "\e050";
+}
+.social-icon-linkedin-alt:before {
+	content: "\e051";
+}
+.social-icon-lastfm:before {
+	content: "\e052";
+}
+.social-icon-krop:before {
+	content: "\e053";
+}
+.social-icon-kik:before {
+	content: "\e054";
+}
+.social-icon-itunes:before {
+	content: "\e055";
+}
+.social-icon-instapaper:before {
+	content: "\e056";
+}
+.social-icon-identica:before {
+	content: "\e057";
+}
+.social-icon-icq:before {
+	content: "\e058";
+}
+.social-icon-hyves:before {
+	content: "\e059";
+}
+.social-icon-hype-machine:before {
+	content: "\e05a";
+}
+.social-icon-hi5:before {
+	content: "\e05b";
+}
+.social-icon-hacker-news:before {
+	content: "\e05c";
+}
+.social-icon-grooveshark:before {
+	content: "\e05d";
+}
+.social-icon-gowalla:before {
+	content: "\e05e";
+}
+.social-icon-gowalla-alt:before {
+	content: "\e05f";
+}
+.social-icon-google:before {
+	content: "\e060";
+}
+.social-icon-google-talk:before {
+	content: "\e061";
+}
+.social-icon-google-buzz:before {
+	content: "\e062";
+}
+.social-icon-goodreads:before {
+	content: "\e063";
+}
+.social-icon-github:before {
+	content: "\e064";
+}
+.social-icon-github-alt:before {
+	content: "\e065";
+}
+.social-icon-gdgt:before {
+	content: "\e066";
+}
+.social-icon-friendster:before {
+	content: "\e067";
+}
+.social-icon-friendfeed:before {
+	content: "\e068";
+}
+.social-icon-foursquare:before {
+	content: "\e069";
+}
+.social-icon-forrst:before {
+	content: "\e06a";
+}
+.social-icon-formspring:before {
+	content: "\e06b";
+}
+.social-icon-folkd:before {
+	content: "\e06c";
+}
+.social-icon-flickr:before {
+	content: "\e06d";
+}
+.social-icon-feedburner:before {
+	content: "\e06e";
+}
+.social-icon-factome:before {
+	content: "\e06f";
+}
+.social-icon-facebook:before {
+	content: "\e070";
+}
+.social-icon-facebook-places:before {
+	content: "\e071";
+}
+.social-icon-facebook-alt:before {
+	content: "\e072";
+}
+.social-icon-evernote:before {
+	content: "\e073";
+}
+.social-icon-etsy:before {
+	content: "\e074";
+}
+.social-icon-ember:before {
+	content: "\e075";
+}
+.social-icon-ebay:before {
+	content: "\e076";
+}
+.social-icon-dzone:before {
+	content: "\e077";
+}
+.social-icon-drupal:before {
+	content: "\e078";
+}
+.social-icon-dropbox:before {
+	content: "\e079";
+}
+.social-icon-dribbble:before {
+	content: "\e07a";
+}
+.social-icon-diigo:before {
+	content: "\e07b";
+}
+.social-icon-digg:before {
+	content: "\e07c";
+}
+.social-icon-digg-alt:before {
+	content: "\e07d";
+}
+.social-icon-deviantart:before {
+	content: "\e07e";
+}
+.social-icon-designmoo:before {
+	content: "\e07f";
+}
+.social-icon-designfloat:before {
+	content: "\e080";
+}
+.social-icon-designbump:before {
+	content: "\e081";
+}
+.social-icon-delicious:before {
+	content: "\e082";
+}
+.social-icon-dailybooth:before {
+	content: "\e083";
+}
+.social-icon-creative-commons:before {
+	content: "\e084";
+}
+.social-icon-coroflot:before {
+	content: "\e085";
+}
+.social-icon-cloudapp:before {
+	content: "\e086";
+}
+.social-icon-cinch:before {
+	content: "\e087";
+}
+.social-icon-brightkite:before {
+	content: "\e088";
+}
+.social-icon-bnter:before {
+	content: "\e089";
+}
+.social-icon-blogger:before {
+	content: "\e08a";
+}
+.social-icon-blip:before {
+	content: "\e08b";
+}
+.social-icon-bing:before {
+	content: "\e08c";
+}
+.social-icon-behance:before {
+	content: "\e08d";
+}
+.social-icon-bebo:before {
+	content: "\e08e";
+}
+.social-icon-basecamp:before {
+	content: "\e08f";
+}
+.social-icon-baidu:before {
+	content: "\e090";
+}
+.social-icon-aws:before {
+	content: "\e091";
+}
+.social-icon-arto:before {
+	content: "\e092";
+}
+.social-icon-apple:before {
+	content: "\e093";
+}
+.social-icon-app-store:before {
+	content: "\e094";
+}
+.social-icon-amazon:before {
+	content: "\e095";
+}
+.social-icon-aim:before {
+	content: "\e096";
+}
+.social-icon-aim-alt:before {
+	content: "\e097";
+}

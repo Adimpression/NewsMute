@@ -1,0 +1,113 @@
+@charset "utf-8";
+
+/* BEGIN HTML5 CSS RESET */
+
+html, body,
+a, abbr, address, article, aside, audio
+b, blockquote,
+canvas, caption, cite, code,
+dd, del, details, dfn, div, dl, dt,
+em,
+fieldset, figcaption, figure, footer, form,
+h1, h2, h3, h4, h5, h6, header, hgroup,
+i, iframe, img, ins,
+kbd,
+label, legend, li,
+mark, menu, meter,
+nav,
+object, ol,
+p, pre,
+q,
+samp, section, small, span, sub, summary, sup, strong,
+table, tbody, td, tfoot, th, thead, time, tr,
+ul,
+var, video{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: 100%;
+    font-family: inherit;
+    vertical-align: baseline;
+}
+
+body{
+    line-height: 1;
+    color: black;
+    background: white;
+}
+
+:focus{
+    outline: 0;
+}
+
+a{
+    text-decoration: none;
+}
+
+abbr[title], dfn[title]{
+    border-bottom: 1px dotted #000;
+    cursor: help;
+}
+
+article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary{
+    display:block;
+}
+
+blockquote:before, blockquote:after, q:before, q:after{
+    content:"";
+}
+
+blockquote, q{
+    quotes:"" "";
+}
+
+caption, th, td{
+    text-align: left;
+    font-weight: normal;
+}
+
+del{
+    text-decoration: line-through;
+}
+
+div{
+    position: relative;
+}
+
+hr{
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #cccccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+input, select{
+    vertical-align: middle;
+}
+
+ins{
+    background-color: #cfcfcf;
+    text-decoration: none;
+}
+
+mark{
+    background-color: #cfcfcf;
+    font-style: italic;
+    font-weight: bold;
+}
+
+menu, ol, ul{
+    list-style: none;
+}
+
+table{
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* END HTML5 CSS RESET */

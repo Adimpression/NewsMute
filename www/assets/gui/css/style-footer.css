@@ -1,0 +1,90 @@
+@charset "utf-8";
+
+/******************************************************************************* Begin Footer */
+
+/********************************************************* Begin Social Icons */
+
+#footer{
+    background: #000000;
+    bottom: 0;
+    display: none;
+    z-index: 5000;
+}
+
+#footer .copyright{
+    color: #7f7f7f;
+    float: left;
+    font: 14px/24px 'PT Sans Narrow', Helvetica, Arial, sans-serif;
+    padding: 14px 0 10px 15px;
+    width: 40%;
+}
+    
+#footer .icons{
+    float: right;
+    width: 50%;
+}
+
+#footer .icons .social-link{
+    background: #1c1c1c;
+    float: right;
+    font-size: 24px;
+    height: 48px;
+    line-height: 48px;
+    margin: 1px 0 0 1px;
+    width: 48px;
+}
+
+#footer .icons .social-link .tooltip{
+    margin: -24px 0 0 -41px;
+}
+
+/*********************************************************** End Social Icons */
+
+/* ----- Begin Navigation Responsive ----- */
+
+@media screen and (min-width: 1340px){
+    #footer{
+        left: 320px;
+        position: fixed;
+        width: 1000px;
+    }
+}
+
+@media screen and (min-width: 1001px) and (max-width: 1339px){
+    #footer{
+        display: block !important;
+        position: fixed;
+        width: 1000px;
+    }
+}
+
+@media screen and (min-width: 764px) and (max-width: 1000px){
+    #footer{
+        display: block !important;
+        position: fixed;
+        width: 760px;
+    }
+}
+
+@media screen and (max-width: 763px){
+    #footer{
+        display: block !important;
+        width: 100%;
+    }
+ 
+    #footer .copyright{
+        float: none;
+        padding: 14px 0 10px 0;
+        text-align: center;
+        width: 100%;
+    }
+    
+    #footer .icons{
+        float: none;
+        margin: auto;
+        width: 300px;
+    }
+}
+/* ----- End Navigation Responsive ----- */
+
+/******************************************************************************* End Footer */

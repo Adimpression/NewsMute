@@ -1,0 +1,693 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Mr Goose - Responsive AJAX HTML Template</title>
+
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        
+        <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic|PT+Sans+Narrow:400,700|Economica|Anonymous+Pro|Source+Sans+Pro:300,400|Nothing+You+Could+Do" />
+        <link rel="stylesheet" type="text/css" href="assets/gui/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="assets/gui/css/style-social-icons.css" />
+        <link rel="stylesheet" type="text/css" href="assets/gui/css/style-icons.css" />
+        <link rel="stylesheet" type="text/css" href="libraries/css/reset.css" />
+        <link rel="stylesheet" type="text/css" href="libraries/css/colorpicker.css" />
+        <link rel="stylesheet" type="text/css" href="libraries/css/jquery.jscrollpane.css" />
+        <link rel="stylesheet" type="text/css" href="libraries/css/jquery.isotope.css" />
+        <link rel="stylesheet" type="text/css" href="libraries/css/jquery.dop.WallGridGallery.css" />
+        <link rel="stylesheet" type="text/css" href="libraries/css/jquery.dop.ThumbnailGallery.css" />
+        <link rel="stylesheet" type="text/css" href="libraries/css/jquery.dop.ThumbnailScroller.css" />
+        <link rel="stylesheet" type="text/css" href="assets/gui/css/jquery.dop.Panel.css" />
+        <link rel="stylesheet" type="text/css" href="assets/gui/css/style-general.css" />
+        <link rel="stylesheet" type="text/css" href="assets/gui/css/style-background.css" />
+        <link rel="stylesheet" type="text/css" href="assets/gui/css/style-navigation.css" />
+        <link rel="stylesheet" type="text/css" href="assets/gui/css/style-header.css" />
+        <link rel="stylesheet" type="text/css" href="assets/gui/css/style-content.css" />
+        <link rel="stylesheet" type="text/css" href="assets/gui/css/style-blog.css" />
+        <link rel="stylesheet" type="text/css" href="assets/gui/css/style-footer.css" />
+        <link rel="shortcut icon" href="assets/gui/images/icon.png" />
+
+        <script type="text/JavaScript" src="assets/js/config.js"></script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAzLSyccySIGiJXk3Ni4Czwgc9MEvdeU8&amp;sensor=false"></script>
+        <script type="text/JavaScript" src="http://code.jquery.com/jquery-latest.js"></script>
+        <script type="text/JavaScript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
+        <script type="text/JavaScript" src="libraries/js/three.js"></script>
+        <script type="text/JavaScript" src="libraries/js/css3-mediaqueries.js"></script>
+        <script type="text/JavaScript" src="libraries/js/colorpicker.js"></script>
+        <script type="text/JavaScript" src="libraries/js/jquery.tweet.js"></script>
+        <script type="text/JavaScript" src="libraries/js/jquery.countdown.min.js"></script>
+        <script type="text/JavaScript" src="libraries/js/jquery.jscrollpane.min.js"></script>
+        <script type="text/JavaScript" src="libraries/js/jquery.mousewheel.js"></script>
+        <script type="text/JavaScript" src="libraries/js/jquery.isotope.min.js"></script>
+        <script type="text/JavaScript" src="libraries/js/jquery.dop.ImageLoader.js"></script>
+        <script type="text/JavaScript" src="libraries/js/jquery.dop.WallGridGallery.js"></script>
+        <script type="text/JavaScript" src="libraries/js/jquery.dop.ThumbnailGallery.js"></script>
+        <script type="text/JavaScript" src="libraries/js/jquery.dop.ThumbnailScroller.js"></script>
+        <script type="text/JavaScript" src="assets/js/jquery.dop.Panel.js"></script>
+        <script type="text/JavaScript" src="assets/js/jquery.dop.Birds.js"></script>
+        <script type="text/JavaScript" src="assets/js/main.js"></script>
+    </head>
+    <body>
+        <div id="wrapper" class="left">
+<!-- Begin Background -->
+            <div id="background-wrapper">
+                <div class="pattern pattern-7"></div>
+                <div class="landscape">
+                    <div class="background"></div>
+                    <div class="light"></div>
+                    <div class="birds"></div>
+                    <div class="foreground"></div>
+                </div>    
+            </div>
+<!-- End Background -->
+<!-- Begin Panel -->
+            <div id="panel">
+                <a href="javascript:void(0)" class="toggle-button icon-73"></a>
+                <div class="general">
+                    <h3 class="open">General Settings</h3>
+                    <a href="javascript:void(0)" class="general-settings-toggle options-toggle icon-67"></a>
+                    <div class="general-list">
+                        <label for="panel_website_type">Website Type</label>
+                        <select name="panel_website_type" id="panel_website_type">
+                            <option value="ajax">AJAX</option>
+                            <option value="html" selected="selected">HTML</option>
+                        </select>
+                        <br class="clear" />                       
+<!--                        <label for="panel_content_position">Menu Position</label>
+                        <select name="panel_content_position" id="panel_content_position">
+                            <option value="left">Left</option>
+                            <option value="right" selected="selected">Right</option>
+                        </select>
+                        <br class="clear" />-->
+                        <label for="panel_main_color">Main Color</label>
+                        <input type="text" name="panel_main_color" id="panel_main_color" value="af3425" />
+                        <br class="clear" />
+                    </div>
+                </div>
+                <div class="patterns">
+                    <h3 class="open">Patterns</h3>  
+                    <a href="javascript:void(0)" class="patterns-toggle options-toggle icon-67"></a>
+                    <ul class="patterns-list">
+                        <li><a href="javascript:void(0)" id="pattern-1"></a></li>
+                        <li><a href="javascript:void(0)" id="pattern-2"></a></li>
+                        <li><a href="javascript:void(0)" id="pattern-3"></a></li>
+                        <li><a href="javascript:void(0)" id="pattern-4"></a></li>
+                        <li><a href="javascript:void(0)" id="pattern-5"></a></li>
+                        <li class="last"><a href="javascript:void(0)" id="pattern-6"></a></li>
+                        <li><a href="javascript:void(0)" id="pattern-7"></a></li>
+                        <li><a href="javascript:void(0)" id="pattern-8"></a></li>
+                        <li><a href="javascript:void(0)" id="pattern-9"></a></li>
+                        <li><a href="javascript:void(0)" id="pattern-10"></a></li>
+                        <li><a href="javascript:void(0)" id="pattern-11"></a></li>
+                    </ul>
+                </div>
+                <div class="background">  
+                    <h3 class="open">Background Settings</h3>
+                    <a href="javascript:void(0)" class="background-settings-toggle options-toggle icon-67"></a>
+                    <div class="background-list"> 
+                        <label for="panel_background_image">Select Image</label>
+                        <select name="panel_background_image" id="panel_background_image">
+                            <option value="bridge">Bridge</option>
+                            <option value="church">Church</option>
+                            <option value="city">City</option>
+                            <option value="forest">Forest</option>
+                            <option value="ship">Ship</option>
+                            <option value="train">Train</option>
+                            <option value="windmill">Windmill</option>
+                            <option value="wolf" selected="selected">Wolf</option>
+                        </select>
+                        <br class="clear" />
+                        <label for="panel_birds_fly_from">Birds fly from</label>
+                        <select name="panel_birds_fly_from" id="panel_birds_fly_from">
+                            <option value="top">Top</option>
+                            <option value="top-right">Top-Right</option>
+                            <option value="right">Right</option>
+                            <option value="bottom-right">Bottom-Right</option>
+                            <option value="bottom">Bottom</option>
+                            <option value="bottom-left">Bottom-Left</option>
+                            <option value="left">Left</option>
+                            <option value="top-left" selected="selected">Top-Left</option>
+                        </select>
+                        <br class="clear" />
+                        <label for="panel_no_birds">Number of Birds</label>
+                        <select name="panel_no_birds" id="panel_no_birds">
+                            <option value="12">12 birds</option>
+                            <option value="24">24 birds</option>
+                            <option value="48">48 birds</option>
+                            <option value="72">72 birds</option>
+                            <option value="120" selected="selected">96 birds</option>
+                        </select>
+                        <br class="clear" />
+                    </div>
+                </div>
+            </div>
+<!-- End Panel -->
+            <div id="content-wrapper">
+<!-- Begin Navigation -->
+                <div id="navigation-wrapper">
+                    <!-- Logo -->
+                    <div id="logo">
+                        <a href="" class="ajax-link">
+                            <h1>MR GOOSE</h1>
+                            <img src="assets/gui/images/logo.png" alt="Mr Goose - Responsive AJAX HTML Template" />
+                        </a>
+                    </div>
+                    
+                    <div class="loader"></div>
+                    
+                    <form action="#" method="get" id="searchform" role="search" onsubmit="return false;">
+                        <label for="s">Search for:</label>
+                        <input type="submit" id="searchsubmit" value="" />
+                        <input type="text" name="s" id="s" onfocus="this.value = ''" onblur="this.value = 'Type and hit enter...'" value="Type and hit enter..." />
+                        <br class="clear" />
+                    </form>
+                    
+                    <ul id="menu">
+                        <li>
+                            <a href="javascript:void(0)">
+                                <span class="icon">
+                                    <span class="glyph icon-159"></span>
+                                    <span class="glyph-hover icon-159"></span>
+                                </span>
+                                PAGES
+                                <span class="more">
+                                    <span class="square square1"></span>
+                                    <span class="square square2"></span>
+                                    <span class="square square3"></span>
+                                </span>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a href="page-about-us.html" class="ajax-link">About us</a>
+                                </li>
+                                <li>
+                                    <a href="page-services.html" class="ajax-link">Services</a>
+                                </li>
+                                <li>
+                                    <a href="page-our-team.html" class="ajax-link">Our team</a>
+                                </li>
+                                <li>
+                                    <a href="page-404.html" class="ajax-link">404 page</a>
+                                </li>
+                                <li>
+                                    <a href="page-coming-soon.html" class="ajax-link">Coming soon page</a>
+                                </li>
+                            </ul>
+                        </li><li>
+                            <a href="javascript:void(0)">
+                                <span class="icon">
+                                    <span class="glyph icon-219"></span>
+                                    <span class="glyph-hover icon-219"></span>
+                                </span>
+                                PORTFOLIO
+                                <span class="more">
+                                    <span class="square square1"></span>
+                                    <span class="square square2"></span>
+                                    <span class="square square3"></span>
+                                </span>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a href="portfolio-grid-with-label.html" class="ajax-link">Grid - with label</a>
+                                </li>
+                                <li>
+                                    <a href="portfolio-grid-no-spaces.html" class="ajax-link">Grid - no spaces</a>
+                                </li>
+                                <li>
+                                    <a href="portfolio-gallery-bottom.html" class="ajax-link">Gallery - Bottom</a>
+                                </li>
+                                <li>
+                                    <a href="portfolio-gallery-right.html" class="ajax-link">Gallery - Right</a>
+                                </li>
+                                <li>
+                                    <a href="portfolio-project-wide.html" class="ajax-link">Project wide</a>
+                                </li>
+                                <li>
+                                    <a href="portfolio-project-half.html" class="ajax-link">Project half</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <span class="icon">
+                                    <span class="glyph icon-190"></span>
+                                    <span class="glyph-hover icon-190"></span>
+                                </span>
+                                ELEMENTS
+                                <span class="more">
+                                    <span class="square square1"></span>
+                                    <span class="square square2"></span>
+                                    <span class="square square3"></span>
+                                </span>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a href="javascript:void(0)">
+                                        2nd level item
+                                        <span class="more">
+                                            <span class="square square1"></span>
+                                            <span class="square square2"></span>
+                                            <span class="square square3"></span>
+                                        </span>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="javascript:void(0)">
+                                                3rd level item
+                                                <span class="more">
+                                                    <span class="square square1"></span>
+                                                    <span class="square square2"></span>
+                                                    <span class="square square3"></span>
+                                                </span>
+                                            </a>
+                                            <ul>
+                                                <li>
+                                                    <a href="javascript:void(0)">
+                                                        4th level item
+                                                        <span class="more">
+                                                            <span class="square square1"></span>
+                                                            <span class="square square2"></span>
+                                                            <span class="square square3"></span>
+                                                        </span>
+                                                    </a>
+                                                    <ul>
+                                                        <li>
+                                                            <a href="javascript:void(0)">"N" Level Items</a>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="page-typography.html" class="ajax-link">Typography</a>
+                                </li>
+                                <li>
+                                    <a href="page-grid.html" class="ajax-link">Grid</a>
+                                </li>
+                                <li>
+                                    <a href="page-icons.html" class="ajax-link">Icons</a>
+                                </li>
+                                <li>
+                                    <a href="page-interactive-elements.html" class="ajax-link">Interactive elements</a>
+                                </li>
+                                <li>
+                                    <a href="page-tables.html" class="ajax-link">Tables</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <span class="icon">
+                                    <span class="glyph icon-249"></span>
+                                    <span class="glyph-hover icon-249"></span>
+                                </span>
+                                BLOG
+                                <span class="more">
+                                    <span class="square square1"></span>
+                                    <span class="square square2"></span>
+                                    <span class="square square3"></span>
+                                </span>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a href="blog-masonry.html" class="ajax-link">Blog Masonry</a>
+                                </li>
+                                <li>
+                                    <a href="blog-list.html" class="ajax-link">Blog List</a>
+                                </li>
+                                <li>
+                                    <a href="blog-classic.html" class="ajax-link">Blog Classic</a>
+                                </li>
+                                <li>
+                                    <a href="blog-post.html" class="ajax-link">Blog Post</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="contact.html" class="ajax-link">
+                                <span class="icon">
+                                    <span class="glyph icon-274"></span>
+                                    <span class="glyph-hover icon-274"></span>
+                                </span>
+                                CONTACT
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <ul id="mobile-menu">
+                        <li>
+                            <a href="javascript:void(0)">
+                                <span class="icon">
+                                    <span class="row"></span>
+                                    <span class="row"></span>
+                                    <span class="row"></span>
+                                    <span class="row"></span>
+                                </span>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a href="javascript:void(0)">
+                                        <span class="icon">
+                                            <span class="glyph icon-159"></span>
+                                            <span class="glyph-hover icon-159"></span>
+                                        </span>
+                                        PAGES
+                                        <span class="more">
+                                            <span class="square square1"></span>
+                                            <span class="square square2"></span>
+                                            <span class="square square3"></span>
+                                        </span>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="page-about-us.html" class="ajax-link">About us</a>
+                                        </li>
+                                        <li>
+                                            <a href="page-services.html" class="ajax-link">Services</a>
+                                        </li>
+                                        <li>
+                                            <a href="page-our-team.html" class="ajax-link">Our team</a>
+                                        </li>
+                                        <li>
+                                            <a href="page-404.html" class="ajax-link">404 page</a>
+                                        </li>
+                                        <li>
+                                            <a href="page-coming-soon.html" class="ajax-link">Coming soon page</a>
+                                        </li>
+                                    </ul>
+                                </li><li>
+                                    <a href="javascript:void(0)">
+                                        <span class="icon">
+                                            <span class="glyph icon-219"></span>
+                                            <span class="glyph-hover icon-219"></span>
+                                        </span>
+                                        PORTFOLIO
+                                        <span class="more">
+                                            <span class="square square1"></span>
+                                            <span class="square square2"></span>
+                                            <span class="square square3"></span>
+                                        </span>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="portfolio-grid-with-label.html" class="ajax-link">Grid - with label</a>
+                                        </li>
+                                        <li>
+                                            <a href="portfolio-grid-no-spaces.html" class="ajax-link">Grid - no spaces</a>
+                                        </li>
+                                        <li>
+                                            <a href="portfolio-gallery-bottom.html" class="ajax-link">Gallery - Bottom</a>
+                                        </li>
+                                        <li>
+                                            <a href="portfolio-gallery-right.html" class="ajax-link">Gallery - Right</a>
+                                        </li>
+                                        <li>
+                                            <a href="portfolio-project-wide.html" class="ajax-link">Project wide</a>
+                                        </li>
+                                        <li>
+                                            <a href="portfolio-project-half.html" class="ajax-link">Project half</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)">
+                                        <span class="icon">
+                                            <span class="glyph icon-190"></span>
+                                            <span class="glyph-hover icon-190"></span>
+                                        </span>
+                                        ELEMENTS
+                                        <span class="more">
+                                            <span class="square square1"></span>
+                                            <span class="square square2"></span>
+                                            <span class="square square3"></span>
+                                        </span>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="javascript:void(0)">
+                                                2nd level item
+                                                <span class="more">
+                                                    <span class="square square1"></span>
+                                                    <span class="square square2"></span>
+                                                    <span class="square square3"></span>
+                                                </span>
+                                            </a>
+                                            <ul>
+                                                <li>
+                                                    <a href="javascript:void(0)">
+                                                        3rd level item
+                                                        <span class="more">
+                                                            <span class="square square1"></span>
+                                                            <span class="square square2"></span>
+                                                            <span class="square square3"></span>
+                                                        </span>
+                                                    </a>
+                                                    <ul>
+                                                        <li>
+                                                            <a href="javascript:void(0)">
+                                                                4th level item
+                                                                <span class="more">
+                                                                    <span class="square square1"></span>
+                                                                    <span class="square square2"></span>
+                                                                    <span class="square square3"></span>
+                                                                </span>
+                                                            </a>
+                                                            <ul>
+                                                                <li>
+                                                                    <a href="javascript:void(0)">"N" Level Items</a>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="page-typography.html" class="ajax-link">Typography</a>
+                                        </li>
+                                        <li>
+                                            <a href="page-grid.html" class="ajax-link">Grid</a>
+                                        </li>
+                                        <li>
+                                            <a href="page-icons.html" class="ajax-link">Icons</a>
+                                        </li>
+                                        <li>
+                                            <a href="page-interactive-elements.html" class="ajax-link">Interactive elements</a>
+                                        </li>
+                                        <li>
+                                            <a href="page-tables.html" class="ajax-link">Tables</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)">
+                                        <span class="icon">
+                                            <span class="glyph icon-249"></span>
+                                            <span class="glyph-hover icon-249"></span>
+                                        </span>
+                                        BLOG
+                                        <span class="more">
+                                            <span class="square square1"></span>
+                                            <span class="square square2"></span>
+                                            <span class="square square3"></span>
+                                        </span>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="blog-masonry.html" class="ajax-link">Blog Masonry</a>
+                                        </li>
+                                        <li>
+                                            <a href="blog-list.html" class="ajax-link">Blog List</a>
+                                        </li>
+                                        <li>
+                                            <a href="blog-classic.html" class="ajax-link">Blog Classic</a>
+                                        </li>
+                                        <li>
+                                            <a href="blog-post.html" class="ajax-link">Blog Post</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="contact.html" class="ajax-link">
+                                        <span class="icon">
+                                            <span class="glyph icon-274"></span>
+                                            <span class="glyph-hover icon-274"></span>
+                                        </span>
+                                        CONTACT
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>    
+                </div>
+<!-- End Navigation -->
+                <div id="header">
+
+                    <ul id="filters">
+                        <li>
+                            <a href="javasxcript:void(0)" data-filter="*">
+                                <span class="icon">
+                                    <span class="glyph icon-35"></span>
+                                    <span class="glyph-hover icon-35"></span>
+                                </span>
+                                <span class="text">all</span>
+                                <br class="clear" />
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javasxcript:void(0)" data-filter=".category-article">
+                                <span class="icon">
+                                    <span class="glyph icon-245"></span>
+                                    <span class="glyph-hover icon-245"></span>
+                                </span>
+                                <span class="text">articles</span>
+                                <br class="clear" />
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javasxcript:void(0)" data-filter=".category-audio">
+                                <span class="icon">
+                                    <span class="glyph icon-277"></span>
+                                    <span class="glyph-hover icon-277"></span>
+                                </span>
+                                <span class="text">audio</span>
+                                <br class="clear" />
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javasxcript:void(0)" data-filter=".category-gallery">
+                                <span class="icon">
+                                    <span class="glyph icon-82"></span>
+                                    <span class="glyph-hover icon-82"></span>
+                                </span>
+                                <span class="text">galleries</span>
+                                <br class="clear" />
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javasxcript:void(0)" data-filter=".category-image">
+                                <span class="icon">
+                                    <span class="glyph icon-81"></span>
+                                    <span class="glyph-hover icon-81"></span>
+                                </span>
+                                <span class="text">images</span>
+                                <br class="clear" />
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javasxcript:void(0)" data-filter=".category-link">
+                                <span class="icon">
+                                    <span class="glyph icon-25"></span>
+                                    <span class="glyph-hover icon-25"></span>
+                                </span>
+                                <span class="text">links</span>
+                                <br class="clear" />
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javasxcript:void(0)" data-filter=".category-quote">
+                                <span class="icon">
+                                    <span class="glyph icon-22"></span>
+                                    <span class="glyph-hover icon-22"></span>
+                                </span>
+                                <span class="text">quotes</span>
+                                <br class="clear" />
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javasxcript:void(0)" data-filter=".category-video">
+                                <span class="icon">
+                                    <span class="glyph icon-45"></span>
+                                    <span class="glyph-hover icon-45"></span>
+                                </span>
+                                <span class="text">videos</span>
+                                <br class="clear" />
+                            </a>
+                        </li>
+                    </ul>
+                    <a href="" class="ajax-link" id="close"></a>
+                    <a href="javascript:void(0)" id="gotop"></a>
+                    <br class="clear" />
+                </div>
+
+                <div id="main">                
+                    <div class="content"> 
+                        <h2>Contact us</h2>
+                        <hr />
+                        <article>
+                            <p id="map"></p>
+                            <div class="grid-row">
+                                <div class="grid6 style2">
+                                    <form action="#" method="post" onsubmit="return contact()">
+                                        <label>Your name<span class="required"> [required]</span></label>
+                                        <input type="text" name="contact_name" id="contact_name" value="" />
+                                        <label>Your email<span class="required"> [required]</span></label>
+                                        <input type="text" name="contact_email" id="contact_email" value="" />
+                                        <label>Textarea Field</label>
+                                        <textarea name="contact_message" id="contact_message" cols="10" rows="2"></textarea>
+                                        <input type="submit" name="form_submit" value="Submit" />
+                                        <input type="reset" name="form_reset" value="Reset" />
+                                        <br class="clear" />
+                                    </form>
+                                    <div class="valid" id="valid-contact">
+                                        Thank you for your message!
+                                    </div>
+                                    <div class="invalid" id="invalid-contact">
+                                        Please complete all the fields!
+                                    </div>
+                                </div>
+                                <div class="grid6 style2">
+                                    <h3>Address</h3>
+                                    <p>
+                                        Nulla at quam non arcu scelerisque condimentum vel in orci. Duis ac quam sit amet ipsum consequat ultricies. Nam cursus ante eget est tempor cursus. Morbi vel felis dui, ac tincidunt odio. Nunc congue ante ut lacus scelerisque accumsan.
+                                    </p>
+                                    <p>
+                                        Park Avenue<br />
+                                        100 East 63rd Street<br />
+                                        New York City
+                                        <br /><br />
+                                        NY, United States
+                                    </p>
+                                </div>
+                                <br class="clear" />
+                            </div>
+                        </article>
+                    </div> 
+                </div>
+                
+<!-- Begin Footer -->            
+                <div id="footer">
+                    <div class="copyright">
+                        Copyright MR GOOSE &copy; 2013
+                    </div>
+                    <div class="icons">
+                        <a href="http://www.twitter.com" target="_blank" class="social-link social-icon-twitter">
+                            <span class="tooltip">Twitter <span class="tooltip-arrow"></span></span>
+                        </a>
+                        <a href="http://www.rss.com" target="_blank" class="social-link social-icon-rss">
+                            <span class="tooltip">RSS <span class="tooltip-arrow"></span></span>
+                        </a>
+                        <a href="http://www.googleplus.com" target="_blank" class="social-link social-icon-google">
+                            <span class="tooltip">Google+ <span class="tooltip-arrow"></span></span>
+                        </a>
+                        <a href="http://www.flickr.com" target="_blank" class="social-link social-icon-flickr">
+                            <span class="tooltip">Flickr <span class="tooltip-arrow"></span></span>
+                        </a>
+                        <a href="http://www.facebook.com" target="_blank" class="social-link social-icon-facebook">
+                            <span class="tooltip">Facebook <span class="tooltip-arrow"></span></span>
+                        </a>
+                        <a href="http://www.dribbble.com" target="_blank" class="social-link social-icon-dribbble">
+                            <span class="tooltip">Dribbble <span class="tooltip-arrow"></span></span>
+                        </a>
+                    </div>
+                    <br class="clear" />
+                </div>
+            </div>
+<!-- End Footer -->            
+        </div>
+    </body>
+</html>

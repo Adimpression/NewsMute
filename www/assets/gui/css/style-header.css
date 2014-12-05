@@ -1,0 +1,76 @@
+@charset "utf-8";
+
+/******************************************************************************* Begin Header */
+
+#header{
+    background: #000000;
+    display: none;
+    min-height: 49px;
+    position: fixed;
+    top: 0;
+    z-index: 5000;
+}
+
+#close{
+    background-image: url('../images/close.png');
+}
+
+#gotop{
+    background-image: url('../images/gotop.png');
+    margin: 0 1px 0 0;
+}
+
+#close,
+#gotop{
+    background-color: #1c1c1c;
+    height: 48px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 48px;
+    z-index: 40000;
+}
+
+#gotop{
+    display: none;
+    right: 49px;
+}
+
+#close:hover,
+#gotop:hover{
+    background-color: #af3425;
+    -webkit-transition: background-color 200ms ease-in;
+    -moz-transition: background-color 200ms ease-in;
+    -ms-transition: background-color 200ms ease-in;
+    -o-transition: background-color 200ms ease-in;
+    transition: background-color 200ms ease-in;
+}
+
+/* ----- Begin Navigation Responsive ----- */
+
+@media screen and (min-width: 1340px){
+    #header{
+        left: 320px;
+        width: 1000px;
+    }
+}
+
+@media screen and (min-width: 1001px) and (max-width: 1339px){
+    #header{
+        width: 1000px;
+    }
+}
+
+@media screen and (min-width: 764px) and (max-width: 1000px){
+    #header{
+        width: 760px;
+    }
+}
+
+@media screen and (max-width: 763px){
+    #header{
+        width: 100%;
+    }
+}
+
+/******************************************************************************* End Header */

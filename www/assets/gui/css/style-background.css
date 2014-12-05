@@ -1,0 +1,259 @@
+@charset "utf-8";
+
+/******************************************************************************* Begin Background */
+
+#background-wrapper,
+#background-wrapper .pattern,
+#background-wrapper .landscape,
+#background-wrapper .landscape .background,
+#background-wrapper .landscape .birds,
+#background-wrapper .landscape .foreground{
+    bottom: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+#background-wrapper .landscape{
+    opacity: 0;
+}
+
+#background-wrapper .landscape .foreground img,
+#background-wrapper .landscape .light img{
+    bottom: 0;
+    height: 100%;
+    position: fixed;
+    width: auto;
+}
+
+#wrapper.left #background-wrapper .landscape .light img{
+    left: 50%;
+}
+
+#wrapper.right #background-wrapper .landscape .light img{
+    right: 50%;
+}
+
+#wrapper.left #background-wrapper .landscape .foreground img{
+    right: 0;
+}
+
+#wrapper.right #background-wrapper .landscape .foreground img{
+    left: 0;
+}
+
+/********************************************************** Begin Backgrounds */
+
+/* Default */
+
+#wrapper.left #background-wrapper .landscape.default .background{
+    background: url('../images/background-images/default/left-background.png') repeat-x left bottom fixed;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+}
+
+#wrapper.right #background-wrapper .landscape.default .background{
+    background: url('../images/background-images/default/right-background.png') repeat-x left bottom fixed;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+}
+
+/* Bridge */
+
+#wrapper.left #background-wrapper .landscape.bridge .background{
+    background: url('../images/background-images/bridge/left-background.png') repeat-x left bottom fixed;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+}
+
+#wrapper.right #background-wrapper .landscape.bridge .background{
+    background: url('../images/background-images/bridge/right-background.png') repeat-x left bottom fixed;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+}
+
+/* Church */
+
+#wrapper.left #background-wrapper .landscape.church .background{
+    background: url('../images/background-images/church/left-background.png') repeat-x left bottom fixed;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+}
+
+#wrapper.right #background-wrapper .landscape.church .background{
+    background: url('../images/background-images/church/right-background.png') repeat-x left bottom fixed;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+}
+
+/* City */
+
+#wrapper.left #background-wrapper .landscape.city .background{
+    background: url('../images/background-images/city/left-background.png') repeat-x left bottom fixed;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+}
+
+#wrapper.right #background-wrapper .landscape.city .background{
+    background: url('../images/background-images/city/right-background.png') repeat-x left bottom fixed;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+}
+
+/* Forest */
+
+#wrapper.left #background-wrapper .landscape.forest .background{
+    background: url('../images/background-images/forest/left-background.png') repeat-x left bottom fixed;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+}
+
+#wrapper.right #background-wrapper .landscape.forest .background{
+    background: url('../images/background-images/forest/right-background.png') repeat-x left bottom fixed;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+}
+
+/* Ship */
+
+#wrapper.left #background-wrapper .landscape.ship .background{
+    background: url('../images/background-images/ship/left-background.png') repeat-x left bottom fixed;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+}
+
+#wrapper.right #background-wrapper .landscape.ship .background{
+    background: url('../images/background-images/ship/right-background.png') repeat-x left bottom fixed;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+}
+
+/* Train */
+
+#wrapper.left #background-wrapper .landscape.train .background{
+    background: url('../images/background-images/train/left-background.png') repeat left bottom fixed;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+}
+
+#wrapper.right #background-wrapper .landscape.train .background{
+    background: url('../images/background-images/train/right-background.png') repeat-x left bottom fixed;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+}
+
+/* Windmill */
+
+#wrapper.left #background-wrapper .landscape.windmill .background{
+    background: url('../images/background-images/windmill/left-background.png') repeat-x left bottom fixed;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+}
+
+#wrapper.right #background-wrapper .landscape.windmill .background{
+    background: url('../images/background-images/windmill/right-background.png') repeat-x left bottom fixed;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+}
+
+/* Wolf */
+
+#wrapper.left #background-wrapper .landscape.wolf .background{
+    background: url('../images/background-images/wolf/left-background.png') repeat-x left bottom fixed;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+}
+
+#wrapper.right #background-wrapper .landscape.wolf .background{
+    background: url('../images/background-images/wolf/right-background.png') repeat-x left bottom fixed;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+}
+
+/************************************************************ End Backgrounds */
+
+/************************************************************* Begin Patterns */
+
+#background-wrapper .pattern.pattern-1{
+    background: url('../images/background-patterns/1.jpg');
+}
+
+#background-wrapper .pattern.pattern-2{
+    background: url('../images/background-patterns/2.jpg');
+}
+
+#background-wrapper .pattern.pattern-3{
+    background: url('../images/background-patterns/3.jpg');
+}
+
+#background-wrapper .pattern.pattern-4{
+    background: url('../images/background-patterns/4.jpg');
+}
+
+#background-wrapper .pattern.pattern-5{
+    background: url('../images/background-patterns/5.jpg');
+}
+
+#background-wrapper .pattern.pattern-6{
+    background: url('../images/background-patterns/6.jpg');
+}
+
+#background-wrapper .pattern.pattern-7{
+    background: url('../images/background-patterns/7.jpg');
+}
+
+#background-wrapper .pattern.pattern-8{
+    background: url('../images/background-patterns/8.jpg');
+}
+
+#background-wrapper .pattern.pattern-9{
+    background: url('../images/background-patterns/9.jpg');
+}
+
+#background-wrapper .pattern.pattern-10{
+    background: url('../images/background-patterns/10.jpg');
+}
+
+#background-wrapper .pattern.pattern-11{
+    background: url('../images/background-patterns/11.jpg');
+}
+
+/*************************************************************** End Patterns */
+
+/******************************************************************************* End Background */

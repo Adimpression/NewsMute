@@ -1,0 +1,234 @@
+@charset "utf-8";
+
+/******************************************************************************* Begin Panel */
+
+#panel{
+    background: #000000;
+    color: #e2e2e2;
+    padding: 0 15px 10px 15px;
+    position: fixed;
+    top: 100px;
+    z-index: 50000;
+}
+
+#wrapper.left #panel{
+    -webkit-box-shadow: -2px 2px 5px 1px rgba(0, 0, 0, 0.3);
+    box-shadow: -2px 2px 5px 1px rgba(0, 0, 0, 0.3);
+    right: -235px;
+}
+
+#wrapper.right #panel{
+    -webkit-box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.3);
+    left: -235px;
+}
+
+#panel .toggle-button{
+    background: #000000;
+    color: #7f7f7f;
+    display: block;
+    font: 24px/24px 'Icons';
+    padding: 6px 0 6px 6px;
+    position: absolute;
+    text-align: center;
+    top: 7px;
+    width: 24px;
+    text-align: center;
+    -webkit-transition: color 300ms linear;
+    -moz-transition: color 300ms linear;
+    -ms-transition: color 300ms linear;
+    -o-transition: color 300ms linear;
+    transition: color 300ms linear;
+}
+
+#panel .toggle-button:hover{
+    color: #ffffff;
+    -webkit-transition: color 300ms linear;
+    -moz-transition: color 300ms linear;
+    -ms-transition: color 300ms linear;
+    -o-transition: color 300ms linear;
+    transition: color 300ms linear;
+}
+
+#wrapper.left #panel .toggle-button{
+    border-right: none;
+    -webkit-border-top-left-radius: 24px;
+    -webkit-border-bottom-left-radius: 24px;
+    border-top-left-radius: 24px;
+    border-bottom-left-radius: 24px;
+    -webkit-box-shadow: -2px 0 2px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: -2px 0 2px 1px rgba(0, 0, 0, 0.2);
+    right: 235px;
+}
+
+#wrapper.right #panel .toggle-button{
+    border-left: none;
+    -webkit-border-top-right-radius: 24px;
+    -webkit-border-bottom-right-radius: 24px;
+    border-top-right-radius: 24px;
+    border-bottom-right-radius: 24px;
+    -webkit-box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.3);
+    left: 235px;
+}
+
+#panel .options-toggle{
+    color: #7f7f7f;
+    display: block;
+    float: right;
+    font: normal 24px/24px 'Icons';
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 12px;
+    width: 24px;
+    -webkit-transition: color 300ms linear;
+    -moz-transition: color 300ms linear;
+    -ms-transition: color 300ms linear;
+    -o-transition: color 300ms linear;
+    transition: color 300ms linear;
+}
+
+#panel .options-toggle:hover{
+    color: #ffffff;
+    -webkit-transition: color 300ms linear;
+    -moz-transition: color 300ms linear;
+    -ms-transition: color 300ms linear;
+    -o-transition: color 300ms linear;
+    transition: color 300ms linear;
+}
+
+#panel h3{
+    border-bottom: 1px solid #404040;
+    cursor: pointer;
+    font: bold 14px/47px Helvetica, Arial, sans-serif;
+    width: 205px;
+}
+
+#panel h3 a{
+    color: #000000;
+    text-decoration: none;
+}
+
+#panel label{
+    display: block;
+    float: left;
+    font: 12px Helvetica, Arial, sans-serif;
+    margin: 8px 0 0 0;
+}
+
+#panel select{
+    background: #000000;
+    border: 1px solid #212121;
+    color: #e2e2e2;
+    float: right;
+    margin: 5px 0 0 0;
+    width: 90px;
+}
+
+#panel input[type=text]{
+    border: 1px solid #212121;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    float: right;
+    margin: 5px 0 0 0;
+    padding: 2px 5px;
+    text-align: center;
+    width: 78px;
+}
+
+#panel .general-list,
+#panel .patterns-list,
+#panel .background-list{
+    border-bottom: 1px solid #404040;
+    padding: 5px 0 18px 0;
+}
+
+/* Patterns */
+#panel .patterns ul{
+    height: 70px;
+    width: 205px;
+}
+
+#panel .patterns ul li{
+    float: left;
+    height: 30px;
+    margin: 5px 5px 0 0;
+    width: 30px;
+}
+
+#panel .patterns ul li.last{
+    margin: 5px 0 0 0;
+}
+
+#panel .patterns ul li a{
+    display: block;
+    height: 30px;
+    width: 30px;
+}
+
+#panel .patterns ul li:hover,
+#panel .patterns ul li.selected{
+    border: 1px solid #7f7f7f;
+    height: 26px;
+    padding: 1px;
+    width: 26px;
+}
+
+#panel .patterns ul li:hover a,
+#panel .patterns ul li.selected a{
+    height: 26px;
+    width: 26px;
+}
+
+#panel .patterns ul li a#pattern-1{
+    background: url('../images/background-patterns/1.jpg');
+}
+
+#panel .patterns ul li a#pattern-2{
+    background: url('../images/background-patterns/2.jpg');
+}
+
+#panel .patterns ul li a#pattern-3{
+    background: url('../images/background-patterns/3.jpg');
+}
+
+#panel .patterns ul li a#pattern-4{
+    background: url('../images/background-patterns/4.jpg');
+}
+
+#panel .patterns ul li a#pattern-5{
+    background: url('../images/background-patterns/5.jpg');
+}
+
+#panel .patterns ul li a#pattern-6{
+    background: url('../images/background-patterns/6.jpg');
+}
+
+#panel .patterns ul li a#pattern-7{
+    background: url('../images/background-patterns/7.jpg');
+}
+
+#panel .patterns ul li a#pattern-8{
+    background: url('../images/background-patterns/8.jpg');
+}
+
+#panel .patterns ul li a#pattern-9{
+    background: url('../images/background-patterns/9.jpg');
+}
+
+#panel .patterns ul li a#pattern-10{
+    background: url('../images/background-patterns/10.jpg');
+}
+
+#panel .patterns ul li a#pattern-11{
+    background: url('../images/background-patterns/11.jpg');
+}
+
+@media (max-width: 1339px){
+    #panel{
+        display: none;
+    }
+}
+
+/******************************************************************************* End Panel */
