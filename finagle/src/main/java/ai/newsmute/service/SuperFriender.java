@@ -6,7 +6,8 @@ import ai.newsmute.model.Return;
 import ai.newsmute.model.ReturnValueSuperFriend;
 import ai.newsmute.model.SuperFriendValue;
 import ai.newsmute.util.Printer;
-import com.datastax.driver.core.*;
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.Session;
 import com.google.gson.Gson;
 import com.twitter.finagle.Service;
 import com.twitter.finagle.builder.ServerBuilder;
@@ -20,7 +21,8 @@ import org.jboss.netty.handler.codec.http.*;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.net.InetSocketAddress;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 
 
@@ -86,7 +88,7 @@ public class SuperFriender implements Runnable {
                         final ChannelBuffer buffer = ChannelBuffers.buffer(resultBytes.length);
                         buffer.writeBytes(resultBytes);
                         httpResponse.setContent(buffer);
-                        httpResponse.setHeader("Content-Type","text/html; charset=utf-8");
+                        httpResponse.setHeader("Content-Type", "text/html; charset=utf-8");
                         return httpResponse;
                     }
                 });
@@ -113,7 +115,7 @@ public class SuperFriender implements Runnable {
         if (userParameterValues != null) {
             //@TODO: Remove unwanted emails such as unsubscribe@mailinglist.com(limit by keyword) or 123123980u09203412341343@_23e234LLgmail.com(limit by length)
             final String user = userParameterValues.get(0);
-            System.out.println("user:" +user);
+            System.out.println("user:" + user);
             final String hasheduser = BCrypt.hashpw(user, new String(SuperFriender.GLOBAL_SALT));
             System.out.println("hashed user:" + hasheduser);
             if (usersParameterValues != null) {//Adding friends
@@ -127,6 +129,17 @@ public class SuperFriender implements Runnable {
                                 hasheduser,
                                 superFriendHash,
                                 new Gson().toJson(new SuperFriendValue(hasheduser, new String[]{superFriendHash}))));//Yet to hash the urlHash value
+                    }
+                }
+
+                if (newContacts.length == 1) {//woeid
+                    final String inverseContact = newContacts[0];
+                    if (inverseContact != null && !inverseContact.isEmpty()) {
+                        final String inverseSuperFriendHash = BCrypt.hashpw(inverseContact, new String(GLOBAL_SALT));
+                        threadSafeSession.execute(String.format("insert into SuperFriend(humanId, humanSuperFriend, value) values('%s','%s','%s');",
+                                inverseSuperFriendHash,
+                                hasheduser,
+                                new Gson().toJson(new SuperFriendValue(hasheduser, new String[]{inverseSuperFriendHash}))));//Yet to hash the urlHash value
                     }
                 }
 
