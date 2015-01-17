@@ -141,96 +141,93 @@ public class Stalker implements Runnable {
         final List<String> action = parameters.get(Yawner.ACTION);
         StalkItem[] stalkItems = new StalkItem[]{};
 
-        if (user != null) {
-            StalkerAction stalkerAction = StalkerAction.valueOf(action.get(0));
-            switch (stalkerAction) {
-                case CREATE: {
-                    try {
-                        System.out.println(stalkerAction.toString());
-                        final String url = urlParameter.get(0);
-                        System.out.println("url:" + url);
-                        final SyndFeed document = Feed.getFeed(url);
-                        final String title = document.getTitle();
-                        System.out.println("title:" + title);
-                        final String description = document.getDescription();
-                        System.out.println("description:" + description);
+        StalkerAction stalkerAction = StalkerAction.valueOf(action.get(0));
+        switch (stalkerAction) {
+            case CREATE: {
+                try {
+                    System.out.println(stalkerAction.toString());
+                    final String url = urlParameter.get(0);
+                    System.out.println("url:" + url);
+                    final SyndFeed document = Feed.getFeed(url);
+                    final String title = document.getTitle();
+                    System.out.println("title:" + title);
+                    final String description = document.getDescription();
+                    System.out.println("description:" + description);
 
-                        threadSafeSession.execute(String.format("insert into Stalk(humanId, mood, urlHash, value) values('%s','%c','%s','%s');", hashUser, MOOD.LIFE.ALIVE.state, url, new Gson().toJson(new StalkItem(url, title, description))));//Yet to hash the urlHash value
+                    threadSafeSession.execute(String.format("insert into Stalk(humanId, mood, urlHash, value) values('%s','%c','%s','%s');", hashUser, MOOD.LIFE.ALIVE.state, url, new Gson().toJson(new StalkItem(url, title, description))));//Yet to hash the urlHash value
 
-                        try {//Please match this with Harvester first time feed setup
+                    try {//Please match this with Harvester first time feed setup
 
-                            for (final StalkItem feedItem : Feed.getFeedEntries(url)) {
+                        for (final StalkItem feedItem : Feed.getFeedEntries(url)) {
 
-                                final String feedItemTitle = feedItem.title;
-                                System.out.println("title:" + feedItemTitle);
+                            final String feedItemTitle = feedItem.title;
+                            System.out.println("title:" + feedItemTitle);
 
-                                final String feedItemLink = feedItem.link;
-                                System.out.println("link:" + feedItemLink);
+                            final String feedItemLink = feedItem.link;
+                            System.out.println("link:" + feedItemLink);
 
-                                final String feedItemDescription = feedItem.description;
-                                System.out.println("description:" + feedItemDescription);
+                            final String feedItemDescription = feedItem.description;
+                            System.out.println("description:" + feedItemDescription);
 
-                                final ResultSet yawnRowsNotRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashUser, MOOD.LIFE.ALIVE.state, feedItemLink));
-                                final ResultSet yawnRowsDidRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashUser, MOOD.LIFE.DEAD.state, feedItemLink));
+                            final ResultSet yawnRowsNotRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashUser, MOOD.LIFE.ALIVE.state, feedItemLink));
+                            final ResultSet yawnRowsDidRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashUser, MOOD.LIFE.DEAD.state, feedItemLink));
 
-                                final boolean feedItemLinkMissing = yawnRowsNotRead.all().isEmpty() && yawnRowsDidRead.all().isEmpty();
+                            final boolean feedItemLinkMissing = yawnRowsNotRead.all().isEmpty() && yawnRowsDidRead.all().isEmpty();
 
-                                if (feedItemLinkMissing) {
-                                    threadSafeSession.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %s;", hashUser, MOOD.LIFE.ALIVE.state, feedItemLink, new Gson().toJson(new YawnItem(feedItemLink, feedItemTitle, feedItemDescription, url, "0")), DBScripts.INITIAL_INSERT_TTL));//Yet to hash the urlHash value
-                                } else {
-                                    //Ignoring insert
-                                }
-
-
+                            if (feedItemLinkMissing) {
+                                threadSafeSession.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %s;", hashUser, MOOD.LIFE.ALIVE.state, feedItemLink, new Gson().toJson(new YawnItem(feedItemLink, feedItemTitle, feedItemDescription, url, "0")), DBScripts.INITIAL_INSERT_TTL));//Yet to hash the urlHash value
+                            } else {
+                                //Ignoring insert
                             }
-                        } catch (final Throwable throwable) {
-                            throwable.printStackTrace(System.err);
-                        }
 
-                    } catch (final Throwable e) {
-                        e.printStackTrace(System.err);
+
+                        }
+                    } catch (final Throwable throwable) {
+                        throwable.printStackTrace(System.err);
                     }
+
+                } catch (final Throwable e) {
+                    e.printStackTrace(System.err);
                 }
-                break;
-                case READ: {
-                    System.out.println("Values in table as follows");
-                    final ResultSet execute = threadSafeSession.execute(String.format("select * from Stalk where humanId='%s'", hashUser));
+            }
+            break;
+            case READ: {
+                System.out.println("Values in table as follows");
+                final ResultSet execute = threadSafeSession.execute(String.format("select * from Stalk where humanId='%s'", hashUser));
+                final List<Row> all = execute.all();
+
+                stalkItems = new StalkItem[all.size()];
+
+                for (int i = 0; i < stalkItems.length; i++) {
+                    stalkItems[i] = new Gson().fromJson(all.get(i).getString("value"), StalkItem.class);
+                }
+            }
+            break;
+            case DELETE: {
+                try {
+                    System.out.println(stalkerAction.toString());
+                    final String source = urlParameter.get(0);
+                    System.out.println("url:" + source);
+                    threadSafeSession.execute(String.format("delete from Stalk where humanId='%s' and mood='%c' and urlHash='%s';", hashUser, MOOD.LIFE.ALIVE.state, source));//Yet to hash the urlHash value
+
+
+                    final ResultSet execute = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' and mood='%c'", hashUser, MOOD.LIFE.ALIVE.state));
                     final List<Row> all = execute.all();
 
-                    stalkItems = new StalkItem[all.size()];
+                    for (final Row row : all) {
+                        final YawnItem yawnItem = new Gson().fromJson(row.getString("value"), YawnItem.class);
 
-                    for (int i = 0; i < stalkItems.length; i++) {
-                        stalkItems[i] = new Gson().fromJson(all.get(i).getString("value"), StalkItem.class);
-                    }
-                }
-                break;
-                case DELETE: {
-                    try {
-                        System.out.println(stalkerAction.toString());
-                        final String source = urlParameter.get(0);
-                        System.out.println("url:" + source);
-                        threadSafeSession.execute(String.format("delete from Stalk where humanId='%s' and mood='%c' and urlHash='%s';", hashUser, MOOD.LIFE.ALIVE.state, source));//Yet to hash the urlHash value
-
-
-                        final ResultSet execute = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' and mood='%c'", hashUser, MOOD.LIFE.ALIVE.state));
-                        final List<Row> all = execute.all();
-
-                        for (final Row row : all) {
-                            final YawnItem yawnItem = new Gson().fromJson(row.getString("value"), YawnItem.class);
-
-                            if (yawnItem.source.equals(source)) {
-                                threadSafeSession.execute(String.format("delete from Yawn where humanId='%s' and mood='%c' and urlHash='%s';", hashUser, MOOD.LIFE.ALIVE.state, yawnItem.link));
-                            }
+                        if (yawnItem.source.equals(source)) {
+                            threadSafeSession.execute(String.format("delete from Yawn where humanId='%s' and mood='%c' and urlHash='%s';", hashUser, MOOD.LIFE.ALIVE.state, yawnItem.link));
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace(System.err);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace(System.err);
                 }
-                break;
-                case ERROR:
-                    break;
             }
-
+            break;
+            case ERROR:
+                break;
         }
 
         return new Gson().toJson(new Return<ReturnValueStalk>(new ReturnValueStalk(stalkItems), "", "OK"));
