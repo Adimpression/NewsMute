@@ -15,8 +15,16 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
+ * Phase 1:
+ * Read data of an account.
+ * Share all data.
+ *
+ * Phase 2:
+ * Dynamic subscribe for trends during read
+ *
+ *
  * Created with IntelliJ IDEA Ultimate.
- * User: http://www.ilikeplaces.com
+ * User: http://www.NewsMute.com
  * Date: 30/12/14
  * Time: 12:18 AM
  */
