@@ -93,6 +93,14 @@
         </dependency>
         <!--End of Hazelcast Dependencies -->
 
+        <!--Unirest  Dependencies -->
+        <dependency>
+            <groupId>com.mashape.unirest</groupId>
+            <artifactId>unirest-java</artifactId>
+            <version>1.3.27</version>
+        </dependency>
+        <!--End of Unirest  Dependencies -->
+
         <!--Jersey  Dependencies -->
         <dependency>
             <groupId>com.sun.jersey</groupId>
