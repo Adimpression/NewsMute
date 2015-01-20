@@ -47,16 +47,11 @@ public class Influencer implements Runnable {
 
                     //Get complete hashed password in hex format
 
-                    final String email = "@gmail.com";
+                    final String email = "@adimpression.mobi";
                     final String passwordHash = get_hash("");
                     final String url = endpointGuardian + "/?user=" + get_hash(email) + "&token=" + passwordHash + "&nmact=" + "READ";
 
-                    final HttpResponse<JsonNode> jsonNodeHttpResponse = Unirest.post(url)
-                            .queryString("name", "Mark")
-                            .field("last", "Polo")
-                            .asJson();
-
-                    System.out.println(jsonNodeHttpResponse.getStatusText());
+                    final HttpResponse<JsonNode> jsonNodeHttpResponse = Unirest.post(url).asJson();
 
                     System.out.println(jsonNodeHttpResponse.getBody());
 
@@ -64,12 +59,14 @@ public class Influencer implements Runnable {
 
                     final JSONObject status = body.getJSONObject("returnValue");
 
-                    System.out.println(status);
+                    final String tokenHash = status.getJSONArray("data").getJSONObject(0).getString("tokenHash");
+
+                    System.out.println(tokenHash);
 
 
                     final Date endTime = Calendar.getInstance().getTime();
                     System.out.printf("Influencing finished at %s influencing %d sessions", new SimpleDateFormat("MM-dd HH:mm:ss").format(endTime), 0);
-                    System.out.println("Harvesting took " + (endTime.getTime() - startTime.getTime()) + "  milliseconds");
+                    System.out.println("Influencing took " + (endTime.getTime() - startTime.getTime()) + "  milliseconds");
 
                 } catch (final Exception e) {
                     e.printStackTrace(System.err);
@@ -81,7 +78,7 @@ public class Influencer implements Runnable {
     }
 
     private String get_hash(final String email) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("MD5");
+        MessageDigest md = MessageDigest.getInstance("SHA-512");
         //Add password bytes to digest
         md.update(email.getBytes());
         //Get the hash's bytes
