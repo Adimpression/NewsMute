@@ -4,6 +4,7 @@ import ai.newsmute.db.DBScripts;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.security.MessageDigest;
@@ -18,17 +19,30 @@ import java.util.TimerTask;
  * Phase 1:
  * Read data of an account.
  * Share all data.
- *
+ * <p/>
  * Phase 2:
  * Dynamic subscribe for trends during read
- *
- *
+ * <p/>
+ * <p/>
  * Created with IntelliJ IDEA Ultimate.
  * User: http://www.NewsMute.com
  * Date: 30/12/14
  * Time: 12:18 AM
  */
 public class Influencer implements Runnable {
+
+
+    final static String endpointYawn = "http://yawn.newsmute.com:40200";
+
+    final static String endpointScream = "http://scream.newsmute.com:30200";
+
+    final static String endpointStalk = "http://stalk.newsmute.com:16285";
+
+    final static String endpointSuperFriend = "http://superfriend.newsmute.com:20200";
+
+    final static String endpointGuardian = "http://guardian.newsmute.com:50200";
+
+    final static String endpointGodFather = "http://guardian.newsmute.com:40700";
 
     public Influencer() {
     }
@@ -43,25 +57,32 @@ public class Influencer implements Runnable {
                     final Date startTime = Calendar.getInstance().getTime();
                     System.out.println(String.format("Influencing started at %s...", new SimpleDateFormat("MM-dd HH:mm:ss").format(startTime)));
 
-                    final String endpointGuardian = "http://guardian.newsmute.com:50200";
-
                     //Get complete hashed password in hex format
 
                     final String email = "@adimpression.mobi";
                     final String passwordHash = get_hash("");
-                    final String url = endpointGuardian + "/?user=" + get_hash(email) + "&token=" + passwordHash + "&nmact=" + "READ";
 
-                    final HttpResponse<JsonNode> jsonNodeHttpResponse = Unirest.post(url).asJson();
+                    final String tokenHash;
+                    {
+                        final String login = endpointGuardian + "/?user=" + get_hash(email) + "&token=" + passwordHash + "&nmact=" + "READ";
+                        final HttpResponse<JsonNode> jsonNodeHttpResponse = Unirest.post(login).asJson();
+                        final JSONObject body = jsonNodeHttpResponse.getBody().getObject();
+                        final JSONObject status = body.getJSONObject("returnValue");
+                        tokenHash = status.getJSONArray("data").getJSONObject(0).getString("tokenHash");
+                    }
 
-                    System.out.println(jsonNodeHttpResponse.getBody());
+                    final JSONArray data;
+                    {
+                        final String login = endpointYawn + "/?user=" + get_hash(email) + "&nmact=" + "READ";
+                        final HttpResponse<JsonNode> jsonNodeHttpResponse = Unirest.post(login)
+                                .header("x-session-header", tokenHash)
+                                .asJson();
+                        final JSONObject body = jsonNodeHttpResponse.getBody().getObject();
+                        System.out.println(body.toString());
+                        final JSONObject status = body.getJSONObject("returnValue");
+                        data = status.getJSONArray("data");
+                    }
 
-                    final JSONObject body = jsonNodeHttpResponse.getBody().getObject();
-
-                    final JSONObject status = body.getJSONObject("returnValue");
-
-                    final String tokenHash = status.getJSONArray("data").getJSONObject(0).getString("tokenHash");
-
-                    System.out.println(tokenHash);
 
 
                     final Date endTime = Calendar.getInstance().getTime();
