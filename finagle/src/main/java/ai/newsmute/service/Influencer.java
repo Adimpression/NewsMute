@@ -83,6 +83,20 @@ public class Influencer implements Runnable {
                         data = status.getJSONArray("data");
                     }
 
+                    {
+                        for (int i = 0; i < data.length(); i++) {
+                            final String link = data.getJSONObject(i).getString("link");
+                            {
+                                final String login = endpointScream + "/?user=" + get_hash(email) + "&url=" + link;
+                                final HttpResponse<JsonNode> jsonNodeHttpResponse = Unirest.post(login)
+                                        .header("x-session-header", tokenHash)
+                                        .asJson();
+                                final JSONObject body = jsonNodeHttpResponse.getBody().getObject();
+                                System.out.println(body.toString());
+                            }
+                        }
+                    }
+
 
 
                     final Date endTime = Calendar.getInstance().getTime();
