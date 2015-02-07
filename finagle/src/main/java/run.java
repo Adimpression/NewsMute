@@ -7,6 +7,7 @@ enum WHAT_TO_RUN {
     COUNSELLOR,
     STALKER,
     HARVESTER,
+    INFLUENCER,
     SUPER_FRIENDER,
     GUARDIAN,
     GOD_FATHER,
@@ -116,6 +117,9 @@ public class run {
                         break;
                     case HARVESTER:
                         StartThreadSafely(new Thread(new Harvester(databaseIp)));
+                        break;
+                    case INFLUENCER:
+                        StartThreadSafely(new Thread(new Influencer()));
                         break;
                     case SUPER_FRIENDER:
                         StartThreadSafely(new Thread(new SuperFriender(privateInterfaceIp, arg.split(",")[1], databaseIp)));
