@@ -31,17 +31,11 @@ import java.util.*;
 public class Influencer implements Runnable {
 
 
-    final static String endpointYawn = "http://yawn.newsmute.com:40200";
+    final static String endpointYawn = "http://23.253.36.42:40200";
 
-    final static String endpointScream = "http://scream.newsmute.com:30200";
+    final static String endpointScream = "http://23.253.36.42:30200";
 
-    final static String endpointStalk = "http://stalk.newsmute.com:16285";
-
-    final static String endpointSuperFriend = "http://superfriend.newsmute.com:20200";
-
-    final static String endpointGuardian = "http://guardian.newsmute.com:50200";
-
-    final static String endpointGodFather = "http://guardian.newsmute.com:40700";
+    final static String endpointGuardian = "http://23.253.36.42:50200";
 
     final String[] countries = new String[]{"Afghanistan",
             "Albania",
@@ -313,7 +307,7 @@ public class Influencer implements Runnable {
                             }
                         } catch (final Throwable e) {
                             failed.add(country);
-                            //e.printStackTrace(System.out);
+                            e.printStackTrace(System.out);
                         }
                     }
 
