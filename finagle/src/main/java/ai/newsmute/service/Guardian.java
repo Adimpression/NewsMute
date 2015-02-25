@@ -5,8 +5,12 @@ import ai.newsmute.model.GuardianItem;
 import ai.newsmute.model.Return;
 import ai.newsmute.model.ReturnValueGuardian;
 import ai.newsmute.util.Printer;
-import com.datastax.driver.core.*;
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.core.Row;
+import com.datastax.driver.core.Session;
 import com.google.gson.Gson;
+import com.mashape.unirest.http.Unirest;
 import com.twitter.finagle.Service;
 import com.twitter.finagle.builder.ServerBuilder;
 import com.twitter.finagle.http.Http;
@@ -20,7 +24,8 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 
 
@@ -151,6 +156,34 @@ public class Guardian implements Runnable {
                     public HttpResponse apply() {
 
                         final HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+
+                        //https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=78906820503-htel112fap1eiotho1e8ks1dmemcvlb8.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A31600%2Fauth&scope=email
+                        System.out.println(request.getUri());
+                        if (request.getUri().startsWith("/auth")) {
+                            try {
+
+                                final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
+                                final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
+
+                                System.out.println(Unirest.post("https://accounts.google.com/o/oauth2/token")
+                                        .field("grant_type", "authorization_code")
+                                        .field("client_id", "78906820503-htel112fap1eiotho1e8ks1dmemcvlb8.apps.googleusercontent.com")
+                                        .field("client_secret", "")
+                                        .field("redirect_uri", "http://localhost:31600/auth")
+                                        .field("code", parameters.get("code").get(0))
+                                        .asJson().getBody());
+
+
+//                                final OAuthClientRequest bearerClientRequest = new OAuthBearerClientRequest("https://graph.facebook.com/me").setAccessToken(accessToken).buildQueryMessage();
+//
+//                                final OAuthResourceResponse resourceResponse = oAuthClient.resource(bearerClientRequest, OAuth.HttpMethod.GET, OAuthResourceResponse.class);
+
+                            } catch (final Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            System.out.println("NOT AN AUTH REQUEST");
+                        }
 
                         final String cookieValue = request.getHeader(X_SESSION_HEADER);
                         System.out.println(X_SESSION_HEADER + ":" + cookieValue);
