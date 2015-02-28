@@ -223,11 +223,16 @@ public class Guardian implements Runnable {
 
                                     final String humanId = jsonNode.getObject().getJSONArray("emails").getJSONObject(0).getString("value");
 
-                                    final String humanIdHash = Influencer.get_hash(humanId);
+                                    System.out.println("Obtained email from Google Plus API as:" + humanId);
+
+                                    final String humanIdHash = BCrypt.hashpw(Influencer.get_hash(humanId), SuperFriender.GLOBAL_SALT);
 
                                     System.out.println(jsonNode);
 
                                     final String randomUnique = access_token + System.currentTimeMillis();
+
+                                    System.out.printf("Writing into session {%s,%s}%n", randomUnique, humanIdHash);
+
                                     blockingSessionWrite(randomUnique, humanIdHash);
                                     httpResponse.setHeader(X_SESSION_HEADER, randomUnique);
 
