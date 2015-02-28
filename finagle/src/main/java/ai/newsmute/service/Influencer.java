@@ -1,12 +1,9 @@
 package ai.newsmute.service;
 
-import ai.newsmute.db.DBScripts;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.security.MessageDigest;
@@ -326,7 +323,7 @@ public class Influencer implements Runnable {
         timer.scheduleAtFixedRate(task, 0, 60000 * 60);//Every ten minutes
     }
 
-    private String get_hash(final String email) throws NoSuchAlgorithmException {
+    public static String get_hash(final String email) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-512");
         //Add password bytes to digest
         md.update(email.getBytes());
