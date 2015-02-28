@@ -133,7 +133,6 @@ public class Guardian implements Runnable {
      */
     @Override
     public void run() {
-        /*
         this.open(databaseIp);
 
         final Session connect = cluster.connect("NewsMute");
@@ -149,7 +148,6 @@ public class Guardian implements Runnable {
         } catch (final Exception e) {//Table already exists
             System.out.println(e.getMessage());
         }
-*/
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
 
