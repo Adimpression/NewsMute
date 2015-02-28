@@ -139,6 +139,7 @@ public class Guardian implements Runnable {
      */
     @Override
     public void run() {
+        /*
         this.open(databaseIp);
 
         final Session connect = cluster.connect("NewsMute");
@@ -154,7 +155,7 @@ public class Guardian implements Runnable {
         } catch (final Exception e) {//Table already exists
             System.out.println(e.getMessage());
         }
-
+*/
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
 
@@ -213,7 +214,7 @@ public class Guardian implements Runnable {
                                             .field("grant_type", "authorization_code")
                                             .field("client_id", "78906820503-htel112fap1eiotho1e8ks1dmemcvlb8.apps.googleusercontent.com")
                                             .field("client_secret", "jX52yU7pOgJ4j8JZVl7iA18x")
-                                            .field("redirect_uri", "http://localhost:31600/auth")
+                                            .field("redirect_uri", "http://guardian.newsmute.com:50200")
                                             .field("code", parameters.get("code").get(0))
                                             .asJson().getBody();
                                     System.out.println(body);
@@ -234,7 +235,9 @@ public class Guardian implements Runnable {
                                     System.out.printf("Writing into session {%s,%s}%n", randomUnique, humanIdHash);
 
                                     blockingSessionWrite(randomUnique, humanIdHash);
-                                    httpResponse.setHeader(X_SESSION_HEADER, randomUnique);
+
+                                    httpResponse.setHeader("Location", "http://localhost/?tokenHash=" + randomUnique);
+                                    httpResponse.setStatus(HttpResponseStatus.SEE_OTHER);
 
                                     result  = new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(humanIdHash, randomUnique, GuardianItem.OK)}), "Password correct", "OK");
                                 } catch (final Exception e) {
