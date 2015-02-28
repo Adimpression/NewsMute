@@ -39,24 +39,11 @@ public class Counsellor implements Runnable {
                 try {
                     final Date startTime = Calendar.getInstance().getTime();
 
-                    System.out.printf("Counselling started at %s...", new SimpleDateFormat("MM-dd HH:mm:ss").format(startTime));
-
-                    /**
-                     * This operation is not heavy, Cassandra handles paging(via cursors) transparently
-                     */
-                    final List<Row> allScreams = threadSafeSession.execute("select * from Scream;").all();
-
-                    /**
-                     * This operation is not heavy, Cassandra handles paging(via cursors) transparently
-                     */
-                    final List<Row> allYawns = threadSafeSession.execute("select * from Yawn;").all();
-
-                    System.out.println("Counselling " + allScreams.size() + " screams");
-                    System.out.println("Counselling " + allYawns.size() + " yawns");
+                    System.out.printf("\nCounselling started at %s...\n", new SimpleDateFormat("MM-dd HH:mm:ss").format(startTime));
 
                     int totalInsertions = 0;
 
-                    for (final Row screamRow : allScreams) {
+                    for (final Row screamRow : threadSafeSession.execute("select * from Scream;")) {
                         //@FIXME: Duplicate fetches. Can we fetch by partition? For, humanId on one partition will be the same
                         final List<Row> allSuperFriends = threadSafeSession.execute(String.format("select * from SuperFriend where humanId='%s'", screamRow.getString(0))).all();
 
