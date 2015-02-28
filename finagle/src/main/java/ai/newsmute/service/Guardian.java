@@ -167,34 +167,6 @@ public class Guardian implements Runnable {
 
                         final HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 
-                        //https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=78906820503-htel112fap1eiotho1e8ks1dmemcvlb8.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A31600%2Fauth&scope=email
-//                        System.out.println(request.getUri());
-//                        if (request.getUri().startsWith("/auth")) {
-//                            try {
-//
-//                                final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
-//                                final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
-//
-//                                final JsonNode body = Unirest.post("https://accounts.google.com/o/oauth2/token")
-//                                        .field("grant_type", "authorization_code")
-//                                        .field("client_id", "78906820503-htel112fap1eiotho1e8ks1dmemcvlb8.apps.googleusercontent.com")
-//                                        .field("client_secret", "jX52yU7pOgJ4j8JZVl7iA18x")
-//                                        .field("redirect_uri", "http://localhost:31600/auth")
-//                                        .field("code", parameters.get("code").get(0))
-//                                        .asJson().getBody();
-//                                System.out.println(body);
-//
-//                                final String jsonNode = Unirest.get("https://content.googleapis.com/plus/v1/people/me").queryString("access_token", body.getObject().getString("access_token")).asString().getBody();
-//
-//                                System.out.println(jsonNode);
-//
-//                            } catch (final Exception e) {
-//                                e.printStackTrace();
-//                            }
-//                        } else {
-//                            System.out.println("NOT AN AUTH REQUEST");
-//                        }
-
                         final String cookieValue = request.getHeader(X_SESSION_HEADER);
                         System.out.println(X_SESSION_HEADER + ":" + cookieValue);
 
@@ -230,21 +202,58 @@ public class Guardian implements Runnable {
                         } else {//We need to create a session
                             System.out.println("COOKIE IS MISSING");
 
-                            result = blocking(request);
+                            //https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=78906820503-htel112fap1eiotho1e8ks1dmemcvlb8.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A31600%2Fauth&scope=email
+                            if (request.getUri().startsWith("/auth")) {
+                                try {
 
-                            final GuardianItem guardianItem = result.returnValue.data[0];
-                            if (result.returnStatus.equals("OK")) {
-                                if (guardianItem.status.equals(GuardianItem.OK)) {
-                                    final String randomUnique = guardianItem.tokenHash + System.currentTimeMillis();
-                                    blockingSessionWrite(randomUnique, guardianItem.humanIdHash);
+                                    final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
+                                    final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
+
+                                    final JsonNode body = Unirest.post("https://accounts.google.com/o/oauth2/token")
+                                            .field("grant_type", "authorization_code")
+                                            .field("client_id", "78906820503-htel112fap1eiotho1e8ks1dmemcvlb8.apps.googleusercontent.com")
+                                            .field("client_secret", "jX52yU7pOgJ4j8JZVl7iA18x")
+                                            .field("redirect_uri", "http://localhost:31600/auth")
+                                            .field("code", parameters.get("code").get(0))
+                                            .asJson().getBody();
+                                    System.out.println(body);
+
+                                    final String access_token = body.getObject().getString("access_token");
+                                    final JsonNode jsonNode = Unirest.get("https://content.googleapis.com/plus/v1/people/me").queryString("access_token", access_token).asJson().getBody();
+
+                                    final String humanId = jsonNode.getObject().getJSONArray("emails").getJSONObject(0).getString("value");
+
+                                    final String humanIdHash = Influencer.get_hash(humanId);
+
+                                    System.out.println(jsonNode);
+
+                                    final String randomUnique = access_token + System.currentTimeMillis();
+                                    blockingSessionWrite(randomUnique, humanIdHash);
                                     httpResponse.setHeader(X_SESSION_HEADER, randomUnique);
-                                } else if (guardianItem.status.equals(GuardianItem.ERROR)) {
-                                    System.out.println(result.returnMessage);
+
+                                    result  = new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(humanIdHash, randomUnique, GuardianItem.OK)}), "Password correct", "OK");
+                                } catch (final Exception e) {
+                                    throw new RuntimeException(e);
+                                }
+                            } else {
+                                System.out.println("NOT AN AUTH REQUEST");
+
+                                result = blocking(request);
+
+                                final GuardianItem guardianItem = result.returnValue.data[0];
+                                if (result.returnStatus.equals("OK")) {
+                                    if (guardianItem.status.equals(GuardianItem.OK)) {
+                                        final String randomUnique = guardianItem.tokenHash + System.currentTimeMillis();
+                                        blockingSessionWrite(randomUnique, guardianItem.humanIdHash);
+                                        httpResponse.setHeader(X_SESSION_HEADER, randomUnique);
+                                    } else if (guardianItem.status.equals(GuardianItem.ERROR)) {
+                                        System.out.println(result.returnMessage);
+                                    } else {
+                                        System.out.println("UNIDENTIFIED ERROR");
+                                    }
                                 } else {
                                     System.out.println("UNIDENTIFIED ERROR");
                                 }
-                            } else {
-                                System.out.println("UNIDENTIFIED ERROR");
                             }
                         }
 
