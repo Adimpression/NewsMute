@@ -162,8 +162,10 @@ public class Guardian implements Runnable {
 
                         final String cookieValue = request.getHeader(X_SESSION_HEADER);
                         System.out.println(X_SESSION_HEADER + ":" + cookieValue);
+                        System.out.println("request.getUri():" + request.getUri());
 
                         final Return<ReturnValueGuardian> result;
+                        String oauthResult = null;
 
                         if (cookieValue != null) {//User already has a session
                             final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
@@ -194,19 +196,27 @@ public class Guardian implements Runnable {
 
                         } else {//We need to create a session
                             System.out.println("COOKIE IS MISSING");
+                            final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
+                            final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
 
-                            //https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=78906820503-htel112fap1eiotho1e8ks1dmemcvlb8.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A31600%2Fauth&scope=email
-                            if (request.getUri().startsWith("/auth")) {
+                            //https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=78906820503-htel112fap1eiotho1e8ks1dmemcvlb8.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Fguardian.newsmute.com%3A50200%2Fauth&scope=email
+                            if (request.getUri().startsWith("/auth")){
+                                if( parameters.get("code") == null || parameters.get("code").size() == 0 ){
+                                    httpResponse.setStatus(HttpResponseStatus.OK);
+                                    result  = new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(null, null, GuardianItem.ERROR)}), "'code' missing", "ERROR");
+                                }
+                                else {
+
+                                    System.out.println("OAuth Reguest");
+
                                 try {
 
-                                    final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
-                                    final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
 
                                     final JsonNode body = Unirest.post("https://accounts.google.com/o/oauth2/token")
                                             .field("grant_type", "authorization_code")
                                             .field("client_id", "78906820503-htel112fap1eiotho1e8ks1dmemcvlb8.apps.googleusercontent.com")
                                             .field("client_secret", "jX52yU7pOgJ4j8JZVl7iA18x")
-                                            .field("redirect_uri", "http://guardian.newsmute.com:50200")
+                                            .field("redirect_uri", "http://guardian.newsmute.com:50200/auth")
                                             .field("code", parameters.get("code").get(0))
                                             .asJson().getBody();
                                     System.out.println(body);
@@ -218,7 +228,8 @@ public class Guardian implements Runnable {
 
                                     System.out.println("Obtained email from Google Plus API as:" + humanId);
 
-                                    final String humanIdHash = BCrypt.hashpw(Influencer.get_hash(humanId), SuperFriender.GLOBAL_SALT);
+                                    final String oneHash = Influencer.get_hash(humanId);
+                                    final String humanIdHash = BCrypt.hashpw(oneHash, SuperFriender.GLOBAL_SALT);
 
                                     System.out.println(jsonNode);
 
@@ -228,13 +239,49 @@ public class Guardian implements Runnable {
 
                                     blockingSessionWrite(randomUnique, humanIdHash);
 
-                                    httpResponse.setHeader("Location", "http://localhost/?tokenHash=" + randomUnique);
-                                    httpResponse.setStatus(HttpResponseStatus.SEE_OTHER);
+//                                    final String url = "auth_redirect.html/?tokenHash=" + randomUnique + "&user=" + oneHash;
+//                                    httpResponse.setHeader("Location", url);
+//                                    httpResponse.setStatus(HttpResponseStatus.SEE_OTHER);
 
-                                    result  = new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(humanIdHash, randomUnique, GuardianItem.OK)}), "Password correct", "OK");
+                                    System.out.println("Location Refresh Temporary 2");
+                                    System.out.println("Location Refresh Temporary 2");
+                                    System.out.println("Location Refresh Temporary 2");
+                                    System.out.println("Location Refresh Temporary 2");
+                                    System.out.println("Location Refresh Temporary 2");
+                                    System.out.println("Location Refresh Temporary 2");
+                                    System.out.println("Location Refresh Temporary 2");
+                                    System.out.println("Location Refresh Temporary 2");
+                                    System.out.println("Location Refresh Temporary 2");
+                                    System.out.println("Location Refresh Temporary 2");
+                                    System.out.println("Location Refresh Temporary 2");
+                                    System.out.println("Location Refresh Temporary 2");
+                                    System.out.println("Location Refresh Temporary 2");
+
+                                    oauthResult = "<!DOCTYPE html>\n" +
+                                            "<html>\n" +
+                                            "<head lang=\"en\">\n" +
+                                            "    <meta charset=\"UTF-8\">\n" +
+                                            "    <title></title>\n" +
+                                            "    <script type=\"text/javascript\">\n" +
+                                            "        url = 'http://localhost/?tokenHash='" +
+                                            randomUnique +
+                                            "'&user='" +
+                                            oneHash +
+                                            ";\n" +
+                                            "\n" +
+                                            "        alert(url);\n" +
+                                            "\n" +
+                                            "        window.location.href = url;\n" +
+                                            "    </script>\n" +
+                                            "</head>\n" +
+                                            "<body>\n" +
+                                            "\n" +
+                                            "</body>\n" +
+                                            "</html>\n";
+                                    result  = null;
                                 } catch (final Exception e) {
                                     throw new RuntimeException(e);
-                                }
+                                }    }
                             } else {
                                 System.out.println("NOT AN AUTH REQUEST");
 
@@ -259,7 +306,11 @@ public class Guardian implements Runnable {
 
                         final byte[] resultBytes;
                         try {
-                            resultBytes = new Gson().toJson(result).getBytes("UTF-8");
+                            if(oauthResult == null) {
+                                resultBytes = new Gson().toJson(result).getBytes("UTF-8");
+                            } else {
+                                resultBytes = oauthResult.getBytes("UTF-8");
+                            }
                         } catch (UnsupportedEncodingException e) {
                             throw new RuntimeException(e);
                         }
