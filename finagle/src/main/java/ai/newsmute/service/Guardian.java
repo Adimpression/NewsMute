@@ -162,10 +162,8 @@ public class Guardian implements Runnable {
 
                         final String cookieValue = request.getHeader(X_SESSION_HEADER);
                         System.out.println(X_SESSION_HEADER + ":" + cookieValue);
-                        System.out.println("request.getUri():" + request.getUri());
 
                         final Return<ReturnValueGuardian> result;
-                        String oauthResult = null;
 
                         if (cookieValue != null) {//User already has a session
                             final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
@@ -196,121 +194,28 @@ public class Guardian implements Runnable {
 
                         } else {//We need to create a session
                             System.out.println("COOKIE IS MISSING");
-                            final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
-                            final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
 
-                            //https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=78906820503-htel112fap1eiotho1e8ks1dmemcvlb8.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Fguardian.newsmute.com%3A50200%2Fauth&scope=email
-                            if (request.getUri().startsWith("/auth")){
-                                if( parameters.get("code") == null || parameters.get("code").size() == 0 ){
-                                    httpResponse.setStatus(HttpResponseStatus.OK);
-                                    result  = new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(null, null, GuardianItem.ERROR)}), "'code' missing", "ERROR");
-                                }
-                                else {
+                            result = blocking(request);
 
-                                    System.out.println("OAuth Reguest");
-
-                                try {
-
-
-                                    final JsonNode body = Unirest.post("https://accounts.google.com/o/oauth2/token")
-                                            .field("grant_type", "authorization_code")
-                                            .field("client_id", "78906820503-htel112fap1eiotho1e8ks1dmemcvlb8.apps.googleusercontent.com")
-                                            .field("client_secret", "jX52yU7pOgJ4j8JZVl7iA18x")
-                                            .field("redirect_uri", "http://guardian.newsmute.com:50200/auth")
-                                            .field("code", parameters.get("code").get(0))
-                                            .asJson().getBody();
-                                    System.out.println(body);
-
-                                    final String access_token = body.getObject().getString("access_token");
-                                    final JsonNode jsonNode = Unirest.get("https://content.googleapis.com/plus/v1/people/me").queryString("access_token", access_token).asJson().getBody();
-
-                                    final String humanId = jsonNode.getObject().getJSONArray("emails").getJSONObject(0).getString("value");
-
-                                    System.out.println("Obtained email from Google Plus API as:" + humanId);
-
-                                    final String oneHash = Influencer.get_hash(humanId);
-                                    final String humanIdHash = BCrypt.hashpw(oneHash, SuperFriender.GLOBAL_SALT);
-
-                                    System.out.println(jsonNode);
-
-                                    final String randomUnique = access_token + System.currentTimeMillis();
-
-                                    System.out.printf("Writing into session {%s,%s}%n", randomUnique, humanIdHash);
-
-                                    blockingSessionWrite(randomUnique, humanIdHash);
-
-//                                    final String url = "auth_redirect.html/?tokenHash=" + randomUnique + "&user=" + oneHash;
-//                                    httpResponse.setHeader("Location", url);
-//                                    httpResponse.setStatus(HttpResponseStatus.SEE_OTHER);
-
-                                    System.out.println("Location Refresh Temporary 2");
-                                    System.out.println("Location Refresh Temporary 2");
-                                    System.out.println("Location Refresh Temporary 2");
-                                    System.out.println("Location Refresh Temporary 2");
-                                    System.out.println("Location Refresh Temporary 2");
-                                    System.out.println("Location Refresh Temporary 2");
-                                    System.out.println("Location Refresh Temporary 2");
-                                    System.out.println("Location Refresh Temporary 2");
-                                    System.out.println("Location Refresh Temporary 2");
-                                    System.out.println("Location Refresh Temporary 2");
-                                    System.out.println("Location Refresh Temporary 2");
-                                    System.out.println("Location Refresh Temporary 2");
-                                    System.out.println("Location Refresh Temporary 2");
-
-                                    oauthResult = "<!DOCTYPE html>\n" +
-                                            "<html>\n" +
-                                            "<head lang=\"en\">\n" +
-                                            "    <meta charset=\"UTF-8\">\n" +
-                                            "    <title></title>\n" +
-                                            "    <script type=\"text/javascript\">\n" +
-                                            "        url = 'http://localhost/?tokenHash='" +
-                                            randomUnique +
-                                            "'&user='" +
-                                            oneHash +
-                                            ";\n" +
-                                            "\n" +
-                                            "        alert(url);\n" +
-                                            "\n" +
-                                            "        window.location.href = url;\n" +
-                                            "    </script>\n" +
-                                            "</head>\n" +
-                                            "<body>\n" +
-                                            "\n" +
-                                            "</body>\n" +
-                                            "</html>\n";
-                                    result  = null;
-                                } catch (final Exception e) {
-                                    throw new RuntimeException(e);
-                                }    }
-                            } else {
-                                System.out.println("NOT AN AUTH REQUEST");
-
-                                result = blocking(request);
-
-                                final GuardianItem guardianItem = result.returnValue.data[0];
-                                if (result.returnStatus.equals("OK")) {
-                                    if (guardianItem.status.equals(GuardianItem.OK)) {
-                                        final String randomUnique = guardianItem.tokenHash + System.currentTimeMillis();
-                                        blockingSessionWrite(randomUnique, guardianItem.humanIdHash);
-                                        httpResponse.setHeader(X_SESSION_HEADER, randomUnique);
-                                    } else if (guardianItem.status.equals(GuardianItem.ERROR)) {
-                                        System.out.println(result.returnMessage);
-                                    } else {
-                                        System.out.println("UNIDENTIFIED ERROR");
-                                    }
+                            final GuardianItem guardianItem = result.returnValue.data[0];
+                            if (result.returnStatus.equals("OK")) {
+                                if (guardianItem.status.equals(GuardianItem.OK)) {
+                                    final String randomUnique = guardianItem.tokenHash + System.currentTimeMillis();
+                                    blockingSessionWrite(randomUnique, guardianItem.humanIdHash);
+                                    httpResponse.setHeader(X_SESSION_HEADER, randomUnique);
+                                } else if (guardianItem.status.equals(GuardianItem.ERROR)) {
+                                    System.out.println(result.returnMessage);
                                 } else {
                                     System.out.println("UNIDENTIFIED ERROR");
                                 }
+                            } else {
+                                System.out.println("UNIDENTIFIED ERROR");
                             }
                         }
 
                         final byte[] resultBytes;
                         try {
-                            if(oauthResult == null) {
                                 resultBytes = new Gson().toJson(result).getBytes("UTF-8");
-                            } else {
-                                resultBytes = oauthResult.getBytes("UTF-8");
-                            }
                         } catch (UnsupportedEncodingException e) {
                             throw new RuntimeException(e);
                         }
