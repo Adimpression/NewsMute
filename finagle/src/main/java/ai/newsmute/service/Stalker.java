@@ -221,6 +221,15 @@ public class Stalker implements Runnable {
                             threadSafeSession.execute(String.format("delete from Yawn where humanId='%s' and mood='%c' and urlHash='%s';", hashUser, MOOD.LIFE.ALIVE.state, yawnItem.link));
                         }
                     }
+
+                    if(!source.startsWith("http:")){
+                        System.out.println("Deleted source:" + source);
+                        threadSafeSession.execute(String.format("delete from SuperFriend where humanId='%s' and humanSuperFriend='%s';",
+                                source,
+                                hashUser
+                                ));
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace(System.err);
                 }
