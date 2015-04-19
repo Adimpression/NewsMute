@@ -2,6 +2,8 @@ package ai.newsmute;
 
 import ai.newsmute.model.*;
 import ai.newsmute.service.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Component;
 @SpringBootApplication
 @Component
 public class Init implements CommandLineRunner {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Init.class);
 
     public Init() {
     }
@@ -51,7 +55,7 @@ public class Init implements CommandLineRunner {
             config:
             for (final String arg : args) {
                 final WHAT_TO_RUN what_to_run = WHAT_TO_RUN.valueOf(arg.toUpperCase().split(",")[0]);
-                System.out.println("Configuring " + what_to_run.toString());
+                LOG.info("Configuring " + what_to_run.toString());
 
                 switch (what_to_run) {
                     case CONFIG:
@@ -67,7 +71,7 @@ public class Init implements CommandLineRunner {
 
             for (final String arg : args) {
                 final WHAT_TO_RUN what_to_run = WHAT_TO_RUN.valueOf(arg.toUpperCase().split(",")[0]);
-                System.out.println("Executing " + what_to_run.toString());
+                LOG.info("Executing " + what_to_run.toString());
                 switch (what_to_run) {
                     case SCREAMER:
                         StartThreadSafely(new Thread(new Screamer(privateInterfaceIp, arg.split(",")[1], databaseIp)));
@@ -200,8 +204,7 @@ public class Init implements CommandLineRunner {
         try {
             thread.run();
         } catch (final Exception e) {
-            e.printStackTrace(System.err);
-
+            LOG.error("Error starting thread", e);
         }
     }
 }
