@@ -8,7 +8,18 @@
     <artifactId>Finagle</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <packaging>jar</packaging>
 
+    <properties>
+        <start-class>run</start-class>
+    </properties>
+    <!-- Spring boot -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.2.3.RELEASE</version>
+    </parent>
+    <!-- End of Spring boot -->
 
 
     <!-- Tell maven where to find finagle -->
@@ -114,7 +125,23 @@
         </dependency>
         <!--End of Jersey Dependencies -->
 
+        <!-- Spring Boot Dependencies-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <!-- End of Spring Boot Dependencies-->
+
     </dependencies>
 
 
+    <!-- Package as an executable jar -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

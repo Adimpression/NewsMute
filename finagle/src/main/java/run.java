@@ -1,5 +1,6 @@
 import ai.newsmute.model.*;
 import ai.newsmute.service.*;
+import org.springframework.boot.SpringApplication;
 
 enum WHAT_TO_RUN {
     SCREAMER,
@@ -77,6 +78,14 @@ enum FINAGLE_SERVICE {
  */
 public class run {
     public static void main(final String args[]) {
+        if (args.length == 0) {
+            System.err.println("!!!Missing required arguments to run program!!!");
+            System.exit(1);
+        }
+
+        System.out.println("Initializing Spring Boot");
+        SpringApplication.run(run.class, args);
+
         try {
             String privateInterfaceIp = null;
             String publicInterfaceIp = null;
