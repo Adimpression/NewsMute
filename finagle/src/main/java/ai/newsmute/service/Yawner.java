@@ -17,6 +17,8 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.http.*;
 import org.mindrot.jbcrypt.BCrypt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
@@ -35,6 +37,8 @@ import java.util.concurrent.Executors;
  * Time: 2:23 PM
  */
 public class Yawner implements Runnable {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Yawner.class);
 
     public static final String ACTION = "nmact";
 
@@ -67,7 +71,7 @@ public class Yawner implements Runnable {
             connect.execute(DBScripts.CREATE_YAWN);
 
         } catch (final Exception e) {//Table already exists
-            System.out.println(e.getMessage());
+            LOG.info(e.getMessage());
         }
 
 
@@ -83,7 +87,7 @@ public class Yawner implements Runnable {
                         final HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_0, HttpResponseStatus.OK);
                         final List<Map.Entry<String, String>> headers = request.getHeaders();
                         for (Map.Entry<String, String> header : headers) {
-                            System.out.println("Header:" + header.getKey() + " value:" + header.getValue());
+                            LOG.info("Header:" + header.getKey() + " value:" + header.getValue());
                         }
                         byte[] resultBytes;
                         try {
@@ -116,18 +120,18 @@ public class Yawner implements Runnable {
         final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
 
         final String user = getParameter(parameters.get("user"));
-        System.out.println("user:" +user);
+        LOG.info("user:" +user);
         final String hashUser = BCrypt.hashpw(user, SuperFriender.GLOBAL_SALT);
-        System.out.println("hashUser:" + hashUser);
+        LOG.info("hashUser:" + hashUser);
         final String url = getParameter(parameters.get("url") );
-        System.out.println("url:" + url);
+        LOG.info("url:" + url);
         final String action = getParameter(parameters.get(ACTION));
-        System.out.println("action:" + action);
+        LOG.info("action:" + action);
 
         final YawnItem[] yawnItems;
         switch (YawnerAction.to(action.toUpperCase())) {
             case READ:{
-                System.out.println("Values in table as follows");
+                LOG.info("Values in table as follows");
                 final ResultSet execute = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' and mood='%c'", hashUser, MOOD.LIFE.ALIVE.state));
                 final List<Row> all = execute.all();
 
@@ -151,7 +155,7 @@ public class Yawner implements Runnable {
 
             break;
             case READ_ONE:{
-                System.out.println("Values in table as follows");
+                LOG.info("Values in table as follows");
                 final ResultSet execute = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' and mood='%c'", hashUser, MOOD.LIFE.ALIVE.state));
                 final List<Row> all = execute.all();
 

@@ -19,6 +19,8 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.http.*;
 import org.mindrot.jbcrypt.BCrypt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
@@ -36,6 +38,8 @@ import java.util.concurrent.Executors;
  * Time: 2:23 PM
  */
 public class GodFather implements Runnable {
+
+    private static final Logger LOG = LoggerFactory.getLogger(GodFather.class);
 
     private static final String ACTION = "nmact";
 
@@ -104,19 +108,19 @@ public class GodFather implements Runnable {
         final Map<String, List<String>> parameters = queryStringDecoder.getParameters();
 
         final String user = getParameter(parameters.get("user"));
-        System.out.println("user:" +user);
+        LOG.info("user:" +user);
         final List<String> emailParameter = parameters.get("email");
         final String email = (emailParameter != null && !emailParameter.isEmpty()) ? emailParameter.get(0) : null;
-        System.out.println("email:" + email);
+        LOG.info("email:" + email);
         final List<String> tokenParameter = parameters.get("token");
         final String token = tokenParameter.get(0);
-        System.out.println("token:" + token);
+        LOG.info("token:" + token);
         final String action = getParameter(parameters.get(ACTION));
-        System.out.println("action:" + action);
+        LOG.info("action:" + action);
 
 
         final String hashUser = BCrypt.hashpw(user, SuperFriender.GLOBAL_SALT);
-        System.out.println("hashUser:" + hashUser);
+        LOG.info("hashUser:" + hashUser);
 
         switch (GodFatherAction.to(action.toUpperCase())) {
             case CREATE: {
@@ -150,7 +154,7 @@ public class GodFather implements Runnable {
             threadSafeSession.execute(String.format("insert into Guardian(humanId, value) values('%s','%s');", hashUser, hash2Password));
             returnVal = true;
         }else{
-            System.out.println("No such email validation session:" + token);
+            LOG.info("No such email validation session:" + token);
             returnVal = false;
         }
         return returnVal;

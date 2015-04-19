@@ -5,6 +5,8 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -27,6 +29,7 @@ import java.util.*;
  */
 public class Influencer implements Runnable {
 
+    private static final Logger LOG = LoggerFactory.getLogger(Influencer.class);
 
     final static String endpointYawn = "http://23.253.36.42:40200";
 
@@ -242,13 +245,13 @@ public class Influencer implements Runnable {
             public void run() {
                 try {
                     final Date startTime = Calendar.getInstance().getTime();
-                    System.out.println(String.format("Influencing started at %s...", new SimpleDateFormat("MM-dd HH:mm:ss").format(startTime)));
+                    LOG.info(String.format("Influencing started at %s...", new SimpleDateFormat("MM-dd HH:mm:ss").format(startTime)));
 
                     final List<String> failed = new ArrayList<String>();
 
                     for (final String country : countries) {
                         try {
-                            System.out.println("Influencing: " + country);
+                            LOG.info("Influencing: " + country);
 
                             final String email = country.toLowerCase() + "@adimpression.mobi";
                             final String passwordHash = get_hash("");
@@ -269,7 +272,7 @@ public class Influencer implements Runnable {
                                         .header("x-session-header", tokenHash)
                                         .asJson();
                                 final JSONObject body = jsonNodeHttpResponse.getBody().getObject();
-                                System.out.println(body.toString());
+                                LOG.info(body.toString());
                                 final JSONObject status = body.getJSONObject("returnValue");
                                 data = status.getJSONArray("data");
                             }
@@ -286,7 +289,7 @@ public class Influencer implements Runnable {
                                                     .header("x-session-header", tokenHash)
                                                     .asJson();
                                             final JSONObject body = jsonNodeHttpResponse.getBody().getObject();
-                                            System.out.println(body.toString());
+                                            LOG.info(body.toString());
                                         }
                                         {
                                             final String login = endpointYawn;
@@ -297,7 +300,7 @@ public class Influencer implements Runnable {
                                                     .header("x-session-header", tokenHash)
                                                     .asJson();
                                             final JSONObject body = jsonNodeHttpResponse.getBody().getObject();
-                                            System.out.println(body.toString());
+                                            LOG.info(body.toString());
                                         }
                                     }
                                 }
@@ -310,9 +313,9 @@ public class Influencer implements Runnable {
 
                     final Date endTime = Calendar.getInstance().getTime();
 
-                    System.out.println("Failed:" + Arrays.toString(failed.toArray()));
+                    LOG.info("Failed:" + Arrays.toString(failed.toArray()));
                     System.out.printf("Influencing finished at %s influencing %d sessions", new SimpleDateFormat("MM-dd HH:mm:ss").format(endTime), 0);
-                    System.out.println("Influencing took " + (endTime.getTime() - startTime.getTime()) + "  milliseconds");
+                    LOG.info("Influencing took " + (endTime.getTime() - startTime.getTime()) + "  milliseconds");
 
                 } catch (final Exception e) {
                     e.printStackTrace(System.err);

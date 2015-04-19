@@ -25,6 +25,8 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.http.*;
 import org.mindrot.jbcrypt.BCrypt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -64,6 +66,8 @@ import java.util.concurrent.Executors;
  */
 public class Stalker implements Runnable {
 
+    private static final Logger LOG = LoggerFactory.getLogger(Stalker.class);
+
     private final String port;
 
     private final String bindIp;
@@ -92,7 +96,7 @@ public class Stalker implements Runnable {
             connect.execute(DBScripts.CREATE_STALK);
 
         } catch (final Exception e) {//Table already exists
-            System.out.println(e.getMessage());
+            LOG.info(e.getMessage());
         }
 
 
@@ -108,7 +112,7 @@ public class Stalker implements Runnable {
                         final HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_0, HttpResponseStatus.OK);
                         final List<Map.Entry<String, String>> headers = request.getHeaders();
                         for (Map.Entry<String, String> header : headers) {
-                            System.out.println("Header:" + header.getKey() + " value:" + header.getValue());
+                            LOG.info("Header:" + header.getKey() + " value:" + header.getValue());
                         }
                         final byte[] resultBytes = result.getBytes();
                         final ChannelBuffer buffer = ChannelBuffers.buffer(resultBytes.length);
@@ -136,7 +140,7 @@ public class Stalker implements Runnable {
 
         final List<String> user = parameters.get("user");
         final String hashUser = BCrypt.hashpw(user.get(0), SuperFriender.GLOBAL_SALT);
-        System.out.println("hashUser:" + hashUser);
+        LOG.info("hashUser:" + hashUser);
         final List<String> urlParameter = parameters.get("url");
         final List<String> action = parameters.get(Yawner.ACTION);
         StalkItem[] stalkItems = new StalkItem[]{};
@@ -145,14 +149,14 @@ public class Stalker implements Runnable {
         switch (stalkerAction) {
             case CREATE: {
                 try {
-                    System.out.println(stalkerAction.toString());
+                    LOG.info(stalkerAction.toString());
                     final String url = urlParameter.get(0);
-                    System.out.println("url:" + url);
+                    LOG.info("url:" + url);
                     final SyndFeed document = Feed.getFeed(url);
                     final String title = document.getTitle();
-                    System.out.println("title:" + title);
+                    LOG.info("title:" + title);
                     final String description = document.getDescription();
-                    System.out.println("description:" + description);
+                    LOG.info("description:" + description);
 
                     threadSafeSession.execute(String.format("insert into Stalk(humanId, mood, urlHash, value) values('%s','%c','%s','%s');", hashUser, MOOD.LIFE.ALIVE.state, url, new Gson().toJson(new StalkItem(url, title, description))));//Yet to hash the urlHash value
 
@@ -161,13 +165,13 @@ public class Stalker implements Runnable {
                         for (final StalkItem feedItem : Feed.getFeedEntries(url)) {
 
                             final String feedItemTitle = feedItem.title;
-                            System.out.println("title:" + feedItemTitle);
+                            LOG.info("title:" + feedItemTitle);
 
                             final String feedItemLink = feedItem.link;
-                            System.out.println("link:" + feedItemLink);
+                            LOG.info("link:" + feedItemLink);
 
                             final String feedItemDescription = feedItem.description;
-                            System.out.println("description:" + feedItemDescription);
+                            LOG.info("description:" + feedItemDescription);
 
                             final ResultSet yawnRowsNotRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashUser, MOOD.LIFE.ALIVE.state, feedItemLink));
                             final ResultSet yawnRowsDidRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashUser, MOOD.LIFE.DEAD.state, feedItemLink));
@@ -192,7 +196,7 @@ public class Stalker implements Runnable {
             }
             break;
             case READ: {
-                System.out.println("Values in table as follows");
+                LOG.info("Values in table as follows");
                 final ResultSet execute = threadSafeSession.execute(String.format("select * from Stalk where humanId='%s'", hashUser));
                 final List<Row> all = execute.all();
 
@@ -205,9 +209,9 @@ public class Stalker implements Runnable {
             break;
             case DELETE: {
                 try {
-                    System.out.println(stalkerAction.toString());
+                    LOG.info(stalkerAction.toString());
                     final String source = urlParameter.get(0);
-                    System.out.println("url:" + source);
+                    LOG.info("url:" + source);
                     threadSafeSession.execute(String.format("delete from Stalk where humanId='%s' and mood='%c' and urlHash='%s';", hashUser, MOOD.LIFE.ALIVE.state, source));//Yet to hash the urlHash value
 
 
@@ -223,7 +227,7 @@ public class Stalker implements Runnable {
                     }
 
                     if(!source.startsWith("http:")){
-                        System.out.println("Deleted source:" + source);
+                        LOG.info("Deleted source:" + source);
                         threadSafeSession.execute(String.format("delete from SuperFriend where humanId='%s' and humanSuperFriend='%s';",
                                 source,
                                 hashUser

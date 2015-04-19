@@ -11,6 +11,8 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -22,6 +24,8 @@ import java.util.*;
  * Time: 12:51 PM
  */
 public class Harvester implements Runnable {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Harvester.class);
 
     private final String databaseIp;
 
@@ -43,7 +47,7 @@ public class Harvester implements Runnable {
             public void run() {
                 try {
                     final Date startTime = Calendar.getInstance().getTime();
-                    System.out.println(String.format("Harvesting started at %s...", new SimpleDateFormat("MM-dd HH:mm:ss").format(startTime)));
+                    LOG.info(String.format("Harvesting started at %s...", new SimpleDateFormat("MM-dd HH:mm:ss").format(startTime)));
 
                     final ResultSet executeStalkFetch = threadSafeSession.execute("select * from Stalk;");
 
@@ -51,7 +55,7 @@ public class Harvester implements Runnable {
 
                     int totalInsertions = 0;
 
-                    System.out.println("Number of feeds:" + allStalks.size());
+                    LOG.info("Number of feeds:" + allStalks.size());
 
                     for (final Row stalk : allStalks) {
 
@@ -60,7 +64,7 @@ public class Harvester implements Runnable {
 
                         try {//Please match this with Stalker first time feed setup
                             final String feedLink = stalkItem.link;
-                            System.out.println("Processing feed:" + feedLink);
+                            LOG.info("Processing feed:" + feedLink);
 
                             for (final StalkItem stalkFeedItem : Feed.getFeedEntries(feedLink)) {
                                 final String feedItemTitle = stalkFeedItem.title;
@@ -86,7 +90,7 @@ public class Harvester implements Runnable {
 
                     final Date endTime = Calendar.getInstance().getTime();
                     System.out.printf("Harvested finished at %s harvesting %d sessions", new SimpleDateFormat("MM-dd HH:mm:ss").format(endTime), totalInsertions);
-                    System.out.println("Harvesting took " + (endTime.getTime() - startTime.getTime()) + "  milliseconds");
+                    LOG.info("Harvesting took " + (endTime.getTime() - startTime.getTime()) + "  milliseconds");
 
                 } catch (final Exception e) {
                     e.printStackTrace(System.err);

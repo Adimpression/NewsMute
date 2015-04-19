@@ -19,6 +19,8 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.http.*;
 import org.mindrot.jbcrypt.BCrypt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -35,6 +37,8 @@ import java.util.concurrent.Executors;
  * Time: 2:23 PM
  */
 public class SuperFriender implements Runnable {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SuperFriender.class);
 
     public static final String GLOBAL_SALT = "$2a$10$SzCczWIG7DFBKi2jr8yDz.";
 
@@ -66,7 +70,7 @@ public class SuperFriender implements Runnable {
             connect.execute(DBScripts.CREATE_SUPERFRIEND);
 
         } catch (final Exception e) {//Table already exists
-            System.out.println(e.getMessage());
+            LOG.info(e.getMessage());
         }
 
 
@@ -82,7 +86,7 @@ public class SuperFriender implements Runnable {
                         final HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_0, HttpResponseStatus.OK);
                         final List<Map.Entry<String, String>> headers = request.getHeaders();
                         for (Map.Entry<String, String> header : headers) {
-                            System.out.println("Header:" + header.getKey() + " value:" + header.getValue());
+                            LOG.info("Header:" + header.getKey() + " value:" + header.getValue());
                         }
                         final byte[] resultBytes = result.getBytes();
                         final ChannelBuffer buffer = ChannelBuffers.buffer(resultBytes.length);
@@ -115,9 +119,9 @@ public class SuperFriender implements Runnable {
         if (userParameterValues != null) {
             //@TODO: Remove unwanted emails such as unsubscribe@mailinglist.com(limit by keyword) or 123123980u09203412341343@_23e234LLgmail.com(limit by length)
             final String user = userParameterValues.get(0);
-            System.out.println("user:" + user);
+            LOG.info("user:" + user);
             final String hasheduser = BCrypt.hashpw(user, new String(SuperFriender.GLOBAL_SALT));
-            System.out.println("hashed user:" + hasheduser);
+            LOG.info("hashed user:" + hasheduser);
             if (usersParameterValues != null) {//Adding friends
 
                 final String[] newContacts = usersParameterValues.get(0).split("\\|");

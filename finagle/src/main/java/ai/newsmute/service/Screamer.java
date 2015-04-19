@@ -22,6 +22,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.mindrot.jbcrypt.BCrypt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.net.URL;
@@ -39,6 +41,8 @@ import java.util.concurrent.Executors;
  * Time: 2:23 PM
  */
 public class Screamer implements Runnable {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Screamer.class);
 
     private final String port;
 
@@ -68,7 +72,7 @@ public class Screamer implements Runnable {
         try {
             connect.execute(DBScripts.CREATE_SCREAM);
         } catch (final Exception e) {//Table already exists
-            System.out.println(e.getMessage());
+            LOG.info(e.getMessage());
         }
 
 
@@ -114,11 +118,11 @@ public class Screamer implements Runnable {
             if(user != null && urlParameter != null){
                 for (String s : urlParameter) {
                     try {
-                        System.out.println("url:" + s);
+                        LOG.info("url:" + s);
                         final String unhashedUser = user.get(0);
-                        System.out.println("user:" +unhashedUser);
+                        LOG.info("user:" +unhashedUser);
                         final String hashedUser = BCrypt.hashpw(unhashedUser, SuperFriender.GLOBAL_SALT);
-                        System.out.println("hashed user:" + hashedUser);
+                        LOG.info("hashed user:" + hashedUser);
 
                         final List<Row> screamRowsCounselled = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashedUser, MOOD.LIFE.DEAD.state, s)).all();
                         if(screamRowsCounselled.isEmpty()){
@@ -126,7 +130,7 @@ public class Screamer implements Runnable {
                                 final Document document = Jsoup.parse(new URL(s).openStream(), "UTF-8", s);
 
                                 final String title = document.getElementsByTag("title").first().text();
-                                System.out.println("title:" + title);
+                                LOG.info("title:" + title);
                                 String description = title;
                                 for (final Element meta : document.getElementsByTag("meta")) {
                                     if (meta.attr("name").equalsIgnoreCase("description")) {
@@ -134,14 +138,14 @@ public class Screamer implements Runnable {
                                         break;
                                     }
                                 }
-                                System.out.println("description:" + description);
+                                LOG.info("description:" + description);
                                 threadSafeSession.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", hashedUser, MOOD.LIFE.ALIVE.state, s, new Gson().toJson(new YawnItem(s, title, description, hashedUser, "0")), DBScripts.YAWN_COUNSEL));//Yet to hash the urlHash value
                             } catch (final Throwable e) {//Leave the insert here alone. Works as a default if the internet connectivity decides to break. We discovered this when application was running on a non www accessible server
                                 e.printStackTrace(System.out);
                                 threadSafeSession.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", hashedUser, MOOD.LIFE.ALIVE.state, s, new Gson().toJson(new YawnItem(s, s, s, hashedUser, "0")), DBScripts.YAWN_COUNSEL));//Yet to hash the urlHash value
                             }
                         } else{
-                            System.out.println("Ignoring already screamed item for humanId:" + hashedUser + " for url:" + s);
+                            LOG.info("Ignoring already screamed item for humanId:" + hashedUser + " for url:" + s);
                         }
                     } catch (final Throwable e) {
                         e.printStackTrace(System.err);

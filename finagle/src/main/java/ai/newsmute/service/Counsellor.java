@@ -6,6 +6,8 @@ import ai.newsmute.model.YawnItem;
 import ai.newsmute.util.Printer;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -17,6 +19,8 @@ import java.util.*;
  * Time: 12:51 PM
  */
 public class Counsellor implements Runnable {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Counsellor.class);
 
     private final String databaseIp;
 
@@ -64,9 +68,9 @@ public class Counsellor implements Runnable {
                                 } else if (yawnRowsNotRead.size() != 0) {
                                     final Row yawnRow = yawnRowsNotRead.get(0);
                                     final YawnItem yawnFeedItem = new Gson().fromJson(yawnRow.getString("value"), YawnItem.class);
-                                    System.out.println("Fetched:" + yawnFeedItem.toString());
+                                    LOG.info("Fetched:" + yawnFeedItem.toString());
                                     yawnFeedItem.shock();
-                                    System.out.println("Inserting:" + yawnFeedItem.toString());
+                                    LOG.info("Inserting:" + yawnFeedItem.toString());
                                     threadSafeSession.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", friend, MOOD.LIFE.ALIVE.state, yawnRow.getString("urlHash"), new Gson().toJson(yawnFeedItem), DBScripts.YAWN_COUNSELLED_TTL));
                                 }
 
@@ -81,14 +85,14 @@ public class Counsellor implements Runnable {
 
                                 totalInsertions++;
                             } else {
-                                //System.out.println("Ignoring already counselled item");
+                                //LOG.info("Ignoring already counselled item");
                             }
                         }
                     }
 
                     final Date endTime = Calendar.getInstance().getTime();
                     System.out.printf("Counselling finished at %s counselling %d sessions", new SimpleDateFormat("MM-dd HH:mm:ss").format(endTime), totalInsertions);
-                    System.out.println("Counselling took %d" + (endTime.getTime() - startTime.getTime()) + "  milliseconds");
+                    LOG.info("Counselling took %d" + (endTime.getTime() - startTime.getTime()) + "  milliseconds");
 
                 } catch (final Exception e) {
                     e.printStackTrace(System.err);

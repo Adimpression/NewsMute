@@ -24,6 +24,8 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.http.*;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.mindrot.jbcrypt.BCrypt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
@@ -110,6 +112,8 @@ import java.util.concurrent.Executors;
  */
 public class Guardian implements Runnable {
 
+    private static final Logger LOG = LoggerFactory.getLogger(Guardian.class);
+
     public static final String X_SESSION_HEADER = "x-session-header";
 
     private final String port;
@@ -139,14 +143,14 @@ public class Guardian implements Runnable {
         try {
             connect.execute(DBScripts.CREATE_GUARDIAN);
         } catch (final Exception e) {//Table already exists
-            System.out.println(e.getMessage());
+            LOG.info(e.getMessage());
         }
         //Don't merge up and down try/catches, we need to see the failure upon consecutive runs
         try {
             //threadSafeSession.execute("drop table Guardian;");
             connect.execute(DBScripts.CREATE_SESSION);
         } catch (final Exception e) {//Table already exists
-            System.out.println(e.getMessage());
+            LOG.info(e.getMessage());
         }
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
@@ -161,7 +165,7 @@ public class Guardian implements Runnable {
                         final HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 
                         final String cookieValue = request.getHeader(X_SESSION_HEADER);
-                        System.out.println(X_SESSION_HEADER + ":" + cookieValue);
+                        LOG.info(X_SESSION_HEADER + ":" + cookieValue);
 
                         final Return<ReturnValueGuardian> result;
 
@@ -171,10 +175,10 @@ public class Guardian implements Runnable {
 
                             final List<String> user = parameters.get("user");
                             final String hashUser = BCrypt.hashpw(user.get(0), SuperFriender.GLOBAL_SALT);
-                            System.out.println("hashUser:" + hashUser);
+                            LOG.info("hashUser:" + hashUser);
 
                             final String humanIdHash = blockingSessionRead(cookieValue);
-                            System.out.println("humanIdHash:" + humanIdHash);
+                            LOG.info("humanIdHash:" + humanIdHash);
 
                             if (humanIdHash != null) {
                                 if (humanIdHash.equals(hashUser)) {
@@ -182,18 +186,18 @@ public class Guardian implements Runnable {
                                     httpResponse.setHeader(X_SESSION_HEADER, cookieValue);
                                     result = new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.OK)}), "Session ok", "OK");
                                 } else {//Crazy stuff, either the session was hijacked our we did a client programming mess
-                                    System.out.println("Session present, but humanId hashes don't match! Resetting session to empty string.");
+                                    LOG.info("Session present, but humanId hashes don't match! Resetting session to empty string.");
                                     httpResponse.setHeader(X_SESSION_HEADER, "");
                                     result = new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.ERROR)}), "Session matched but users don't match", "OK");
                                 }
                             } else {//Wrong session, bad bad bad
-                                System.out.println("No such session! Resetting session to empty string.");
+                                LOG.info("No such session! Resetting session to empty string.");
                                 httpResponse.setHeader(X_SESSION_HEADER, "");
                                 result = new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.ERROR)}), "No such session", "OK");
                             }
 
                         } else {//We need to create a session
-                            System.out.println("COOKIE IS MISSING");
+                            LOG.info("COOKIE IS MISSING");
 
                             result = blocking(request);
 
@@ -204,12 +208,12 @@ public class Guardian implements Runnable {
                                     blockingSessionWrite(randomUnique, guardianItem.humanIdHash);
                                     httpResponse.setHeader(X_SESSION_HEADER, randomUnique);
                                 } else if (guardianItem.status.equals(GuardianItem.ERROR)) {
-                                    System.out.println(result.returnMessage);
+                                    LOG.info(result.returnMessage);
                                 } else {
-                                    System.out.println("UNIDENTIFIED ERROR");
+                                    LOG.info("UNIDENTIFIED ERROR");
                                 }
                             } else {
-                                System.out.println("UNIDENTIFIED ERROR");
+                                LOG.info("UNIDENTIFIED ERROR");
                             }
                         }
 
@@ -249,13 +253,13 @@ public class Guardian implements Runnable {
 
         final List<String> user = parameters.get("user");
         final String hashUser = BCrypt.hashpw(user.get(0), SuperFriender.GLOBAL_SALT);
-        System.out.println("hashUser:" + hashUser);
+        LOG.info("hashUser:" + hashUser);
         final List<String> tokenParameter = parameters.get("token");
         final String token = tokenParameter.get(0);
-        System.out.println("token:" + token);
+        LOG.info("token:" + token);
         final List<String> action = parameters.get(Yawner.ACTION);
         final GuardianAction guardianAction = GuardianAction.valueOf(action.get(0));
-        System.out.println("guardianAction:" + guardianAction.toString());
+        LOG.info("guardianAction:" + guardianAction.toString());
 
         switch (guardianAction) {
             case CREATE: {
