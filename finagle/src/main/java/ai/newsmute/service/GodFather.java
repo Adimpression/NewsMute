@@ -170,7 +170,7 @@ public class GodFather implements Runnable {
 
     private String blockingSessionRead(final String sessionId) {
         final ResultSet execute = threadSafeSession.execute(String.format("select * from Session where sessionId='%s'", sessionId));
-        for (final Row row : execute.all()) {
+        for (final Row row : execute) {
             final String aStoredSessionId = row.getString("sessionId");
             if(aStoredSessionId.equals(sessionId)){
                 return  row.getString("value");
