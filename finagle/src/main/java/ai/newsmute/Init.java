@@ -4,6 +4,8 @@ import ai.newsmute.model.*;
 import ai.newsmute.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,9 @@ import org.springframework.stereotype.Component;
 @SpringBootApplication
 @Component
 public class Init implements CommandLineRunner {
+
+    @Autowired
+    AutowireCapableBeanFactory autowire;
 
     private static final Logger LOG = LoggerFactory.getLogger(Init.class);
 
