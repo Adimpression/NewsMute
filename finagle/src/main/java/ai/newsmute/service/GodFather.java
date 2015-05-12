@@ -21,6 +21,8 @@ import org.jboss.netty.handler.codec.http.*;
 import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
@@ -52,6 +54,9 @@ public class GodFather implements Runnable {
     private Cluster cluster;
 
     private Session threadSafeSession;
+
+    @Value("${valid.email.domains}")
+    public String[] validEmailDomains;
 
     public GodFather(final String bindIp, final String port, final String databaseIp) {
         this.bindIp = bindIp;
