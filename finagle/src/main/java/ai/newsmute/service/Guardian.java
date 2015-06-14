@@ -5,9 +5,7 @@ import ai.newsmute.model.GuardianItem;
 import ai.newsmute.model.Return;
 import ai.newsmute.model.ReturnValueGuardian;
 import ai.newsmute.util.Printer;
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import com.amazonaws.services.dynamodbv2.document.Item;
-import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.document.*;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
@@ -149,20 +147,28 @@ public class Guardian implements Runnable {
      */
     @Override
     public void run() {
-        this.open(databaseIp);
+        switch (db) {
+            case DynamoDB:
+                break;
+            case Cassandra:
+                this.open(databaseIp);
 
-        final Session connect = cluster.connect("NewsMute");
-        try {
-            connect.execute(DBScripts.CREATE_GUARDIAN);
-        } catch (final Exception e) {//Table already exists
-            LOG.info(e.getMessage());
-        }
-        //Don't merge up and down try/catches, we need to see the failure upon consecutive runs
-        try {
-            //threadSafeSession.execute("drop table Guardian;");
-            connect.execute(DBScripts.CREATE_SESSION);
-        } catch (final Exception e) {//Table already exists
-            LOG.info(e.getMessage());
+                final Session connect = cluster.connect("NewsMute");
+                try {
+                    connect.execute(DBScripts.CREATE_GUARDIAN);
+                } catch (final Exception e) {//Table already exists
+                    LOG.info(e.getMessage());
+                }
+                //Don't merge up and down try/catches, we need to see the failure upon consecutive runs
+                try {
+                    //threadSafeSession.execute("drop table Guardian;");
+                    connect.execute(DBScripts.CREATE_SESSION);
+                } catch (final Exception e) {//Table already exists
+                    LOG.info(e.getMessage());
+                }
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown DB Type:" + db);
         }
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
@@ -275,13 +281,20 @@ public class Guardian implements Runnable {
 
         switch (guardianAction) {
             case CREATE: {
-                threadSafeSession.execute(String.format("insert into Guardian(humanId, value) values('%s','%s');", hashUser, BCrypt.hashpw(token, BCrypt.gensalt(12))));
+                switch (db) {
+                    case DynamoDB:
+                        tableGuardian.putItem(new Item().withPrimaryKey("humanId", hashUser).withString("value", BCrypt.hashpw(token, BCrypt.gensalt(12)))));
+                        break;
+                    case Cassandra:
+                        threadSafeSession.execute(String.format("insert into Guardian(humanId, value) values('%s','%s');", hashUser, BCrypt.hashpw(token, BCrypt.gensalt(12))));
+                        break;
+                    default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
+                }
                 new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.OK)}), "Create", "OK");
             }
             case READ: {
-                final Row row = blockingReadGuardianEntry(hashUser);
-                if (row != null) {
-                    final String tokenHash = row.getString("value");
+                final String tokenHash = blockingReadGuardianEntry(hashUser);
+                if (tokenHash != null) {
                     if (BCrypt.checkpw(token, tokenHash)) {
                         return new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, tokenHash, GuardianItem.OK)}), "Password correct", "OK");
                     } else {
@@ -299,13 +312,24 @@ public class Guardian implements Runnable {
         return new Return<ReturnValueGuardian>(new ReturnValueGuardian(new GuardianItem[]{new GuardianItem(hashUser, null, GuardianItem.ERROR)}), "Unhandled operation", "ERROR");
     }
 
-    private Row blockingReadGuardianEntry(final String hashUser) {
-        final ResultSet execute = threadSafeSession.execute(String.format("select * from Guardian where humanId='%s'", hashUser));
-        final List<Row> all = execute.all();
-        if(all.isEmpty()){
-            return null;
-        } else {
-            return all.get(0);
+    private String blockingReadGuardianEntry(final String hashUser) {
+        switch (db) {
+            case DynamoDB:
+                return tableGuardian.getItem(new PrimaryKey().addComponents(new KeyAttribute("humanId", hashUser))).getString("humanId");
+            case Cassandra:
+                    final ResultSet execute = threadSafeSession.execute(String.format("select * from Guardian where humanId='%s'", hashUser));
+                    final List<Row> all = execute.all();
+                    if(all.isEmpty()){
+                        return null;
+                    } else {
+                        final Row row = all.get(0);
+                        if (row == null) {
+                            return null;
+                        } else {
+                            return blockingReadGuardianEntry(hashUser);
+                        }
+                    }
+            default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
         }
     }
 
@@ -329,8 +353,7 @@ public class Guardian implements Runnable {
             case Cassandra:
                 threadSafeSession.execute(String.format("insert into Session(sessionId, value) values('%s','%s') USING TTL %d;", sessionId, humanId, DBScripts.SESSION_TTL));
                 break;
-            default:
-                throw new UnsupportedOperationException("Unknown DB Type:" + db);
+            default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
         }
     }
 
