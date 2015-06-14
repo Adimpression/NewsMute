@@ -31,4 +31,9 @@ public class DBScripts {
 
     public static final Object HARVESTED_YAWN_TTL = 86400 * 1;//One day //(Please take into account Cassandra tombstone limitations on queue like implementations)
     public static final Object INITIAL_INSERT_TTL = 86400 * 1;//One day //(Please take into account Cassandra tombstone limitations on queue like implementations)
+
+    public enum DB{
+        DynamoDB,
+        Cassandra
+    }
 }

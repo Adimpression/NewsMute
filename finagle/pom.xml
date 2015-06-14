@@ -136,6 +136,15 @@
         </dependency>
         <!-- End of Spring Boot Dependencies-->
 
+        <!-- AWS Dependencies -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+        <!-- End of AWS Dependencies -->
+
+
     </dependencies>
 
 

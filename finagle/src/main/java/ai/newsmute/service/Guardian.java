@@ -5,6 +5,9 @@ import ai.newsmute.model.GuardianItem;
 import ai.newsmute.model.Return;
 import ai.newsmute.model.ReturnValueGuardian;
 import ai.newsmute.util.Printer;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.Table;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
@@ -26,6 +29,7 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
@@ -116,6 +120,9 @@ public class Guardian implements Runnable {
 
     public static final String X_SESSION_HEADER = "x-session-header";
 
+    @Autowired
+    public DBScripts.DB db;
+
     private final String port;
 
     private final String bindIp;
@@ -125,6 +132,11 @@ public class Guardian implements Runnable {
     private Cluster cluster;
 
     private Session threadSafeSession;
+
+    private DynamoDB dynamoDB;
+
+    private Table tableGuardian;
+    private Table tableSession;
 
     public Guardian(final String bindIp, final String port, final String databaseIp) {
         this.bindIp = bindIp;
@@ -310,7 +322,16 @@ public class Guardian implements Runnable {
     }
 
     private void  blockingSessionWrite(final String sessionId, final String humanId) {
-        threadSafeSession.execute(String.format("insert into Session(sessionId, value) values('%s','%s') USING TTL %d;", sessionId, humanId, DBScripts.SESSION_TTL));
+        switch (db) {
+            case DynamoDB:
+                tableSession.putItem(new Item().withPrimaryKey("sessionId", sessionId).withString("humanId", humanId));
+                break;
+            case Cassandra:
+                threadSafeSession.execute(String.format("insert into Session(sessionId, value) values('%s','%s') USING TTL %d;", sessionId, humanId, DBScripts.SESSION_TTL));
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown DB Type:" + db);
+        }
     }
 
     void open(String node) {
