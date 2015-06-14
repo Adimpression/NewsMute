@@ -118,14 +118,14 @@ public class Guardian implements Runnable {
 
     public static final String X_SESSION_HEADER = "x-session-header";
 
-    @Autowired
-    public DBScripts.DB db;
-
     private final String port;
 
     private final String bindIp;
 
     private final String databaseIp;
+
+    @Autowired
+    public DBScripts.DB db;
 
     private Cluster cluster;
 
