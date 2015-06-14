@@ -283,7 +283,7 @@ public class Guardian implements Runnable {
             case CREATE: {
                 switch (db) {
                     case DynamoDB:
-                        tableGuardian.putItem(new Item().withPrimaryKey("humanId", hashUser).withString("value", BCrypt.hashpw(token, BCrypt.gensalt(12)))));
+                        tableGuardian.putItem(new Item().withPrimaryKey("humanId", hashUser).withString("value", BCrypt.hashpw(token, BCrypt.gensalt(12))));
                         break;
                     case Cassandra:
                         threadSafeSession.execute(String.format("insert into Guardian(humanId, value) values('%s','%s');", hashUser, BCrypt.hashpw(token, BCrypt.gensalt(12))));
