@@ -334,15 +334,27 @@ public class Guardian implements Runnable {
     }
 
     private String blockingSessionRead(final String sessionId) {
-        final Session connect = cluster.connect("NewsMute");
-        final ResultSet execute = connect.execute(String.format("select * from Session where sessionId='%s'", sessionId));
-        for (final Row row : execute.all()) {
-            final String aStoredSessionId = row.getString("sessionId");
-            if(aStoredSessionId.equals(sessionId)){
-                return  row.getString("value");
-            }
+        switch (db) {
+            case DynamoDB:
+                    final Item item = tableSession.getItem(new PrimaryKey("sessionId", sessionId));
+                    if (item == null) {
+                        return null;
+                    } else {
+                        return item.getString("value");
+                    }
+                break;
+            case Cassandra:
+                    final ResultSet execute = threadSafeSession.execute(String.format("select * from Session where sessionId='%s'", sessionId));
+                    for (final Row row : execute.all()) {
+                        final String aStoredSessionId = row.getString("sessionId");
+                        if(aStoredSessionId.equals(sessionId)){
+                            return  row.getString("value");
+                        }
+                    }
+                    return null;
+                break;
+            default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
         }
-        return null;
     }
 
     private void  blockingSessionWrite(final String sessionId, final String humanId) {
