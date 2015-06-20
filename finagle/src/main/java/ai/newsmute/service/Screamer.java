@@ -145,7 +145,7 @@ public class Screamer implements Runnable {
                         final boolean noRecord;
                         switch (db) {
                             case DynamoDB:
-                                noRecord = tableYawn.getItem(new PrimaryKey().addComponents(new KeyAttribute("humanId", hashedUser), new KeyAttribute("mood", MOOD.LIFE.DEAD.state), new KeyAttribute("urlHash", s))) == null;
+                                noRecord = tableYawn.getItem("humanId", hashedUser, "ranger", MOOD.LIFE.DEAD.state + s) == null;
                                 break;
                             case Cassandra:
                                 final List<Row> screamRowsCounselled = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashedUser, MOOD.LIFE.DEAD.state, s)).all();
