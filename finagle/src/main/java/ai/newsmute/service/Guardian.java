@@ -342,7 +342,6 @@ public class Guardian implements Runnable {
                     } else {
                         return item.getString("value");
                     }
-                break;
             case Cassandra:
                     final ResultSet execute = threadSafeSession.execute(String.format("select * from Session where sessionId='%s'", sessionId));
                     for (final Row row : execute.all()) {
@@ -352,7 +351,6 @@ public class Guardian implements Runnable {
                         }
                     }
                     return null;
-                break;
             default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
         }
     }
