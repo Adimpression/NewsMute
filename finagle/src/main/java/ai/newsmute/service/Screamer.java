@@ -173,7 +173,7 @@ public class Screamer implements Runnable {
 
                                 switch (db) {
                                     case DynamoDB:
-                                        tableScream.putItem(new Item().withPrimaryKey(new PrimaryKey(new KeyAttribute("humanId", hashedUser),new KeyAttribute("mood", MOOD.LIFE.ALIVE.state), new KeyAttribute("urlHash", s))).withString("value", value));
+                                        tableScream.putItem(new Item().withPrimaryKey("humanId", hashedUser, "ranger", MOOD.LIFE.ALIVE.state + s).withString("value", value));
                                         break;
                                     case Cassandra:
                                         threadSafeSession.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", hashedUser, MOOD.LIFE.ALIVE.state, s, value, DBScripts.YAWN_COUNSEL));//Yet to hash the urlHash value
@@ -188,7 +188,7 @@ public class Screamer implements Runnable {
 
                                 switch (db) {
                                     case DynamoDB:
-                                        tableScream.putItem(new Item().withPrimaryKey(new PrimaryKey(new KeyAttribute("humanId", hashedUser),new KeyAttribute("mood", MOOD.LIFE.ALIVE.state), new KeyAttribute("urlHash", s))).withString("value", defaultValue));
+                                        tableScream.putItem(new Item().withPrimaryKey("humanId", hashedUser, "ranger", MOOD.LIFE.ALIVE.state + s).withString("value", defaultValue));
                                         break;
                                     case Cassandra:
                                         threadSafeSession.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", hashedUser, MOOD.LIFE.ALIVE.state, s, defaultValue, DBScripts.YAWN_COUNSEL));//Yet to hash the urlHash value
