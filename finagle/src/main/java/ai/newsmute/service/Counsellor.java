@@ -4,10 +4,13 @@ import ai.newsmute.db.DBScripts;
 import ai.newsmute.db.MOOD;
 import ai.newsmute.model.YawnItem;
 import ai.newsmute.util.Printer;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.Table;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -24,9 +27,19 @@ public class Counsellor implements Runnable {
 
     private final String databaseIp;
 
+
+    @Autowired
+    public DBScripts.DB db;
+
     private Cluster cluster;
 
     private Session threadSafeSession;
+
+    private DynamoDB dynamoDB;
+
+    private Table tableStalk;
+    private Table tableYawn;
+
 
     public Counsellor(final String databaseIp) {
         this.databaseIp = databaseIp;
@@ -34,6 +47,15 @@ public class Counsellor implements Runnable {
 
     @Override
     public void run() {
+
+        switch (db) {
+            case DynamoDB:
+                break;
+            case Cassandra:
+                this.open(databaseIp);
+                break;
+            default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
+        }
         this.open(databaseIp);
 
         final Timer timer = new Timer();
@@ -43,7 +65,7 @@ public class Counsellor implements Runnable {
                 try {
                     final Date startTime = Calendar.getInstance().getTime();
 
-                    System.out.printf("\nCounselling started at %s...\n", new SimpleDateFormat("MM-dd HH:mm:ss").format(startTime));
+                    LOG.info("Counselling started at {}...", new SimpleDateFormat("MM-dd HH:mm:ss").format(startTime));
 
                     int totalInsertions = 0;
 
@@ -91,7 +113,7 @@ public class Counsellor implements Runnable {
                     }
 
                     final Date endTime = Calendar.getInstance().getTime();
-                    System.out.printf("Counselling finished at %s counselling %d sessions", new SimpleDateFormat("MM-dd HH:mm:ss").format(endTime), totalInsertions);
+                    LOG.info("Counselling finished at {} counselling {} sessions", new SimpleDateFormat("MM-dd HH:mm:ss").format(endTime), totalInsertions);
                     LOG.info("Counselling took %d" + (endTime.getTime() - startTime.getTime()) + "  milliseconds");
 
                 } catch (final Exception e) {
