@@ -88,6 +88,7 @@ public class Stalker implements Runnable {
 
     private Table tableStalk;
     private Table tableYawn;
+    private Table tableSuperFriend;
 
     public Stalker(final String bindIp, final String port, final String databaseIp) {
         this.bindIp = bindIp;
@@ -231,26 +232,56 @@ public class Stalker implements Runnable {
                     LOG.info(stalkerAction.toString());
                     final String source = urlParameter.get(0);
                     LOG.info("url:" + source);
-                    threadSafeSession.execute(String.format("delete from Stalk where humanId='%s' and mood='%c' and urlHash='%s';", hashUser, MOOD.LIFE.ALIVE.state, source));//Yet to hash the urlHash value
 
+                    switch (db) {
+                        case DynamoDB:{
 
-                    final ResultSet execute = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' and mood='%c'", hashUser, MOOD.LIFE.ALIVE.state));
-                    final List<Row> all = execute.all();
+                            tableStalk.deleteItem("humanId", hashUser,"ranger", MOOD.LIFE.ALIVE.state + source);
 
-                    for (final Row row : all) {
-                        final YawnItem yawnItem = new Gson().fromJson(row.getString("value"), YawnItem.class);
+                            final ItemCollection<QueryOutcome> all = tableYawn.query("humanId", hashUser, new RangeKeyCondition("ranger").beginsWith(String.valueOf(MOOD.LIFE.ALIVE.state)));
 
-                        if (yawnItem.source.equals(source)) {
-                            threadSafeSession.execute(String.format("delete from Yawn where humanId='%s' and mood='%c' and urlHash='%s';", hashUser, MOOD.LIFE.ALIVE.state, yawnItem.link));
+                            for (final Item item : all) {
+                                final YawnItem yawnItem = new Gson().fromJson(item.getString("value"), YawnItem.class);
+
+                                if (yawnItem.source.equals(source)) {
+                                    tableYawn.deleteItem("humanId", hashUser, "ranger", MOOD.LIFE.ALIVE.state + yawnItem.link);
+                                }
+                            }
+                            break;
                         }
+                        case Cassandra:{
+                            threadSafeSession.execute(String.format("delete from Stalk where humanId='%s' and mood='%c' and urlHash='%s';", hashUser, MOOD.LIFE.ALIVE.state, source));//Yet to hash the urlHash value
+
+                            final ResultSet execute = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' and mood='%c'", hashUser, MOOD.LIFE.ALIVE.state));
+                            final List<Row> all = execute.all();
+
+                            for (final Row row : all) {
+                                final YawnItem yawnItem = new Gson().fromJson(row.getString("value"), YawnItem.class);
+
+                                if (yawnItem.source.equals(source)) {
+                                    threadSafeSession.execute(String.format("delete from Yawn where humanId='%s' and mood='%c' and urlHash='%s';", hashUser, MOOD.LIFE.ALIVE.state, yawnItem.link));
+                                }
+                            }
+                            break;
+                        }
+                        default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
                     }
 
                     if(!source.startsWith("http:")){
                         LOG.info("Deleted source:" + source);
-                        threadSafeSession.execute(String.format("delete from SuperFriend where humanId='%s' and humanSuperFriend='%s';",
-                                source,
-                                hashUser
+
+                        switch (db) {
+
+                            case DynamoDB:
+                                tableSuperFriend.deleteItem("humanId", source, "humanSuperFriend", hashUser);
+                                break;
+                            case Cassandra:
+                                threadSafeSession.execute(String.format("delete from SuperFriend where humanId='%s' and humanSuperFriend='%s';",
+                                        source,
+                                        hashUser
                                 ));
+                                break;
+                        }
                     }
 
                 } catch (Exception e) {
