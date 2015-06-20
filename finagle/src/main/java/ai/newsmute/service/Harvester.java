@@ -77,7 +77,7 @@ public class Harvester implements Runnable {
                                 final StalkItem stalkItem = new Gson().fromJson(stalk.getString("value"), StalkItem.class);
                                 final String humanId = stalk.getString("humanId");
 
-                                totalInsertions = doHarvestItem(totalInsertions, stalkItem, humanId);
+                                totalInsertions = doHarvestItem(stalkItem.link, humanId);
                             }
 
                             break;
@@ -90,7 +90,7 @@ public class Harvester implements Runnable {
                                 final StalkItem stalkItem = new Gson().fromJson(stalk.getString("value"), StalkItem.class);
                                 final String humanId = stalk.getString(0);
 
-                                totalInsertions = doHarvestItem(totalInsertions, stalkItem, humanId);
+                                totalInsertions = doHarvestItem(stalkItem.link, humanId);
                             }
                             break;
                         default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
@@ -111,9 +111,10 @@ public class Harvester implements Runnable {
         timer.scheduleAtFixedRate(task, 0, DBScripts.STALK_HARVESTER_REINCARNATION);//Every ten minutes
     }
 
-    private int doHarvestItem(int totalInsertions, final StalkItem stalkItem, final String humanId) {
+    private int doHarvestItem(final String feedLink, final String humanId) {
+        int totalInsertions = 0;
+
         try {//Please match this with Stalker first time feed setup
-            final String feedLink = stalkItem.link;
             LOG.info("Processing feed:" + feedLink);
 
             for (final StalkItem stalkFeedItem : Feed.getFeedEntries(feedLink)) {
