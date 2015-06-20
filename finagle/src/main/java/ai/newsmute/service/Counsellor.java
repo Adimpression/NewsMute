@@ -4,8 +4,9 @@ import ai.newsmute.db.DBScripts;
 import ai.newsmute.db.MOOD;
 import ai.newsmute.model.YawnItem;
 import ai.newsmute.util.Printer;
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.document.*;
+import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
+import com.amazonaws.services.dynamodbv2.document.spec.ScanSpec;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
@@ -37,8 +38,9 @@ public class Counsellor implements Runnable {
 
     private DynamoDB dynamoDB;
 
-    private Table tableStalk;
+    private Table tableScream;
     private Table tableYawn;
+    private Table tableSuperFriend;
 
 
     public Counsellor(final String databaseIp) {
@@ -69,10 +71,49 @@ public class Counsellor implements Runnable {
                     int totalInsertions = 0;
 
                     switch (db) {
+                        case DynamoDB:    {
+                            for (final Item screamRow : tableScream.scan()) {
 
-                        case DynamoDB:
+                                //@FIXME: Duplicate fetches. Can we fetch by partition? For, humanId on one partition will be the same
+                                final ItemCollection<QueryOutcome> allSuperFriends = tableSuperFriend.query("humanId", screamRow.getString("humanId"));
+
+                                for (final Item friendRow : allSuperFriends) {//Ideally, all screams are not friends of this person, but we do so for now for testing
+                                    final String humanId = friendRow.getString("humanId");
+                                    final String friend = friendRow.getString("humanSuperFriend");
+
+                                    if (MOOD.DESTINY(screamRow.getString("mood")).life == MOOD.LIFE.ALIVE) {
+
+                                        final String urlHash = screamRow.getString("urlHash");
+                                        final String value = screamRow.getString("value");
+
+                                        final Item yawnRowsNotRead = tableYawn.getItem("humanId", friend, "ranger", MOOD.LIFE.DEAD.state + urlHash);
+                                        final Item yawnRowsRead = tableYawn.getItem("humanId", friend, "ranger", MOOD.LIFE.DEAD.state + urlHash);
+
+                                        if (yawnRowsNotRead == null && yawnRowsRead == null) {
+                                            threadSafeSession.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", friend, MOOD.LIFE.ALIVE.state, urlHash, value, DBScripts.YAWN_COUNSELLED_TTL));
+                                        } else if (yawnRowsNotRead != null) {
+                                            final YawnItem yawnFeedItem = new Gson().fromJson(yawnRowsNotRead.getString("value"), YawnItem.class);
+                                            LOG.info("Fetched:" + yawnFeedItem.toString());
+                                            yawnFeedItem.shock();
+                                            LOG.info("Inserting:" + yawnFeedItem.toString());
+                                            threadSafeSession.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", friend, MOOD.LIFE.ALIVE.state, yawnRowsNotRead.getString("urlHash"), new Gson().toJson(yawnFeedItem), DBScripts.YAWN_COUNSELLED_TTL));
+                                        }
+
+                                        //Removing scream record as alive
+                                        tableScream.deleteItem("humanId", humanId,"ranger", MOOD.LIFE.ALIVE.state + urlHash);//Yet to hash the urlHash value
+
+                                        //Inserting scream record as dead
+                                        tableScream.putItem(new Item().withPrimaryKey("humanId", humanId, "ranger",  MOOD.LIFE.DEAD.state + urlHash).withString("value", value));
+
+                                        totalInsertions++;
+                                    } else {
+                                        //LOG.info("Ignoring already counselled item");
+                                    }
+                                }
+                            }
                             break;
-                        case Cassandra:
+                        }
+                        case Cassandra:{
                             for (final Row screamRow : threadSafeSession.execute("select * from Scream;")) {
                                 //@FIXME: Duplicate fetches. Can we fetch by partition? For, humanId on one partition will be the same
                                 final List<Row> allSuperFriends = threadSafeSession.execute(String.format("select * from SuperFriend where humanId='%s'", screamRow.getString(0))).all();
@@ -116,6 +157,7 @@ public class Counsellor implements Runnable {
                                 }
                             }
                             break;
+                        }
                         default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
                     }
 
