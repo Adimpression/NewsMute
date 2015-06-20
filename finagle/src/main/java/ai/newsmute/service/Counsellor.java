@@ -56,7 +56,6 @@ public class Counsellor implements Runnable {
                 break;
             default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
         }
-        this.open(databaseIp);
 
         final Timer timer = new Timer();
         final TimerTask task = new TimerTask() {
@@ -69,48 +68,57 @@ public class Counsellor implements Runnable {
 
                     int totalInsertions = 0;
 
-                    for (final Row screamRow : threadSafeSession.execute("select * from Scream;")) {
-                        //@FIXME: Duplicate fetches. Can we fetch by partition? For, humanId on one partition will be the same
-                        final List<Row> allSuperFriends = threadSafeSession.execute(String.format("select * from SuperFriend where humanId='%s'", screamRow.getString(0))).all();
+                    switch (db) {
 
-                        for (final Row friendRow : allSuperFriends) {//Ideally, all screams are not friends of this person, but we do so for now for testing
-                            final String humanId = friendRow.getString("humanId");
-                            final String friend = friendRow.getString("humanSuperFriend");
+                        case DynamoDB:
+                            break;
+                        case Cassandra:
+                            for (final Row screamRow : threadSafeSession.execute("select * from Scream;")) {
+                                //@FIXME: Duplicate fetches. Can we fetch by partition? For, humanId on one partition will be the same
+                                final List<Row> allSuperFriends = threadSafeSession.execute(String.format("select * from SuperFriend where humanId='%s'", screamRow.getString(0))).all();
 
-                            if (MOOD.DESTINY(screamRow.getString("mood")).life == MOOD.LIFE.ALIVE) {
+                                for (final Row friendRow : allSuperFriends) {//Ideally, all screams are not friends of this person, but we do so for now for testing
+                                    final String humanId = friendRow.getString("humanId");
+                                    final String friend = friendRow.getString("humanSuperFriend");
 
-                                final String urlHash = screamRow.getString("urlHash");
-                                final String value = screamRow.getString("value");
+                                    if (MOOD.DESTINY(screamRow.getString("mood")).life == MOOD.LIFE.ALIVE) {
 
-                                final List<Row> yawnRowsNotRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", friend, MOOD.LIFE.ALIVE.state, urlHash)).all();
-                                final List<Row> yawnRowsRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", friend, MOOD.LIFE.DEAD.state, urlHash)).all();
+                                        final String urlHash = screamRow.getString("urlHash");
+                                        final String value = screamRow.getString("value");
 
-                                if (yawnRowsNotRead.size() == 0 && yawnRowsRead.size() == 0) {
-                                    threadSafeSession.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", friend, MOOD.LIFE.ALIVE.state, urlHash, value, DBScripts.YAWN_COUNSELLED_TTL));
-                                } else if (yawnRowsNotRead.size() != 0) {
-                                    final Row yawnRow = yawnRowsNotRead.get(0);
-                                    final YawnItem yawnFeedItem = new Gson().fromJson(yawnRow.getString("value"), YawnItem.class);
-                                    LOG.info("Fetched:" + yawnFeedItem.toString());
-                                    yawnFeedItem.shock();
-                                    LOG.info("Inserting:" + yawnFeedItem.toString());
-                                    threadSafeSession.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", friend, MOOD.LIFE.ALIVE.state, yawnRow.getString("urlHash"), new Gson().toJson(yawnFeedItem), DBScripts.YAWN_COUNSELLED_TTL));
+                                        final List<Row> yawnRowsNotRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", friend, MOOD.LIFE.ALIVE.state, urlHash)).all();
+                                        final List<Row> yawnRowsRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", friend, MOOD.LIFE.DEAD.state, urlHash)).all();
+
+                                        if (yawnRowsNotRead.size() == 0 && yawnRowsRead.size() == 0) {
+                                            threadSafeSession.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", friend, MOOD.LIFE.ALIVE.state, urlHash, value, DBScripts.YAWN_COUNSELLED_TTL));
+                                        } else if (yawnRowsNotRead.size() != 0) {
+                                            final Row yawnRow = yawnRowsNotRead.get(0);
+                                            final YawnItem yawnFeedItem = new Gson().fromJson(yawnRow.getString("value"), YawnItem.class);
+                                            LOG.info("Fetched:" + yawnFeedItem.toString());
+                                            yawnFeedItem.shock();
+                                            LOG.info("Inserting:" + yawnFeedItem.toString());
+                                            threadSafeSession.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;", friend, MOOD.LIFE.ALIVE.state, yawnRow.getString("urlHash"), new Gson().toJson(yawnFeedItem), DBScripts.YAWN_COUNSELLED_TTL));
+                                        }
+
+                                        //Removing scream record as alive
+                                        threadSafeSession.execute(String.format("delete from Scream where humanId='%s' and mood='%c' and urlHash='%s';",
+                                                humanId, MOOD.LIFE.ALIVE.state, urlHash));//Yet to hash the urlHash value
+
+                                        //Inserting scream record as dead
+                                        threadSafeSession.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;",
+                                                humanId, MOOD.LIFE.DEAD.state, urlHash, value, DBScripts.YAWN_TTL));
+
+
+                                        totalInsertions++;
+                                    } else {
+                                        //LOG.info("Ignoring already counselled item");
+                                    }
                                 }
-
-                                //Removing scream record as alive
-                                threadSafeSession.execute(String.format("delete from Scream where humanId='%s' and mood='%c' and urlHash='%s';",
-                                        humanId, MOOD.LIFE.ALIVE.state, urlHash));//Yet to hash the urlHash value
-
-                                //Inserting scream record as dead
-                                threadSafeSession.execute(String.format("insert into Scream(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %d;",
-                                        humanId, MOOD.LIFE.DEAD.state, urlHash, value, DBScripts.YAWN_TTL));
-
-
-                                totalInsertions++;
-                            } else {
-                                //LOG.info("Ignoring already counselled item");
                             }
-                        }
+                            break;
+                        default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
                     }
+
 
                     final Date endTime = Calendar.getInstance().getTime();
                     LOG.info("Counselling finished at {} counselling {} sessions", new SimpleDateFormat("MM-dd HH:mm:ss").format(endTime), totalInsertions);
