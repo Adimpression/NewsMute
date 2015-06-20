@@ -65,10 +65,10 @@ public class Harvester implements Runnable {
             public void run() {
                 try {
                     final Date startTime = Calendar.getInstance().getTime();
-                    LOG.info(String.format("Harvesting started at %s...", new SimpleDateFormat("MM-dd HH:mm:ss").format(startTime)));
+
+                    LOG.info("Harvesting started at {}...", new SimpleDateFormat("MM-dd HH:mm:ss").format(startTime));
 
                     int totalInsertions = 0;
-
 
                     switch (db) {
                         case DynamoDB:
@@ -97,7 +97,7 @@ public class Harvester implements Runnable {
                     }
 
                     final Date endTime = Calendar.getInstance().getTime();
-                    System.out.printf("Harvested finished at %s harvesting %d sessions", new SimpleDateFormat("MM-dd HH:mm:ss").format(endTime), totalInsertions);
+                    LOG.info("Harvested finished at {} harvesting {} sessions", new SimpleDateFormat("MM-dd HH:mm:ss").format(endTime), totalInsertions);
                     LOG.info("Harvesting took " + (endTime.getTime() - startTime.getTime()) + "  milliseconds");
 
                 } catch (final Exception e) {
