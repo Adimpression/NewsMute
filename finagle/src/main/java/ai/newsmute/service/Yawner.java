@@ -5,6 +5,8 @@ import ai.newsmute.db.DBScripts;
 import ai.newsmute.db.MOOD;
 import ai.newsmute.model.*;
 import ai.newsmute.util.Printer;
+import com.amazonaws.services.dynamodbv2.document.*;
+import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 import com.datastax.driver.core.*;
 import com.google.gson.Gson;
 import com.twitter.finagle.Service;
@@ -19,6 +21,7 @@ import org.jboss.netty.handler.codec.http.*;
 import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
@@ -50,6 +53,13 @@ public class Yawner implements Runnable {
 
     private Cluster cluster;
 
+    @Autowired
+    public DBScripts.DB db;
+
+    private DynamoDB dynamoDB;
+
+    private Table tableYawn;
+
     private Session threadSafeSession;
 
     public Yawner(final String bindIp, final String port, final String databaseIp) {
@@ -63,15 +73,20 @@ public class Yawner implements Runnable {
      */
     @Override
     public void run() {
-        this.open(databaseIp);
+        switch (db) {
+            case DynamoDB:
+                break;
+            case Cassandra:
+                    this.open(databaseIp);
+                    final Session connect = cluster.connect("NewsMute");
+                    try {
+                        connect.execute(DBScripts.CREATE_YAWN);
 
-        final Session connect = cluster.connect("NewsMute");
-
-        try {
-            connect.execute(DBScripts.CREATE_YAWN);
-
-        } catch (final Exception e) {//Table already exists
-            LOG.info(e.getMessage());
+                    } catch (final Exception e) {//Table already exists
+                        LOG.info(e.getMessage());
+                    }
+                break;
+            default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
         }
 
 
@@ -132,20 +147,28 @@ public class Yawner implements Runnable {
         switch (YawnerAction.to(action.toUpperCase())) {
             case READ:{
                 LOG.info("Values in table as follows");
-                final ResultSet execute = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' and mood='%c'", hashUser, MOOD.LIFE.ALIVE.state));
-                final List<Row> all = execute.all();
 
                 final HashMap<String, YawnItem> mostPopularOfFeedSource = new HashMap<String, YawnItem>();
 
-                for (final Row row : all) {
-                    final YawnItem yawnItem = new Gson().fromJson(row.getString("value"), YawnItem.class);
-                    final int yawnItemShocks = Integer.parseInt(yawnItem.shocks());
-                    final YawnItem lastValue = mostPopularOfFeedSource.put(yawnItem.source, yawnItem);
-                    if (lastValue != null && yawnItemShocks > 0) {
-                        if (Integer.parseInt(lastValue.shocks()) > yawnItemShocks) {
-                            mostPopularOfFeedSource.put(row.getString("urlHash"), lastValue);//Replacing with last value since it is more popular
+                switch (db) {
+                    case DynamoDB:
+                        final ItemCollection<QueryOutcome> items = tableYawn.query(new QuerySpec().withHashKey("humanId", hashUser).withRangeKeyCondition(new RangeKeyCondition("ranger").beginsWith(String.valueOf(MOOD.LIFE.ALIVE.state))));
+                        for (final Item row : items) {
+                            final String value = row.getString("value");
+                            processPopularItems(mostPopularOfFeedSource, value);
                         }
-                    }
+                        break;
+                    case Cassandra:
+                            final ResultSet execute = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' and mood='%c'", hashUser, MOOD.LIFE.ALIVE.state));
+                            final List<Row> all = execute.all();
+                            for (final Row row : all) {
+                                final String value = row.getString("value");
+                                final String urlHash = row.getString("urlHash");
+
+                                processPopularItems(mostPopularOfFeedSource, value);
+                            }
+                        break;
+                    default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
                 }
 
                 YawnItem[] temp = new YawnItem[mostPopularOfFeedSource.size()];
@@ -203,6 +226,17 @@ public class Yawner implements Runnable {
 
 
         return new Gson().toJson(new Return<ReturnValueYawn>(new ReturnValueYawn(yawnItems), "No Error", "OK"));
+    }
+
+    private void processPopularItems(final HashMap<String, YawnItem> mostPopularOfFeedSource, final String value) {
+        final YawnItem yawnItem = new Gson().fromJson(value, YawnItem.class);
+        final int yawnItemShocks = Integer.parseInt(yawnItem.shocks());
+        final YawnItem lastValue = mostPopularOfFeedSource.put(yawnItem.source, yawnItem);
+        if (lastValue != null && yawnItemShocks > 0) {
+            if (Integer.parseInt(lastValue.shocks()) > yawnItemShocks) {
+                mostPopularOfFeedSource.put(lastValue.link, lastValue);//Replacing with last value since it is more popular
+            }
+        }
     }
 
     void open(String node) {
