@@ -9,6 +9,7 @@ import ai.newsmute.model.StalkItem;
 import ai.newsmute.model.YawnItem;
 import ai.newsmute.util.Feed;
 import ai.newsmute.util.Printer;
+import com.amazonaws.services.dynamodbv2.document.*;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
@@ -27,8 +28,10 @@ import org.jboss.netty.handler.codec.http.*;
 import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -74,9 +77,17 @@ public class Stalker implements Runnable {
 
     private final String databaseIp;
 
+    @Autowired
+    public DBScripts.DB db;
+
     private Cluster cluster;
 
     private Session threadSafeSession;
+
+    private DynamoDB dynamoDB;
+
+    private Table tableStalk;
+    private Table tableYawn;
 
     public Stalker(final String bindIp, final String port, final String databaseIp) {
         this.bindIp = bindIp;
@@ -89,15 +100,24 @@ public class Stalker implements Runnable {
      */
     @Override
     public void run() {
-        this.open(databaseIp);
 
-        final Session connect = cluster.connect("NewsMute");
-        try {
-            connect.execute(DBScripts.CREATE_STALK);
+        switch (db) {
+            case DynamoDB:
+                break;
+            case Cassandra:
+                this.open(databaseIp);
 
-        } catch (final Exception e) {//Table already exists
-            LOG.info(e.getMessage());
+                final Session connect = cluster.connect("NewsMute");
+                try {
+                    connect.execute(DBScripts.CREATE_STALK);
+
+                } catch (final Exception e) {//Table already exists
+                    LOG.info(e.getMessage());
+                }
+                break;
+            default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
         }
+
 
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
@@ -158,53 +178,52 @@ public class Stalker implements Runnable {
                     final String description = document.getDescription();
                     LOG.info("description:" + description);
 
-                    threadSafeSession.execute(String.format("insert into Stalk(humanId, mood, urlHash, value) values('%s','%c','%s','%s');", hashUser, MOOD.LIFE.ALIVE.state, url, new Gson().toJson(new StalkItem(url, title, description))));//Yet to hash the urlHash value
-
-                    try {//Please match this with Harvester first time feed setup
-
-                        for (final StalkItem feedItem : Feed.getFeedEntries(url)) {
-
-                            final String feedItemTitle = feedItem.title;
-                            LOG.info("title:" + feedItemTitle);
-
-                            final String feedItemLink = feedItem.link;
-                            LOG.info("link:" + feedItemLink);
-
-                            final String feedItemDescription = feedItem.description;
-                            LOG.info("description:" + feedItemDescription);
-
-                            final ResultSet yawnRowsNotRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashUser, MOOD.LIFE.ALIVE.state, feedItemLink));
-                            final ResultSet yawnRowsDidRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", hashUser, MOOD.LIFE.DEAD.state, feedItemLink));
-
-                            final boolean feedItemLinkMissing = yawnRowsNotRead.all().isEmpty() && yawnRowsDidRead.all().isEmpty();
-
-                            if (feedItemLinkMissing) {
-                                threadSafeSession.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %s;", hashUser, MOOD.LIFE.ALIVE.state, feedItemLink, new Gson().toJson(new YawnItem(feedItemLink, feedItemTitle, feedItemDescription, url, "0")), DBScripts.INITIAL_INSERT_TTL));//Yet to hash the urlHash value
-                            } else {
-                                //Ignoring insert
-                            }
-
-
-                        }
-                    } catch (final Throwable throwable) {
-                        throwable.printStackTrace(System.err);
+                    switch (db) {
+                        case DynamoDB:
+                            tableStalk.putItem(new Item().withPrimaryKey("humanId", hashUser, "ranger", MOOD.LIFE.ALIVE.state + url).with("value", new Gson().toJson(new StalkItem(url, title, description))));
+                            break;
+                        case Cassandra:
+                            threadSafeSession.execute(String.format("insert into Stalk(humanId, mood, urlHash, value) values('%s','%c','%s','%s');", hashUser, MOOD.LIFE.ALIVE.state, url, new Gson().toJson(new StalkItem(url, title, description))));//Yet to hash the urlHash value
+                            break;
+                        default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
                     }
 
+                    doHarvestItem(url, hashUser);
+
                 } catch (final Throwable e) {
-                    e.printStackTrace(System.err);
+                    LOG.error("Error during delete", e);
                 }
             }
             break;
             case READ: {
                 LOG.info("Values in table as follows");
-                final ResultSet execute = threadSafeSession.execute(String.format("select * from Stalk where humanId='%s'", hashUser));
-                final List<Row> all = execute.all();
+                switch (db) {
 
-                stalkItems = new StalkItem[all.size()];
+                    case DynamoDB:{
+                        final ItemCollection<QueryOutcome> all = tableStalk.query("humanId", hashUser);
 
-                for (int i = 0; i < stalkItems.length; i++) {
-                    stalkItems[i] = new Gson().fromJson(all.get(i).getString("value"), StalkItem.class);
+                        final List<StalkItem> itemArrayList = new ArrayList<StalkItem>();
+
+                        for (final Item item : all) {
+                            itemArrayList.add(new Gson().fromJson(item.getString("value"), StalkItem.class));
+                        }
+                        stalkItems = itemArrayList.toArray(new StalkItem[itemArrayList.size()]);
+                        break;
+                    }
+                    case Cassandra:{
+                        final ResultSet execute = threadSafeSession.execute(String.format("select * from Stalk where humanId='%s'", hashUser));
+                        final List<Row> all = execute.all();
+
+                        stalkItems = new StalkItem[all.size()];
+
+                        for (int i = 0; i < stalkItems.length; i++) {
+                            stalkItems[i] = new Gson().fromJson(all.get(i).getString("value"), StalkItem.class);
+                        }
+                        break;
+                    }
+                    default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
                 }
+
             }
             break;
             case DELETE: {
@@ -235,7 +254,7 @@ public class Stalker implements Runnable {
                     }
 
                 } catch (Exception e) {
-                    e.printStackTrace(System.err);
+                    LOG.error("Error during delete", e);
                 }
             }
             break;
@@ -244,6 +263,44 @@ public class Stalker implements Runnable {
         }
 
         return new Gson().toJson(new Return<ReturnValueStalk>(new ReturnValueStalk(stalkItems), "", "OK"));
+    }
+
+    private int doHarvestItem( final String feedLink, final String humanId) {
+        int totalInsertions = 0;
+
+        try {//Please match this with Stalker first time feed setup
+            LOG.info("Processing feed:" + feedLink);
+
+            for (final StalkItem stalkFeedItem : Feed.getFeedEntries(feedLink)) {
+                final String feedItemTitle = stalkFeedItem.title;
+                final String feedItemLink = stalkFeedItem.link;
+                final String feedItemDescription = stalkFeedItem.description;
+
+
+                switch (db) {
+                    case DynamoDB:
+                        final Item yawnRowNotRead = tableYawn.getItem("humanId", humanId, "ranger", MOOD.LIFE.ALIVE.state + feedItemLink);
+                        final Item yawnRowDidRead = tableYawn.getItem("humanId", humanId, "ranger", MOOD.LIFE.DEAD.state + feedItemLink);
+                        if (yawnRowNotRead == null && yawnRowDidRead == null) {
+                            tableYawn.putItem(new Item().withPrimaryKey("humanId", humanId, "ranger", MOOD.LIFE.ALIVE.state + feedItemLink).with("value", new Gson().toJson(new YawnItem(feedItemLink, feedItemTitle, feedItemDescription, feedLink, "0"))));
+                            totalInsertions++;
+                        }
+                        break;
+                    case Cassandra:
+                        final ResultSet yawnRowsNotRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", humanId, MOOD.LIFE.ALIVE.state, feedItemLink));
+                        final ResultSet yawnRowsDidRead = threadSafeSession.execute(String.format("select * from Yawn where humanId='%s' AND mood='%c' AND urlHash='%s'", humanId, MOOD.LIFE.DEAD.state, feedItemLink));
+                        if (yawnRowsNotRead.all().isEmpty() && yawnRowsDidRead.all().isEmpty()) {
+                            threadSafeSession.execute(String.format("insert into Yawn(humanId, mood, urlHash, value) values('%s','%c','%s','%s') USING TTL %s;", humanId, MOOD.LIFE.ALIVE.state, feedItemLink, new Gson().toJson(new YawnItem(feedItemLink, feedItemTitle, feedItemDescription, feedLink, "0")), DBScripts.HARVESTED_YAWN_TTL));//Yet to hash the urlHash value
+                            totalInsertions++;
+                        }
+                        break;
+                    default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
+                }
+            }
+        } catch (final Throwable throwable) {
+            System.err.println(throwable.getMessage());//Don't print full stack trace, will be hard to see what is failing and what is not
+        }
+        return totalInsertions;
     }
 
     void open(String node) {
