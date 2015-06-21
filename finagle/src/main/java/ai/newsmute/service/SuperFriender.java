@@ -6,6 +6,9 @@ import ai.newsmute.model.Return;
 import ai.newsmute.model.ReturnValueSuperFriend;
 import ai.newsmute.model.SuperFriendValue;
 import ai.newsmute.util.Printer;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.Table;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Session;
 import com.google.gson.Gson;
@@ -21,6 +24,7 @@ import org.jboss.netty.handler.codec.http.*;
 import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -50,6 +54,13 @@ public class SuperFriender implements Runnable {
 
     private Cluster cluster;
 
+    @Autowired
+    public DBScripts.DB db;
+
+    private DynamoDB dynamoDB;
+
+    private Table tableSuperFriend;
+
     private Session threadSafeSession;
 
     public SuperFriender(final String bindIp, final String port, final String databaseIp) {
@@ -63,14 +74,22 @@ public class SuperFriender implements Runnable {
      */
     @Override
     public void run() {
-        this.open(databaseIp);
+        switch (db) {
 
-        final Session connect = cluster.connect("NewsMute");
-        try {
-            connect.execute(DBScripts.CREATE_SUPERFRIEND);
+            case DynamoDB:
+                break;
+            case Cassandra:
+                this.open(databaseIp);
 
-        } catch (final Exception e) {//Table already exists
-            LOG.info(e.getMessage());
+                final Session connect = cluster.connect("NewsMute");
+                try {
+                    connect.execute(DBScripts.CREATE_SUPERFRIEND);
+
+                } catch (final Exception e) {//Table already exists
+                    LOG.info(e.getMessage());
+                }
+                break;
+            default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
         }
 
 
@@ -129,10 +148,19 @@ public class SuperFriender implements Runnable {
                 for (final String contact : newContacts) {
                     if (contact != null && !contact.isEmpty()) {
                         final String superFriendHash = BCrypt.hashpw(contact, new String(GLOBAL_SALT));
-                        threadSafeSession.execute(String.format("insert into SuperFriend(humanId, humanSuperFriend, value) values('%s','%s','%s');",
-                                hasheduser,
-                                superFriendHash,
-                                new Gson().toJson(new SuperFriendValue(hasheduser, new String[]{superFriendHash}))));//Yet to hash the urlHash value
+                        final String value = new Gson().toJson(new SuperFriendValue(hasheduser, new String[]{superFriendHash}));
+                        switch (db) {
+                            case DynamoDB:
+                                tableSuperFriend.putItem(new Item().withPrimaryKey("humanId", hasheduser, "ranger", superFriendHash).withString("value", value));
+                                break;
+                            case Cassandra:
+                                threadSafeSession.execute(String.format("insert into SuperFriend(humanId, humanSuperFriend, value) values('%s','%s','%s');",
+                                        hasheduser,
+                                        superFriendHash,
+                                        value));//Yet to hash the urlHash value
+                                break;
+                            default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
+                        }
                     }
                 }
 
@@ -140,10 +168,19 @@ public class SuperFriender implements Runnable {
                     final String inverseContact = newContacts[0];
                     if (inverseContact != null && !inverseContact.isEmpty()) {
                         final String inverseSuperFriendHash = BCrypt.hashpw(inverseContact, new String(GLOBAL_SALT));
-                        threadSafeSession.execute(String.format("insert into SuperFriend(humanId, humanSuperFriend, value) values('%s','%s','%s');",
-                                inverseSuperFriendHash,
-                                hasheduser,
-                                new Gson().toJson(new SuperFriendValue(hasheduser, new String[]{inverseSuperFriendHash}))));//Yet to hash the urlHash value
+                        final String value = new Gson().toJson(new SuperFriendValue(hasheduser, new String[]{inverseSuperFriendHash}));
+                        switch (db) {
+                            case DynamoDB:
+                                tableSuperFriend.putItem(new Item().withPrimaryKey("humanId", inverseSuperFriendHash, "ranger", hasheduser).withString("value", value));
+                                break;
+                            case Cassandra:
+                                threadSafeSession.execute(String.format("insert into SuperFriend(humanId, humanSuperFriend, value) values('%s','%s','%s');",
+                                        inverseSuperFriendHash,
+                                        hasheduser,
+                                        value));//Yet to hash the urlHash value
+                                break;
+                            default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
+                        }
                     }
                 }
 
