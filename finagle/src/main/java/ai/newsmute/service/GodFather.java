@@ -4,6 +4,9 @@ import ai.newsmute.db.DBScripts;
 import ai.newsmute.model.*;
 import ai.newsmute.util.Email;
 import ai.newsmute.util.Printer;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.Table;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
@@ -51,9 +54,17 @@ public class GodFather implements Runnable {
 
     private final String databaseIp;
 
+    @Autowired
+    public DBScripts.DB db;
+
     private Cluster cluster;
 
     private Session threadSafeSession;
+
+    private DynamoDB dynamoDB;
+
+    private Table tableGuardian;
+    private Table tableSession;
 
     @Value("${valid.email.domains}")
     public String[] validEmailDomains;
@@ -69,7 +80,15 @@ public class GodFather implements Runnable {
      */
     @Override
     public void run() {
-        this.open(databaseIp);
+
+        switch (db) {
+            case DynamoDB:
+                break;
+            case Cassandra:
+                this.open(databaseIp);
+                break;
+            default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
+        }
 
         final Service<HttpRequest, HttpResponse> service = new Service<HttpRequest, HttpResponse>() {
 
@@ -147,7 +166,15 @@ public class GodFather implements Runnable {
 
 
     private void  blockingEmailValidationSessionWrite(final String verifyToken, final String hash1Password) {
-        threadSafeSession.execute(String.format("insert into Session(sessionId, value) values('%s','%s') USING TTL %d;", verifyToken, hash1Password, DBScripts.EMAIL_VALIDATION_SESSION_TTL ));
+        switch (db) {
+            case DynamoDB:
+                tableSession.putItem(new Item().withPrimaryKey("sessionId", verifyToken).with("value", hash1Password));
+                break;
+            case Cassandra:
+                threadSafeSession.execute(String.format("insert into Session(sessionId, value) values('%s','%s') USING TTL %d;", verifyToken, hash1Password, DBScripts.EMAIL_VALIDATION_SESSION_TTL ));
+                break;
+            default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
+        }
     }
 
     private boolean blockingValidatedEmailBasedCreate(final String hashUser, final String token) {
@@ -156,7 +183,15 @@ public class GodFather implements Runnable {
         if(has1hPassword != null) {
             blockingSessionDelete(token);
             final String hash2Password = BCrypt.hashpw(has1hPassword, BCrypt.gensalt(12));
-            threadSafeSession.execute(String.format("insert into Guardian(humanId, value) values('%s','%s');", hashUser, hash2Password));
+            switch (db) {
+                case DynamoDB:
+                    tableGuardian.putItem(new Item().withPrimaryKey("humanId", hashUser).withString("value", hash2Password));
+                    break;
+                case Cassandra:
+                    threadSafeSession.execute(String.format("insert into Guardian(humanId, value) values('%s','%s');", hashUser, hash2Password));
+                    break;
+                default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
+            }
             returnVal = true;
         }else{
             LOG.info("No such email validation session:" + token);
@@ -167,29 +202,60 @@ public class GodFather implements Runnable {
 
 
 
-    private Row blockingReadGuardianEntry(final String hashUser) {
-        final ResultSet execute = threadSafeSession.execute(String.format("select * from Guardian where humanId='%s'", hashUser));
-        final List<Row> all = execute.all();
-        if(all.isEmpty()){
-            return null;
-        } else {
-            return all.get(0);
+    private String blockingReadGuardianEntry(final String hashUser) {
+        switch (db) {
+            case DynamoDB:
+                final Item item = tableGuardian.getItem("humanId", hashUser);
+                if (item != null) {
+                    return item.getString("value");
+                } else {
+                    return null;
+                }
+            case Cassandra:
+                final ResultSet execute = threadSafeSession.execute(String.format("select * from Guardian where humanId='%s'", hashUser));
+                final List<Row> all = execute.all();
+                if(all.isEmpty()){
+                    return null;
+                } else {
+                    return all.get(0).getString("value");
+                }
+                default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
         }
     }
 
     private String blockingSessionRead(final String sessionId) {
-        final ResultSet execute = threadSafeSession.execute(String.format("select * from Session where sessionId='%s'", sessionId));
-        for (final Row row : execute) {
-            final String aStoredSessionId = row.getString("sessionId");
-            if(aStoredSessionId.equals(sessionId)){
-                return  row.getString("value");
-            }
+        switch (db) {
+            case DynamoDB:
+                final Item item = tableSession.getItem("sessionId", sessionId);
+                if (item != null) {
+                    return item.getString("value");
+                } else {
+                    return null;
+                }
+            case Cassandra:
+                final ResultSet execute = threadSafeSession.execute(String.format("select * from Session where sessionId='%s'", sessionId));
+                for (final Row row : execute) {
+                    final String aStoredSessionId = row.getString("sessionId");
+                    if(aStoredSessionId.equals(sessionId)){
+                        return  row.getString("value");
+                    }
+                }
+                return null;
+            default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
         }
-        return null;
     }
 
     private void blockingSessionDelete(final String sessionId) {
-        threadSafeSession.execute(String.format("delete from Session where sessionId='%s'", sessionId));
+        switch (db) {
+
+            case DynamoDB:
+                tableSession.deleteItem("sessionId", sessionId);
+                break;
+            case Cassandra:
+                threadSafeSession.execute(String.format("delete from Session where sessionId='%s'", sessionId));
+                break;
+            default: throw new UnsupportedOperationException("Unknown DB Type:" + db);
+        }
     }
 
     void open(String node) {
