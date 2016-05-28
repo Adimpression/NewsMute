@@ -1,8 +1,13 @@
 console.log('Starting to Scream');
 
 var doc = require('dynamodb-doc');
+var AWS = require("aws-sdk");
+
 
 var dynamo = new doc.DynamoDB();
+var docClient = new AWS.DynamoDB.DocumentClient();
+
+var dynamoDBYawnParser = require('./ts/ParseYawnGet');
 
 exports.handler = function (event, context) {
     console.log('event:', JSON.stringify(event));
@@ -37,7 +42,9 @@ exports.handler = function (event, context) {
                     });
                     break;
                 case 'delete':
+                    console.log("Deleting");
                     action.payload.forEach(function (item) {
+                        console.log("Deleting item:" + item);
                         dynamo.deleteItem(
                             {
                                 'TableName': 'Stalk',
@@ -46,7 +53,46 @@ exports.handler = function (event, context) {
                                     'ref': item
                                 }
                             }
-                            , context.done);
+                            , function (error, dataFromStalk) {
+                                if (error != null) {
+                                    console.log(error);
+                                }
+
+                                dynamo.query(
+                                    {
+                                        'TableName': 'Yawn',
+                                        'KeyConditionExpression': '#me = :me and begins_with(#ref, :mood)',
+                                        'FilterExpression': '#source = :source',
+                                        'ExpressionAttributeNames': {
+                                            '#me': 'me',
+                                            '#ref': 'ref',
+                                            '#source': 'source'
+                                        },
+                                        'ExpressionAttributeValues': {
+                                            ':me': context.identity.cognitoIdentityId,
+                                            ':mood': '1',
+                                            ':source': item
+                                        }
+                                    }, function (error, dataFromYawn) {
+                                        var items = new dynamoDBYawnParser.ParseYawnGet().rootObject(dataFromYawn).Items;
+                                        items.forEach(function (item) {
+                                            docClient.delete(
+                                                {
+                                                    'TableName': 'Yawn',
+                                                    'Key': {
+                                                        "me": item.me,
+                                                        "ref": item.ref
+                                                    }
+                                                }, function (error, ignored) {
+                                                    if (error != null) {
+                                                        console.log(error);
+                                                    } else {
+                                                        console.log("Removed:" + item.me + '/' + item.ref);
+                                                    }
+                                                });
+                                        });
+                                    });
+                            });
                     });
                     break;
                 case 'list':
