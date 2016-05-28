@@ -1,3 +1,5 @@
+//http://www.markomedia.com.au/dynamodb-for-javascript-cheatsheet/
+
 console.log('Starting to Harvest');
 
 var doc = require('dynamodb-doc');
@@ -71,16 +73,19 @@ exports.handler = function (event, context) {
                                 dynamo.query(
                                     {
                                         'TableName': 'Yawn',
-                                        'KeyConditionExpression': 'me = :me and begins_with(#ref, :mood)',
-                                        'FilterExpression': '#source = :source',
+                                        'KeyConditionExpression': '#me = :me and begins_with(#ref, :mood)',
+                                        'FilterExpression': '#source = :source and #created_at < :created_at',
                                         'ExpressionAttributeNames': {
+                                            '#me': 'me',
                                             '#ref': 'ref',
-                                            '#source': 'source'
+                                            '#source': 'source',
+                                            '#created_at': 'created_at'
                                         },
                                         'ExpressionAttributeValues': {
                                             ':me': event.identityId,
                                             ':mood': '1',
-                                            ':source': item.ref
+                                            ':source': item.ref,
+                                            ':created_at': (new Date).getTime() - 7 * 24 * 60 * 60 * 1000
                                         }
                                     }, function (error, dataFromYawn) {
                                         if (error != null) {
@@ -127,20 +132,24 @@ exports.handler = function (event, context) {
                                                             var presentInAlreadyReadItems = new parse.Parse().rootObject(data).Items.length != 0;
 
                                                             if (!presentInAlreadyReadItems) {
-                                                                dynamo.putItem({
-                                                                    'TableName': 'Yawn',
-                                                                    'Item': {
-                                                                        'me': event.identityId,
-                                                                        'ref': '1' + streamedItem.link,
-                                                                        'title': streamedItem.title,
-                                                                        'content': streamedItem.description,
-                                                                        'link': streamedItem.link,
-                                                                        'source': item.ref
-                                                                    }
-                                                                }, function () {
-                                                                    log.info("Inserted item into database");
-                                                                    pushFunc2(null, true);
-                                                                });
+                                                                dynamo.putItem(
+                                                                    {
+                                                                        'TableName': 'Yawn',
+                                                                        'Item': {
+                                                                            'me': event.identityId,
+                                                                            'ref': '1' + streamedItem.link,
+                                                                            'title': streamedItem.title,
+                                                                            'content': streamedItem.description,
+                                                                            'link': streamedItem.link,
+                                                                            'source': item.ref,
+                                                                            'created_at': (new Date).getTime()
+                                                                        },
+                                                                        'ConditionExpression': 'attribute_not_exists(me)'
+                                                                    },
+                                                                    function () {
+                                                                        log.info("Inserted item into database");
+                                                                        pushFunc2(null, true);
+                                                                    });
                                                             } else {
                                                                 log.info("Ignoring dead item");
                                                                 pushFunc2(null, true);
