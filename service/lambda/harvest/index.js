@@ -1,6 +1,8 @@
 console.log('Starting to Harvest');
 
 var doc = require('dynamodb-doc');
+var AWS = require("aws-sdk");
+
 var request = require('request');
 var FeedParser = require('feedparser');
 var async = require('async');
@@ -8,9 +10,14 @@ var bunyan = require('bunyan');
 var _ = require('highland');
 var parse = require('./ts/Parse');
 
+var dynamoDBYawnParser = require('./ts/ParseYawnGet');
+
 
 var log = bunyan.createLogger({name: "harvest"});
 var dynamo = new doc.DynamoDB();
+
+var docClient = new AWS.DynamoDB.DocumentClient();
+
 
 exports.handler = function (event, context) {
     console.log('event:', JSON.stringify(event));
@@ -58,54 +65,97 @@ exports.handler = function (event, context) {
                             });
 
                             feedparser.on('readable', function () {
-                                _(this)
-                                    .flatFilter(function (streamedItem) {
-                                        return _(function (pushFunc2, next2) {
-                                            dynamo.query(
+
+                                var streamedItems = _(this);
+
+                                dynamo.query(
+                                    {
+                                        'TableName': 'Yawn',
+                                        'KeyConditionExpression': 'me = :me and begins_with(#ref, :mood)',
+                                        'FilterExpression': '#source = :source',
+                                        'ExpressionAttributeNames': {
+                                            '#ref': 'ref',
+                                            '#source': 'source'
+                                        },
+                                        'ExpressionAttributeValues': {
+                                            ':me': event.identityId,
+                                            ':mood': '1',
+                                            ':source': item.ref
+                                        }
+                                    }, function (error, dataFromYawn) {
+                                        if (error != null) {
+                                            log.error({error: error});
+                                            pushFunc(error, true);
+                                            return;
+                                        }
+
+                                        var items = new dynamoDBYawnParser.ParseYawnGet().rootObject(dataFromYawn).Items;
+                                        items.forEach(function (item) {
+                                            docClient.delete(
                                                 {
                                                     'TableName': 'Yawn',
-                                                    'KeyConditionExpression': 'me = :me and #ref = :moodref',
-                                                    'ExpressionAttributeNames': {
-                                                        '#ref': 'ref'
-                                                    },
-                                                    'ExpressionAttributeValues': {
-                                                        ':me': event.identityId,
-                                                        ':moodref': '0' + streamedItem.link
+                                                    'Key': {
+                                                        "me": item.me,
+                                                        "ref": item.ref
                                                     }
-                                                },
-                                                function (error, data) {
-                                                    // log.info("error:" + JSON.stringify(error));
-                                                    log.info("data:" + JSON.stringify(data));
-
-                                                    var rootObject = new parse.Parse().rootObject(data);
-                                                    var presentInAlreadyReadItems = rootObject.Items.length != 0;
-
-                                                    if (!presentInAlreadyReadItems) {
-                                                        dynamo.putItem({
-                                                            'TableName': 'Yawn',
-                                                            'Item': {
-                                                                'me': event.identityId,
-                                                                'ref': '1' + streamedItem.link,
-                                                                'title': streamedItem.title,
-                                                                'content': streamedItem.description,
-                                                                'link': streamedItem.link,
-                                                                'source': item.ref
-                                                            }
-                                                        }, function () {
-                                                            log.info("Inserted item into database");
-                                                            pushFunc2(null, true);
-                                                        });
-                                                    } else {
-                                                        log.info("Ignoring dead item");
-                                                        pushFunc2(null, true);
+                                                }, function (error, ignored) {
+                                                    if (error != null) {
+                                                        log.error({error: error});
                                                     }
                                                 });
                                         });
-                                    })
-                                    .done(function () {
-                                        log.info('inner done');
-                                        pushFunc(null, true);
+
+                                        streamedItems.flatFilter(function (streamedItem) {
+                                                return _(function (pushFunc2, next2) {
+
+                                                    dynamo.query(
+                                                        {
+                                                            'TableName': 'Yawn',
+                                                            'KeyConditionExpression': 'me = :me and #ref = :moodref',
+                                                            'ExpressionAttributeNames': {
+                                                                '#ref': 'ref'
+                                                            },
+                                                            'ExpressionAttributeValues': {
+                                                                ':me': event.identityId,
+                                                                ':moodref': '0' + streamedItem.link
+                                                            }
+                                                        },
+                                                        function (error, data) {
+                                                            // log.info("error:" + JSON.stringify(error));
+                                                            log.info("data:" + JSON.stringify(data));
+
+                                                            var presentInAlreadyReadItems = new parse.Parse().rootObject(data).Items.length != 0;
+
+                                                            if (!presentInAlreadyReadItems) {
+                                                                dynamo.putItem({
+                                                                    'TableName': 'Yawn',
+                                                                    'Item': {
+                                                                        'me': event.identityId,
+                                                                        'ref': '1' + streamedItem.link,
+                                                                        'title': streamedItem.title,
+                                                                        'content': streamedItem.description,
+                                                                        'link': streamedItem.link,
+                                                                        'source': item.ref
+                                                                    }
+                                                                }, function () {
+                                                                    log.info("Inserted item into database");
+                                                                    pushFunc2(null, true);
+                                                                });
+                                                            } else {
+                                                                log.info("Ignoring dead item");
+                                                                pushFunc2(null, true);
+                                                            }
+
+
+                                                        });
+                                                });
+                                            })
+                                            .done(function () {
+                                                log.info('inner done');
+                                                pushFunc(null, true);
+                                            });
                                     });
+
                             });
                         });
                     })
