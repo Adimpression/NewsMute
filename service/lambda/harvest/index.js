@@ -9,12 +9,19 @@ var request = require('request');
 var FeedParser = require('feedparser');
 var bunyan = require('bunyan');
 var _ = require('highland');
+var Xray = require('x-ray');
+var x = Xray();
 var parse = require('./ts/Parse');
 
 var dynamoDBYawnParser = require('./ts/ParseYawnGet');
 
 
-var log = bunyan.createLogger({name: "harvest"});
+var log = bunyan.createLogger({
+    name: "harvest",
+    level: 'info',
+    src: true
+});
+
 var dynamo = new doc.DynamoDB();
 
 var docClient = new AWS.DynamoDB.DocumentClient();
@@ -50,6 +57,10 @@ exports.handler = function (event, context) {
                                 pushFunc(null, true);
                             });
 
+                            String.prototype.startsWith = function (stringSequence) {
+                                return (this.indexOf(stringSequence) == 0);
+                            };
+
                             req.on('response', function (res) {
                                 var stream = this;
 
@@ -57,7 +68,97 @@ exports.handler = function (event, context) {
                                     return this.emit('error', new Error('Bad status code'));
                                 }
 
-                                stream.pipe(feedparser);
+                                var contentType = res.headers['content-type'];
+
+                                log.info({
+                                    'link': item.ref,
+                                    'content-type': contentType
+                                });
+
+                                if (contentType.startsWith('application/rss+xml') || contentType.startsWith('application/rdf+xml') || contentType.startsWith('application/atom+xml') || contentType.startsWith('application/xml') || contentType.startsWith('text/xml')) {
+                                    log.info({
+                                        feed: true
+                                    });
+                                    stream.pipe(feedparser);
+                                } else {
+                                    x(item.ref,
+                                        {
+                                            'title': 'title',
+                                            'description': 'meta[name=description]',
+                                            'h1': ['h1'],
+                                            'h2': ['h2'],
+                                            'h3': ['h3']
+                                        }
+                                    )(function (err, obj) {
+                                        if (err) {
+                                            pushFunc(err, false);
+                                        } else {
+                                            log.info(obj);
+                                            log.info({
+                                                'title': obj.title,
+                                                'description': obj.description,
+                                                'h1': obj.h1,
+                                                'h2': obj.h2,
+                                                'h3': obj.h3
+                                            });
+
+                                            var content = '';
+
+                                            obj.h1.forEach(function (h1) {
+                                                content += h1 + '.. '
+                                            });
+                                            obj.h2.forEach(function (h2) {
+                                                content += h2 + '... '
+                                            });
+                                            obj.h3.forEach(function (h3) {
+                                                content += h3 + '... '
+                                            });
+
+                                            dynamo.query(
+                                                {
+                                                    'TableName': 'Yawn',
+                                                    'KeyConditionExpression': '#me = :me and begins_with(#ref, :mood)',
+                                                    'FilterExpression': '#source = :source and #created_at < :created_at',
+                                                    'ExpressionAttributeNames': {
+                                                        '#me': 'me',
+                                                        '#ref': 'ref',
+                                                        '#source': 'source',
+                                                        '#created_at': 'created_at'
+                                                    },
+                                                    'ExpressionAttributeValues': {
+                                                        ':me': event.identityId,
+                                                        ':mood': '1',
+                                                        ':source': item.ref,
+                                                        ':created_at': (new Date).getTime() - 60 * 60 * 1000
+                                                    }
+                                                }, function (error, dataFromYawn) {
+                                                    if (error != null) {
+                                                        log.error({error: error});
+                                                        pushFunc(error, true);
+                                                        return;
+                                                    }
+
+                                                    dynamo.putItem(
+                                                        {
+                                                            'TableName': 'Yawn',
+                                                            'Item': {
+                                                                'me': event.identityId,
+                                                                'ref': '1' + item.ref,
+                                                                'title': obj.title,
+                                                                'content': content,
+                                                                'link': item.ref,
+                                                                'source': item.ref,
+                                                                'created_at': (new Date).getTime()
+                                                            }
+                                                        },
+                                                        function () {
+                                                            log.info("Inserted scraped item into database");
+                                                            pushFunc(null, true);
+                                                        });
+                                                });
+                                        }
+                                    });
+                                }
                             });
 
                             feedparser.on('error', function (error) {
@@ -126,7 +227,7 @@ exports.handler = function (event, context) {
                                                         },
                                                         function (error, data) {
                                                             // log.info("error:" + JSON.stringify(error));
-                                                            log.info("data:" + JSON.stringify(data));
+                                                            log.debug("data:" + JSON.stringify(data));
 
                                                             var presentInAlreadyReadItems = new parse.Parse().rootObject(data).Items.length != 0;
 
@@ -165,7 +266,8 @@ exports.handler = function (event, context) {
                                     });
 
                             });
-                        });
+                        })
+                            ;
                     })
                 .done(
                     function (err, results) {
