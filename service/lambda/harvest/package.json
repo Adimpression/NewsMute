@@ -12,6 +12,7 @@
     "bunyan": "^1.8.1",
     "feedparser": "^1.1.4",
     "highland": "^2.8.1",
-    "request": "^2.72.0"
+    "request": "^2.72.0",
+    "x-ray": "^2.3.0"
   }
 }
