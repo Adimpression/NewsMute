@@ -1,4 +1,4 @@
-console.log('Starting to Scream');
+log.info('Starting to Scream');
 
 var doc = require('dynamodb-doc');
 var AWS = require("aws-sdk");
@@ -8,6 +8,14 @@ var dynamo = new doc.DynamoDB();
 var docClient = new AWS.DynamoDB.DocumentClient();
 
 var dynamoDBYawnParser = require('./ts/ParseYawnGet');
+
+var bunyan = require('bunyan');
+
+var log = bunyan.createLogger({
+    name: "stalk",
+    level: 'debug',
+    src: true
+});
 
 exports.handler = function (event, context) {
     console.log('event:', JSON.stringify(event));
@@ -42,9 +50,9 @@ exports.handler = function (event, context) {
                     });
                     break;
                 case 'delete':
-                    console.log("Deleting");
+                    log.info("Deleting");
                     action.payload.forEach(function (item) {
-                        console.log("Deleting item:" + item);
+                        log.info("Deleting item:" + item);
                         dynamo.deleteItem(
                             {
                                 'TableName': 'Stalk',
@@ -55,7 +63,7 @@ exports.handler = function (event, context) {
                             }
                             , function (error, dataFromStalk) {
                                 if (error != null) {
-                                    console.log(error);
+                                    log.info(error);
                                 }
 
                                 dynamo.query(
@@ -85,9 +93,9 @@ exports.handler = function (event, context) {
                                                     }
                                                 }, function (error, ignored) {
                                                     if (error != null) {
-                                                        console.log(error);
+                                                        log.error(error);
                                                     } else {
-                                                        console.log("Removed:" + item.me + '/' + item.ref);
+                                                        log.info("Removed:" + item.me + '/' + item.ref);
                                                     }
                                                 });
                                         });
