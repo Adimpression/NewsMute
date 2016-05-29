@@ -7,7 +7,6 @@ var AWS = require("aws-sdk");
 
 var request = require('request');
 var FeedParser = require('feedparser');
-var async = require('async');
 var bunyan = require('bunyan');
 var _ = require('highland');
 var parse = require('./ts/Parse');
