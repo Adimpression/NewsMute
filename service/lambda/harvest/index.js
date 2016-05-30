@@ -127,7 +127,7 @@ exports.handler = function (event, context) {
                                                     },
                                                     'ExpressionAttributeValues': {
                                                         ':me': event.identityId,
-                                                        ':mood': '1',
+                                                        ':mood': '0',
                                                         ':source': item.ref,
                                                         ':created_at': (new Date).getTime() - 60 * 60 * 1000
                                                     }
