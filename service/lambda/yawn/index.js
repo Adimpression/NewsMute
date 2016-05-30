@@ -6,6 +6,15 @@ var dynamoDBYawnParser = require('./ts/ParseYawnGet');
 
 var dynamo = new doc.DynamoDB();
 
+var bunyan = require('bunyan');
+
+var log = bunyan.createLogger({
+    name: "yawn",
+    level: 'debug',
+    src: true
+});
+
+
 exports.handler = function (event, context) {
     console.log('event:', JSON.stringify(event));
     console.log('context:', JSON.stringify(context));
@@ -35,16 +44,19 @@ exports.handler = function (event, context) {
                                 'Key': {
                                     'me': me,
                                     'ref': '1' + link
-                                }
+                                },
+                                'ReturnValues': 'ALL_OLD'
                             },
-                            function () {
+                            function (error, dataFromYawn) {
+
+                                log.debug({dataFromYawn: dataFromYawn});
+
+                                dataFromYawn.Attributes.ref = '0' + link;
+
                                 dynamo.putItem(
                                     {
                                         'TableName': 'Yawn',
-                                        'Item': {
-                                            'me': me,
-                                            'ref': '0' + link
-                                        }
+                                        'Item': dataFromYawn.Attributes
                                     },
                                     context.done);
                             });
