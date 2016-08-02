@@ -13,6 +13,13 @@ var log = bunyan.createLogger({
 
 var dynamo = new doc.DynamoDB();
 
+/**
+ * Receives events of new account addition under humanId.
+ * Inserts this handle information to the Handle table.
+ *
+ * @param event from SNS, initially disparched by a sync event on Cognito:NewsMute
+ * @param context used to obtain which user synced
+ */
 exports.handler = function (event, context) {
     console.log('event:', JSON.stringify(event));
     console.log('context:', JSON.stringify(context));
