@@ -33,6 +33,9 @@ exports.handler = function (event, context) {
 
     event = JSON.parse(event.Records[0].Sns.Message);
 
+    var HOUR_IN_MILLIS = 60 * 60 * 1000;
+    var WEEK_IN_MILLIS = 7 * 24 * 60 * 60 * 1000;
+
     dynamo.query(
         {
             'TableName': 'Stalk',
@@ -75,7 +78,9 @@ exports.handler = function (event, context) {
                                     'content-type': contentType
                                 });
 
-                                if (contentType.startsWith('application/rss+xml') || contentType.startsWith('application/rdf+xml') || contentType.startsWith('application/atom+xml') || contentType.startsWith('application/xml') || contentType.startsWith('text/xml')) {
+                                var isFeed = contentType.startsWith('application/rss+xml') || contentType.startsWith('application/rdf+xml') || contentType.startsWith('application/atom+xml') || contentType.startsWith('application/xml') || contentType.startsWith('text/xml');
+
+                                if (isFeed) {
                                     log.info({
                                         feed: true
                                     });
@@ -114,6 +119,7 @@ exports.handler = function (event, context) {
                                                 content += h3 + '... '
                                             });
 
+
                                             dynamo.query(
                                                 {
                                                     'TableName': 'Yawn',
@@ -129,7 +135,7 @@ exports.handler = function (event, context) {
                                                         ':me': event.identityId,
                                                         ':mood': '0',
                                                         ':source': item.ref,
-                                                        ':created_at': (new Date).getTime() - 60 * 60 * 1000
+                                                        ':created_at': (new Date).getTime() - HOUR_IN_MILLIS//Since websites can get updated hourly
                                                     }
                                                 }, function (error, dataFromYawn) {
                                                     if (error != null) {
@@ -185,7 +191,7 @@ exports.handler = function (event, context) {
                                             ':me': event.identityId,
                                             ':mood': '1',
                                             ':source': item.ref,
-                                            ':created_at': (new Date).getTime() - 7 * 24 * 60 * 60 * 1000
+                                            ':created_at': (new Date).getTime() - WEEK_IN_MILLIS//Since items are unlikely to be updated
                                         }
                                     }, function (error, dataFromYawn) {
                                         if (error != null) {
