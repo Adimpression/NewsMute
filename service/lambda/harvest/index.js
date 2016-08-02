@@ -27,6 +27,13 @@ var dynamo = new doc.DynamoDB();
 var docClient = new AWS.DynamoDB.DocumentClient();
 
 
+/**
+ * Receives events from Cognito Sync, News Mute
+ * Inserts data into yawn based on if it is a Website or Feed
+ *
+ * @param event originating from cognito sync of Cognito:NewsMute
+ * @param context not used in logic but as a response
+ */
 exports.handler = function (event, context) {
     console.log('event:', JSON.stringify(event));
     console.log('context:', JSON.stringify(context));
