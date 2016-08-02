@@ -22,6 +22,13 @@ var log = bunyan.createLogger({
     src: true
 });
 
+/**
+ * Receives Kinesis Stream data whenever a user shares information via Scream, to the Scream table.
+ * Inserts received data into Yawn of all friends.
+ *
+ * @param event from AWS Kinesis
+ * @param context not related to logic, but used to respond back
+ */
 exports.handler = function (event, context) {
     console.log('event:', JSON.stringify(event));
     console.log('context:', JSON.stringify(context));
