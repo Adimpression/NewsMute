@@ -13,6 +13,13 @@ var log = bunyan.createLogger({
 AWS.config.region = 'us-east-1';
 var sns = new AWS.SNS();
 
+/**
+ * Receives SNS events whenever a Cognito:NewsMute sync happens.
+ * Disparches event to SNS topics which need to listen to this event.
+ *
+ * @param event Received from Cognito:NewsMute
+ * @param context Not used in logic except in response
+ */
 exports.handler = function (event, context) {
     console.log('event:', JSON.stringify(event));
     console.log('context:', JSON.stringify(context));
