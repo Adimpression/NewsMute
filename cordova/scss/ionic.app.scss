@@ -15,15 +15,23 @@ $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
 
+/*
+Adobe Kuler: Reds theme
+
+https://color.adobe.com/Reds-color-theme-8322344/edit/?copy=true
+
+
+*/
+
 $light: #fff !default;
-$stable: rgba(215, 215, 215, 0.99) !default;
-$positive: rgb(186, 186, 186) !default;
-$calm: #9e9e9e !default;
-$balanced: #888888 !default;
-$energized: #5e5e5e !default;
-$assertive: #454545 !default;
-$royal: #232323 !default;
-$dark: #000000 !default;
+$stable: #E50100 !default;//
+$positive: #400000 !default;//
+$calm: #BF0100 !default;//
+$balanced: #E50100 !default;//
+$energized: #7F0100 !default;//
+$assertive: #E50100 !default;//
+$royal: #FF0100 !default;//
+$dark: #000000 !default;//
 
 $font-family-base:  georgia, 'times new roman', times, serif !default;;
 
@@ -47,12 +55,19 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 //  font-style: normal;
 //}
 
+.item p {
+  white-space: initial;
+  font-family: "HelveticaNeue-UltraLight", "Segoe UI", "Roboto Light", sans-serif;
+  font-weight: 500;
+  color: $dark;
+}
 
 .loading-container .loading {
 }
 
 .nm_title_text {
   font-size: 17px;
+  color: $energized;
   //  white-space: pre-wrap;      /* CSS3 */
   //  white-space: -moz-pre-wrap; /* Firefox */
   //  white-space: -o-pre-wrap;   /* Opera 7 */
