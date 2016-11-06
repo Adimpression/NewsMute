@@ -1,8 +1,16 @@
+var bunyan = require('bunyan');
+
+var log = bunyan.createLogger({
+    name: "scream",
+    level: 'debug',
+    src: true
+});
+
 log.info('Starting to Scream');
 
 var doc = require('dynamodb-doc');
 var AWS = require("aws-sdk");
-
+var validator = require('validator');
 
 var dynamo = new doc.DynamoDB();
 var docClient = new AWS.DynamoDB.DocumentClient();
@@ -32,21 +40,25 @@ exports.handler = function (event, context) {
     }
 
     JSON.parse(events).forEach(function (action) {
-            "use strict";
             var operation = action.operation;
 
             switch (operation) {
                 case 'create':
                     action.payload.forEach(function (item) {
-                        dynamo.putItem(
-                            {
-                                'TableName': 'Stalk',
-                                'Item': {
-                                    'me': context.identity.cognitoIdentityId,
-                                    'ref': item
+
+                        if (validator.isURL(item)) {
+                            dynamo.putItem(
+                                {
+                                    'TableName': 'Stalk',
+                                    'Item': {
+                                        'me': context.identity.cognitoIdentityId,
+                                        'ref': item
+                                    }
                                 }
-                            }
-                            , context.done);
+                                , context.done);
+                        } else {
+                            log.error('Unrecognized URL ' + item);
+                        }
                     });
                     break;
                 case 'delete':

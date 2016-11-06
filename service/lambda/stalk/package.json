@@ -9,6 +9,7 @@
   "author": "Adimpression",
   "license": "AGPL-3.0",
   "dependencies": {
-    "bunyan": "^1.8.1"
+    "bunyan": "^1.8.4",
+    "validator": "^6.1.0"
   }
 }
