@@ -15,25 +15,34 @@ $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
 
-/*
-Adobe Kuler: Reds theme
+//SOLARIZED: http://www.zovirl.com/2011/07/22/solarized_cheat_sheet/
 
-https://color.adobe.com/Reds-color-theme-8322344/edit/?copy=true
+$base03: #002b36;
+$base02: #073642;
+$base01: #586e75;
+$base00: #657b83;
+$base0: #839496;
+$base1: #93a1a1;
+$base2: #eee8d5;
+$base3: #fdf6e3;
+$yellow: #b58900;
+$orange: #cb4b16;
+$red: #dc322f;
+$magenta: #d33682;
+$violet: #6c71c4;
+$blue: #268bd2;
+$cyan: #2aa198;
+$green: #859900;
 
-
-*/
-
-$light: #fff !default;
-$stable: #E50100 !default;//
-$positive: #400000 !default;//
-$calm: #BF0100 !default;//
-$balanced: #E50100 !default;//
-$energized: #7F0100 !default;//
-$assertive: #E50100 !default;//
-$royal: #FF0100 !default;//
-$dark: #000000 !default;//
-
-$font-family-base:  georgia, 'times new roman', times, serif !default;;
+$light:                           $base3 !default;
+$stable:                          $base2 !default;
+$positive:                        $base1 !default;
+$calm:                            $green !default;
+$balanced:                        $blue !default;
+$energized:                       $yellow !default;
+$assertive:                       $base01 !default;
+$royal:                           $base02 !default;
+$dark:                            $base03 !default;
 
 // The path for our ionicons font files, relative to the built CSS in www/css
 //This path and the path in include all of Ionic differs
@@ -42,24 +51,24 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 // Include all of Ionic
 @import "../www/lib/ionic/scss/ionic";
 
-//@font-face {
-//  font-family: 'Titillium Web';
-//  src: url("../lib/ionic/fonts/TitilliumWeb-Regular.ttf");
-//  font-weight: normal;
-//  font-style: normal;
-//}
+@font-face {
+  font-family: 'Titillium Web';
+  src: url("../lib/ionic/fonts/TitilliumWeb-Regular.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
 
-//@font-face {
-//  font-family: georgia, 'times new roman', times, serif;
-//  font-weight: normal;
-//  font-style: normal;
-//}
+$font-family-base: 'Titillium Web' !default;
 
 .item p {
   white-space: initial;
   font-family: "HelveticaNeue-UltraLight", "Segoe UI", "Roboto Light", sans-serif;
   font-weight: 500;
   color: $dark;
+}
+
+.pane {
+  background-color: $light;
 }
 
 .loading-container .loading {
