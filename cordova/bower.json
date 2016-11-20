@@ -6,6 +6,11 @@
     "ionic-platform-web-client": "^0.5.2"
   },
   "dependencies": {
-    "angular-material": "^1.0.6"
+    "angular-material": "^1.0.6",
+    "aws-sdk": "aws-sdk-js#^2.7.5"
+  },
+  "resolutions": {
+    "angular-animate": "^1.4.8",
+    "angular": "1.5.8"
   }
 }
