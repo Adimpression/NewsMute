@@ -33,16 +33,16 @@ $violet: #6c71c4;
 $blue: #268bd2;
 $cyan: #2aa198;
 $green: #859900;
-
-$light:                           $base3 !default;
-$stable:                          $base2 !default;
-$positive:                        $base1 !default;
-$calm:                            $green !default;
-$balanced:                        $blue !default;
-$energized:                       $yellow !default;
-$assertive:                       $base01 !default;
-$royal:                           $base02 !default;
-$dark:                            $base03 !default;
+//
+//$light:                           $base3 !default;
+//$stable:                          $base2 !default;
+//$positive:                        $base1 !default;
+//$calm:                            $green !default;
+//$balanced:                        $blue !default;
+//$energized:                       $yellow !default;
+//$assertive:                       $base01 !default;
+//$royal:                           $base02 !default;
+//$dark:                            $base03 !default;
 
 // The path for our ionicons font files, relative to the built CSS in www/css
 //This path and the path in include all of Ionic differs
@@ -51,20 +51,24 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 // Include all of Ionic
 @import "../www/lib/ionic/scss/ionic";
 
-@font-face {
-  font-family: 'Titillium Web';
-  src: url("../lib/ionic/fonts/TitilliumWeb-Regular.ttf");
-  font-weight: normal;
-  font-style: normal;
-}
+//@font-face {
+//  font-family: 'Titillium Web';
+//  src: url("../lib/ionic/fonts/TitilliumWeb-Regular.ttf");
+//  font-weight: normal;
+//  font-style: normal;
+//}
+//
+//$font-family-base: 'Titillium Web' !default;
 
-$font-family-base: 'Titillium Web' !default;
+.item {
+  overflow: hidden;
+}
 
 .item p {
   white-space: initial;
-  font-family: "HelveticaNeue-UltraLight", "Segoe UI", "Roboto Light", sans-serif;
+  //font-family: "HelveticaNeue-UltraLight", "Segoe UI", "Roboto Light", sans-serif;
   font-weight: 500;
-  color: $dark;
+  //color: $dark;
 }
 
 .pane {
@@ -76,7 +80,7 @@ $font-family-base: 'Titillium Web' !default;
 
 .nm_title_text {
   font-size: 17px;
-  color: $energized;
+  color: $assertive;
   //  white-space: pre-wrap;      /* CSS3 */
   //  white-space: -moz-pre-wrap; /* Firefox */
   //  white-space: -o-pre-wrap;   /* Opera 7 */
@@ -86,7 +90,7 @@ $font-family-base: 'Titillium Web' !default;
 
 .nm_button_font {
   font-size: 14px;
-  font-family: georgia, 'times new roman', times, serif;
+  //font-family: georgia, 'times new roman', times, serif;
 }
 
 .nm_button_shape {
