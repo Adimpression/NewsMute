@@ -49,11 +49,11 @@ $green: #859900;
 //$dark:                            $base03 !default;
 
 // The path for our ionicons font files, relative to the built CSS in www/css
-//This path and the path in include all of Ionic differs
+// This path and the path in include all of Ionic differs
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 // Include all of Ionic
-@import "../www/lib/ionic/scss/ionic";
+@import "www/lib/ionic/scss/ionic";
 
 //@font-face {
 //  font-family: 'Titillium Web';
