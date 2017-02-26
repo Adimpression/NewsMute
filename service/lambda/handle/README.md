@@ -1,0 +1,1 @@
+Handle manages unique pseudonyms of an entity

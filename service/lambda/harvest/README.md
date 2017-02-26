@@ -1,0 +1,1 @@
+Harvest is a system which gathers updates in resources and makes it available to an entity.

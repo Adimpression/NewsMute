@@ -1,0 +1,1 @@
+Scream is when an entity broadcasts it's interactions with resources.

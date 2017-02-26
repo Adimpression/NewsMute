@@ -1,0 +1,1 @@
+SuperFriend is when an entity interacts with it's friend entities.

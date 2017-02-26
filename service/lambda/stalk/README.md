@@ -1,0 +1,1 @@
+Stalk is when an entity interacts with resources it needs to follow.
