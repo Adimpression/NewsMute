@@ -1,8 +1,4 @@
 {
   "name": "NewsMute",
-  "app_id": "5594794f",
-  "gulpStartupTasks": [
-    "sass",
-    "watch"
-  ]
+  "app_id": "5594794f"
 }
