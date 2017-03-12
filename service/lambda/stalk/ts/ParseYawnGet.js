@@ -12,4 +12,3 @@ var ParseYawnGet = (function () {
     return ParseYawnGet;
 }());
 exports.ParseYawnGet = ParseYawnGet;
-//# sourceMappingURL=ParseYawnGet.js.map

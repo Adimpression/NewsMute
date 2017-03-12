@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true
+  },
+  "files": [
+    "DynamoDBEvent.ts",
+    "DynamoDBHandleItems.ts",
+    "DynamoDBHandleParser.ts",
+    "DynamoDBItems.ts",
+    "DynamoDBParser.ts",
+    "KinesisParser.ts"
+  ]
+}

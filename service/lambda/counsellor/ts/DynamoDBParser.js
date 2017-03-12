@@ -1,4 +1,3 @@
-///<reference path="DynamoDBItems.ts"/>
 "use strict";
 var Parse = (function () {
     function Parse() {

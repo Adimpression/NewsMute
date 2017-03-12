@@ -1,4 +1,3 @@
-///<reference path="DynamoDBHandleItems.ts"/>
 "use strict";
 var Parse = (function () {
     function Parse() {

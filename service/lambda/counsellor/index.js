@@ -70,6 +70,8 @@ exports.handler = function (event, context) {
 
                                     log.debug(dataFromSuperFriend);
 
+                                    log.info("number_of_friends:" + dataFromSuperFriend.Items.length);
+
                                     dynamo.deleteItem({
                                         'TableName': 'Scream',
                                         'Key': {
@@ -89,22 +91,51 @@ exports.handler = function (event, context) {
                                                                     ':handle': element.friend
                                                                 }
                                                             }, function (error, dataFromHandle) {
+                                                                log.debug(dataFromHandle);
                                                                 var items = new dynamoDBHandleParser.Parse().rootObject(dataFromHandle).Items;
                                                                 if (items.length == 1) {
-                                                                    dynamo.putItem({
-                                                                            'TableName': 'Yawn',
-                                                                            'Item': {
-                                                                                'me': items[0].me,
-                                                                                'ref': link,
-                                                                                'title': title,
-                                                                                'content': content
+                                                                    log.debug("Shocking the item");
+                                                                    dynamo.updateItem({
+                                                                        'TableName': 'Yawn',
+                                                                        'Key': {
+                                                                            'me': {
+                                                                                'S': items[0].friend
+                                                                            },
+                                                                            'ref': {
+                                                                                'S': link
                                                                             }
+                                                                        },
+                                                                        'UpdateExpression': "SET shocks = shocks + :val",
+                                                                        'ExpressionAttributeValues': {
+                                                                            ":val":1
+                                                                        },
+                                                                        ReturnValues: "UPDATED_NEW"
+                                                                    }, function (err, data) {
+                                                                        if (err) {
+                                                                            log.debug("Shocking item failed. Error JSON:", JSON.stringify(err, null, 2));
+
+                                                                            dynamo.putItem({
+                                                                                    'TableName': 'Yawn',
+                                                                                    'Item': {
+                                                                                        'me': items[0].friend,
+                                                                                        'ref': link,
+                                                                                        'title': title,
+                                                                                        'content': content,
+                                                                                        'shocks': 0
+                                                                                    }
+                                                                                }
+                                                                                , function () {
+                                                                                    log.debug("Added data for " + JSON.stringify(items[0]));
+                                                                                    pushFunc(null, true);
+                                                                                });
+
+                                                                        } else {
+                                                                            log.debug("Shocking succeeded:", JSON.stringify(data, null, 2));
                                                                         }
-                                                                        , function () {
-                                                                            log.debug("Added data for " + JSON.stringify(items[0]));
-                                                                            pushFunc(null, true);
-                                                                        });
+                                                                    });
+
                                                                 } else {
+                                                                    log.info("No handles to input data to");
                                                                     pushFunc(null, true);
                                                                 }
                                                             });
@@ -130,7 +161,7 @@ exports.handler = function (event, context) {
                     });
                     break;
                 default:
-                    console.log("Ignored eventName:" + record.eventName);
+                    log.info("Ignored eventName:" + record.eventName);
                     pushFunc2(null, true);
             }
         });
