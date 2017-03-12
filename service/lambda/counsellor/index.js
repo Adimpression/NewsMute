@@ -102,7 +102,7 @@ exports.handler = function (event, context) {
                                                                                 'S': items[0].friend
                                                                             },
                                                                             'ref': {
-                                                                                'S': link
+                                                                                'S': '1' + link
                                                                             }
                                                                         },
                                                                         'UpdateExpression': "SET shocks = shocks + :val",
@@ -118,7 +118,7 @@ exports.handler = function (event, context) {
                                                                                     'TableName': 'Yawn',
                                                                                     'Item': {
                                                                                         'me': items[0].friend,
-                                                                                        'ref': link,
+                                                                                        'ref': '1' + link,
                                                                                         'title': title,
                                                                                         'content': content,
                                                                                         'shocks': 0
