@@ -3,3 +3,4 @@
 cordova/node_modules
 cordova/.cordova
 cordova/platforms
+.DS_Store
