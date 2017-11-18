@@ -1,3 +1,4 @@
 [submodule "cordova/www"]
 	path = cordova/www
 	url = https://github.com/Adimpression/NewsMuteWWW.git
+    branch = .
