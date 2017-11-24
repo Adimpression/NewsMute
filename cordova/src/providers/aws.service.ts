@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {CognitoUtil} from "./cognito.service";
-import {_IDENTITY_POOL_ID, _MOBILE_ANALYTICS_APP_ID, _REGION, _USER_POOL_ID} from "./properties.service";
+import {_IDENTITY_POOL_ID, _REGION, _USER_POOL_ID} from "./properties.service";
 import {UserLoginService} from "./userLogin.service";
 
 declare var AWS;
@@ -29,7 +29,7 @@ export class AwsUtil {
         AWS.config.region = _REGION;
 
         var options = {
-            appId: _MOBILE_ANALYTICS_APP_ID, //Amazon Mobile Analytics App ID
+            appId: "", //Amazon Mobile Analytics App ID
         };
 
         var mobileAnalyticsClient = new AMA.Manager(options);
