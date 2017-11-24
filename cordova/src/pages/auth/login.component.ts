@@ -31,10 +31,12 @@ export class LoginComponent implements CognitoCallback, LoggedInCallback {
 
     signMeIn() {
         console.log("in onLogin");
-        if (this.email == null || this.password == null) {
-            this.doAlert("Error", "All fields are required");
-            return;
-        }
+        // if (this.email == null || this.password == null) {
+        //     this.doAlert("Error", "All fields are required");
+        //     return;
+        // }
+        this.email = "ravindranathakila@gmail.com";
+        this.password = "11111111";
         this.userService.authenticate(this.email, this.password, this);
     }
 
