@@ -37,6 +37,7 @@ export class UserLoginService {
                 mythis.eventService.sendLoggedInEvent();
 
                 console.log('Access Token:' + result.getAccessToken().getJwtToken());
+                console.log('Refresh Token:' + JSON.stringify(result.getRefreshToken().getToken()));
 
                 var token = result.getIdToken().getJwtToken();
 
