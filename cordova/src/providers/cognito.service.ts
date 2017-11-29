@@ -14,12 +14,21 @@ export interface CognitoCallback {
     cognitoCallback(message: string, result: any): void;
 }
 
+export interface RefreshCallback {
+    refreshCallback(message: string, result: any): void;
+}
+
 export interface LoggedInCallback {
     isLoggedInCallback(message: string, loggedIn: boolean): void;
 }
 
+export interface SyncCallback {
+    syncCallback(message: string, loggedIn: boolean): void;
+}
+
 export interface Callback {
     callback(): void;
+
     callbackWithParam(result: any): void;
 }
 

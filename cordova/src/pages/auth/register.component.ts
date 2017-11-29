@@ -39,7 +39,7 @@ export class RegisterComponent implements CognitoCallback {
      * registration
      *
      */
-    cognitoCallback(message: string, result: any) {
+    callback(message: string, result: any) {
         if (message != null) { //error
             this.doAlert("Registration", message);
         } else { //success

@@ -42,6 +42,12 @@ export class AwsUtil {
                 mythis.setupAWS(loggedIn);
             }
         });
+
+        this.userLogin.refresh({
+            cognitoCallback(message: string, loggedIn: boolean) {
+                mythis.setupAWS(loggedIn);
+            }
+        });
     }
 
 

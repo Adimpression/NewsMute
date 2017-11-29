@@ -1,15 +1,16 @@
 import {Component} from "@angular/core";
-import {CognitoCallback, LoggedInCallback} from "../../providers/cognito.service";
+import {CognitoCallback, LoggedInCallback, RefreshCallback} from "../../providers/cognito.service";
 import {AlertController, NavController, NavParams} from "ionic-angular";
 import {UserLoginService} from "../../providers/userLogin.service";
 import {EventsService} from "../../providers/events.service";
 import {ControlPanelComponent} from "../controlpanel/controlpanel";
 import {RegisterComponent} from "./register.component";
 import {ForgotPasswordStep1Component} from "./forgotPassword1.component";
+
 @Component({
     templateUrl: 'login.html'
 })
-export class LoginComponent implements CognitoCallback, LoggedInCallback {
+export class LoginComponent implements CognitoCallback, LoggedInCallback, RefreshCallback {
     email: string;
     password: string;
 
@@ -44,9 +45,19 @@ export class LoginComponent implements CognitoCallback, LoggedInCallback {
         if (message != null) { //error
             this.doAlert("Error", message);
             console.log("result: " + message);
+            this.userService.refresh(this)
         } else { //success
             console.log("Redirect to ControlPanelComponent");
             this.nav.setRoot(ControlPanelComponent);
+        }
+    }
+
+    refreshCallback(message: string, result: any): void {
+        if (message != null) { //error
+            this.doAlert("Error", message);
+            console.log("result: " + message);
+        } else { //success
+            console.log("Redirect to ControlPanelComponent");
         }
     }
 
