@@ -23,6 +23,7 @@ import {HomePage} from '../pages/home/home';
 import {SigninPage} from "../pages/signin/signin";
 import {SettingsPage} from "../pages/settings/settings";
 import {SignupPage} from "../pages/signup/signup";
+import {IonicStorageModule} from "@ionic/storage";
 
 @NgModule({
     declarations: [
@@ -42,7 +43,8 @@ import {SignupPage} from "../pages/signup/signup";
     ],
     imports: [
         BrowserModule,
-        IonicModule.forRoot(MyApp)
+        IonicModule.forRoot(MyApp),
+        IonicStorageModule.forRoot()
     ],
     bootstrap: [IonicApp],
     entryComponents: [
