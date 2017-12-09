@@ -6,6 +6,7 @@ import {EventsService} from "../../providers/events.service";
 import {ControlPanelComponent} from "../controlpanel/controlpanel";
 import {RegisterComponent} from "./register.component";
 import {ForgotPasswordStep1Component} from "./forgotPassword1.component";
+import {AwsUtil} from "../../providers/aws.service";
 
 @Component({
     templateUrl: 'login.html'
@@ -17,8 +18,8 @@ export class LoginComponent implements CognitoCallback, LoggedInCallback, Refres
     constructor(public nav: NavController,
                 public navParam: NavParams,
                 public alertCtrl: AlertController,
-                public userService: UserLoginService,
-                public eventService: EventsService) {
+                public eventService: EventsService,
+                public awsService: AwsUtil) {
         console.log("LoginComponent constructor");
         if (navParam != null && navParam.get("email") != null)
             this.email = navParam.get("email");
@@ -27,7 +28,8 @@ export class LoginComponent implements CognitoCallback, LoggedInCallback, Refres
 
     ionViewLoaded() {
         console.log("Checking if the user is already authenticated. If so, then redirect to the secure site");
-        this.userService.isAuthenticated(this);
+        // this.userService.isAuthenticated(this);
+        // this.userService.refresh(this);
     }
 
     signMeIn() {
@@ -38,14 +40,14 @@ export class LoginComponent implements CognitoCallback, LoggedInCallback, Refres
         // }
         this.email = "ravindranathakila@gmail.com";
         this.password = "11111111";
-        this.userService.authenticate(this.email, this.password, this);
+        this.awsService.authenticate(this.email, this.password, this);
     }
 
     cognitoCallback(message: string, result: any) {
         if (message != null) { //error
             this.doAlert("Error", message);
             console.log("result: " + message);
-            this.userService.refresh(this)
+            this.awsService.refresh(this)
         } else { //success
             console.log("Redirect to ControlPanelComponent");
             this.nav.setRoot(ControlPanelComponent);

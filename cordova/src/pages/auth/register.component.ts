@@ -39,7 +39,7 @@ export class RegisterComponent implements CognitoCallback {
      * registration
      *
      */
-    callback(message: string, result: any) {
+    cognitoCallback(message: string, result: any) {
         if (message != null) { //error
             this.doAlert("Registration", message);
         } else { //success
@@ -52,7 +52,7 @@ export class RegisterComponent implements CognitoCallback {
     }
 
     navToResendCode() {
-        this.nav.push(ResendCodeComponent);
+        this.nav.push(ResendCodeComponent).catch((err) => console.log(err))
     }
 
     navToLogin() {

@@ -13,19 +13,16 @@ import {SigninPage} from "../pages/signin/signin";
 })
 export class MyApp {
     @ViewChild(NavController) navCtrl;
-    public loginPage = LoginComponent;
+    readonly loginPage = LoginComponent;
     public splash = new SplashScreen();
     public rootPage: any;
 
-
-    constructor(public platform: Platform,
-                public events: Events,
-                public awsUtil: AwsUtil) {
-        console.log("In MyApp constructor");
+    constructor(readonly platform: Platform,
+                readonly events: Events,
+                readonly awsUtil: AwsUtil) {
+        console.log("MyApp()");
 
         this.platform.ready().then(() => {
-            this.awsUtil.initAwsService();
-
             this.rootPage = this.loginPage;
 
             console.log("Hiding splash screen");
