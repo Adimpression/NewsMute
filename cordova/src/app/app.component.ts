@@ -1,6 +1,6 @@
 import {Component, ViewChild} from "@angular/core";
 import {Events, MenuController, NavController, Platform} from "ionic-angular";
-import {AwsUtil} from "../providers/aws.service";
+import {AwsService} from "../providers/aws.service";
 import {ControlPanelComponent} from "../pages/controlpanel/controlpanel";
 import {SplashScreen} from "@ionic-native/splash-screen";
 import {LoginComponent} from "../pages/auth/login.component";
@@ -19,7 +19,7 @@ export class MyApp {
 
     constructor(readonly platform: Platform,
                 readonly events: Events,
-                readonly awsUtil: AwsUtil) {
+                readonly awsUtil: AwsService) {
         console.log("MyApp()");
 
         this.platform.ready().then(() => {

@@ -5,7 +5,7 @@ import {SplashScreen} from '@ionic-native/splash-screen';
 import {StatusBar} from '@ionic-native/status-bar';
 import {MyApp} from "./app.component";
 import {CognitoUtil} from "../providers/cognito.service";
-import {AwsUtil} from "../providers/aws.service";
+import {AwsService} from "../providers/aws.service";
 import {ControlPanelComponent} from "../pages/controlpanel/controlpanel";
 import {EventsService} from "../providers/events.service";
 import {LoginComponent} from "../pages/auth/login.component";
@@ -67,7 +67,7 @@ import {IonicStorageModule} from "@ionic/storage";
         SplashScreen,
         {provide: ErrorHandler, useClass: IonicErrorHandler},
         CognitoUtil,
-        AwsUtil,
+        AwsService,
         UserLoginService,
         UserParametersService,
         UserRegistrationService,

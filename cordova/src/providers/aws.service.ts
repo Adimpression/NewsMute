@@ -9,7 +9,7 @@ declare var AWSCognito: any;
 declare var AMA: any;
 
 @Injectable()
-export class AwsUtil {
+export class AwsService {
 
     constructor(public cUtil: CognitoUtil, public storage: Storage, public eventService: EventsService) {
         AWSCognito.config.region = _REGION;

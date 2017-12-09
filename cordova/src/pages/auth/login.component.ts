@@ -6,7 +6,7 @@ import {EventsService} from "../../providers/events.service";
 import {ControlPanelComponent} from "../controlpanel/controlpanel";
 import {RegisterComponent} from "./register.component";
 import {ForgotPasswordStep1Component} from "./forgotPassword1.component";
-import {AwsUtil} from "../../providers/aws.service";
+import {AwsService} from "../../providers/aws.service";
 
 @Component({
     templateUrl: 'login.html'
@@ -19,7 +19,7 @@ export class LoginComponent implements CognitoCallback, LoggedInCallback, Refres
                 public navParam: NavParams,
                 public alertCtrl: AlertController,
                 public eventService: EventsService,
-                public awsService: AwsUtil) {
+                public awsService: AwsService) {
         console.log("LoginComponent constructor");
         if (navParam != null && navParam.get("email") != null)
             this.email = navParam.get("email");
