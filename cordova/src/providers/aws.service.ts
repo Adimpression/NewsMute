@@ -17,6 +17,7 @@ export class AwsService {
     }
 
     refresh(cognitoCallback: CognitoCallback) {
+        console.log("refresh()");
 
         class React implements SyncCallback {
             cognitoCallback: CognitoCallback;
@@ -35,7 +36,6 @@ export class AwsService {
         this.storage.get("email").then((username) => {
 
             // Need to provide placeholder keys unless unauthorised user access is enabled for user pool
-
             AWSCognito.config.update({accessKeyId: 'anything', secretAccessKey: 'anything'});
 
             let me = this;
@@ -55,14 +55,14 @@ export class AwsService {
                         RefreshToken: refresh_token == null ? "" : refresh_token
                     }), (err, result) => {
                     if (err) {
-                        throw err
+                        cognitoCallback.cognitoCallback(err.message, null)
                     } else {
                         me.sync(result, new React(cognitoCallback))
                     }
                 });
             });
         }).catch((error) => {
-            throw error;
+            cognitoCallback.cognitoCallback(error.message, null)
         })
     }
 

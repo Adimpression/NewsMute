@@ -11,7 +11,7 @@ export class RegistrationUser {
 }
 
 export interface CognitoCallback {
-    cognitoCallback(message: string, result: any): void;
+    cognitoCallback(error: string, result: any): void;
 }
 
 export interface RefreshCallback {

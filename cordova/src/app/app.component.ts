@@ -7,23 +7,23 @@ import {LoginComponent} from "../pages/auth/login.component";
 import {LogoutComponent} from "../pages/auth/logout.component";
 
 import {SigninPage} from "../pages/signin/signin";
+import {CognitoCallback} from "../providers/cognito.service";
 
 @Component({
     templateUrl: 'app.html'
 })
 export class MyApp {
     @ViewChild(NavController) navCtrl;
-    readonly loginPage = LoginComponent;
+    readonly loginComponent = LoginComponent;
     public splash = new SplashScreen();
     public rootPage: any;
 
     constructor(readonly platform: Platform,
-                readonly events: Events,
-                readonly awsUtil: AwsService) {
+                readonly events: Events) {
         console.log("MyApp()");
 
         this.platform.ready().then(() => {
-            this.rootPage = this.loginPage;
+            this.rootPage = this.loginComponent;
 
             console.log("Hiding splash screen");
             this.splash.hide();

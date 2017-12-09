@@ -7,6 +7,7 @@ import {ControlPanelComponent} from "../controlpanel/controlpanel";
 import {RegisterComponent} from "./register.component";
 import {ForgotPasswordStep1Component} from "./forgotPassword1.component";
 import {AwsService} from "../../providers/aws.service";
+import {HomePage} from "../home/home";
 
 @Component({
     templateUrl: 'login.html'
@@ -15,22 +16,29 @@ export class LoginComponent implements CognitoCallback, LoggedInCallback, Refres
     email: string;
     password: string;
 
-    constructor(public nav: NavController,
-                public navParam: NavParams,
-                public alertCtrl: AlertController,
-                public eventService: EventsService,
-                public awsService: AwsService) {
+    constructor(readonly nav: NavController,
+                readonly navParam: NavParams,
+                readonly alertCtrl: AlertController,
+                readonly eventService: EventsService,
+                readonly awsService: AwsService) {
         console.log("LoginComponent constructor");
         if (navParam != null && navParam.get("email") != null)
             this.email = navParam.get("email");
 
+        console.log("Checking if the user is already authenticated. If so, then redirect to the secure site");
+        let me: any = this;
+        me.awsService.refresh(<CognitoCallback>{
+            cognitoCallback(message: string, result: any): void {
+                me.rootPage = me.loginComponent;
+                if (message != null) {
+                    console.log(message)
+                } else {
+                    me.nav.push(HomePage)
+                }
+            }
+        });
     }
 
-    ionViewLoaded() {
-        console.log("Checking if the user is already authenticated. If so, then redirect to the secure site");
-        // this.userService.isAuthenticated(this);
-        // this.userService.refresh(this);
-    }
 
     signMeIn() {
         console.log("in onLogin");
